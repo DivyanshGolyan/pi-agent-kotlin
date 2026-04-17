@@ -1,0 +1,819 @@
+public final class pi/ai/core/AbortController {
+	public fun <init> ()V
+	public final fun abort ()V
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+}
+
+public final class pi/ai/core/AbortSignal {
+	public final fun addListener (Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+	public final fun getAborted ()Z
+}
+
+public abstract interface class pi/ai/core/ApiProvider {
+	public abstract fun getApi ()Ljava/lang/String;
+	public abstract fun stream (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun stream$default (Lpi/ai/core/ApiProvider;Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public abstract fun streamSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimple$default (Lpi/ai/core/ApiProvider;Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/ApiProvider$DefaultImpls {
+	public static synthetic fun stream$default (Lpi/ai/core/ApiProvider;Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimple$default (Lpi/ai/core/ApiProvider;Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/ApiRegistryKt {
+	public static final fun clearApiProviders ()V
+	public static final fun getApiProvider (Ljava/lang/String;)Lpi/ai/core/ApiProvider;
+	public static final fun registerApiProvider (Lpi/ai/core/ApiProvider;)V
+}
+
+public abstract interface class pi/ai/core/AssistantContentBlock {
+}
+
+public final class pi/ai/core/AssistantMessage : pi/ai/core/Message {
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Usage;Lpi/ai/core/StopReason;Ljava/lang/String;JLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Usage;Lpi/ai/core/StopReason;Ljava/lang/String;JLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lpi/ai/core/Usage;
+	public final fun component6 ()Lpi/ai/core/StopReason;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()J
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Usage;Lpi/ai/core/StopReason;Ljava/lang/String;JLjava/lang/String;)Lpi/ai/core/AssistantMessage;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessage;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Usage;Lpi/ai/core/StopReason;Ljava/lang/String;JLjava/lang/String;ILjava/lang/Object;)Lpi/ai/core/AssistantMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApi ()Ljava/lang/String;
+	public final fun getContent ()Ljava/util/List;
+	public final fun getErrorMessage ()Ljava/lang/String;
+	public final fun getModel ()Ljava/lang/String;
+	public final fun getProvider ()Ljava/lang/String;
+	public final fun getResponseId ()Ljava/lang/String;
+	public fun getRole ()Ljava/lang/String;
+	public final fun getStopReason ()Lpi/ai/core/StopReason;
+	public fun getTimestamp ()J
+	public final fun getUsage ()Lpi/ai/core/Usage;
+	public fun hashCode ()I
+	public final fun setErrorMessage (Ljava/lang/String;)V
+	public final fun setResponseId (Ljava/lang/String;)V
+	public final fun setStopReason (Lpi/ai/core/StopReason;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/AssistantMessageEvent {
+	public abstract fun getPartial ()Lpi/ai/core/AssistantMessage;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$Done : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()Lpi/ai/core/StopReason;
+	public final fun component2 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$Done;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$Done;Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$Done;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Lpi/ai/core/AssistantMessage;
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public final fun getReason ()Lpi/ai/core/StopReason;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$Error : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()Lpi/ai/core/StopReason;
+	public final fun component2 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$Error;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$Error;Lpi/ai/core/StopReason;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Lpi/ai/core/AssistantMessage;
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public final fun getReason ()Lpi/ai/core/StopReason;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$Start : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$Start;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$Start;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$Start;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$TextDelta : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$TextDelta;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$TextDelta;ILjava/lang/String;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$TextDelta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public final fun getDelta ()Ljava/lang/String;
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$TextEnd : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$TextEnd;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$TextEnd;ILjava/lang/String;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$TextEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$TextStart : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$TextStart;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$TextStart;ILpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$TextStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ThinkingDelta : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ThinkingDelta;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ThinkingDelta;ILjava/lang/String;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ThinkingDelta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public final fun getDelta ()Ljava/lang/String;
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ThinkingEnd : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ThinkingEnd;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ThinkingEnd;ILjava/lang/String;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ThinkingEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ThinkingStart : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ThinkingStart;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ThinkingStart;ILpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ThinkingStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ToolCallDelta : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILjava/lang/String;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ToolCallDelta;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ToolCallDelta;ILjava/lang/String;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ToolCallDelta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public final fun getDelta ()Ljava/lang/String;
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ToolCallEnd : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILpi/ai/core/ToolCall;Lpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lpi/ai/core/ToolCall;
+	public final fun component3 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILpi/ai/core/ToolCall;Lpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ToolCallEnd;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ToolCallEnd;ILpi/ai/core/ToolCall;Lpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ToolCallEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public final fun getToolCall ()Lpi/ai/core/ToolCall;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEvent$ToolCallStart : pi/ai/core/AssistantMessageEvent {
+	public fun <init> (ILpi/ai/core/AssistantMessage;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lpi/ai/core/AssistantMessage;
+	public final fun copy (ILpi/ai/core/AssistantMessage;)Lpi/ai/core/AssistantMessageEvent$ToolCallStart;
+	public static synthetic fun copy$default (Lpi/ai/core/AssistantMessageEvent$ToolCallStart;ILpi/ai/core/AssistantMessage;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEvent$ToolCallStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentIndex ()I
+	public fun getPartial ()Lpi/ai/core/AssistantMessage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/AssistantMessageEventStream : pi/ai/core/EventStream {
+	public fun <init> ()V
+}
+
+public final class pi/ai/core/CacheRetention : java/lang/Enum {
+	public static final field LONG Lpi/ai/core/CacheRetention;
+	public static final field NONE Lpi/ai/core/CacheRetention;
+	public static final field SHORT Lpi/ai/core/CacheRetention;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/CacheRetention;
+	public static fun values ()[Lpi/ai/core/CacheRetention;
+}
+
+public final class pi/ai/core/Context {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lpi/ai/core/Context;
+	public static synthetic fun copy$default (Lpi/ai/core/Context;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/ai/core/Context;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/EnvApiKeysKt {
+	public static final fun getEnvApiKey (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public class pi/ai/core/EventStream {
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public final fun asFlow ()Lkotlinx/coroutines/flow/Flow;
+	public final fun end (Ljava/lang/Object;)V
+	public static synthetic fun end$default (Lpi/ai/core/EventStream;Ljava/lang/Object;ILjava/lang/Object;)V
+	public final fun push (Ljava/lang/Object;)V
+	public final fun result (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class pi/ai/core/ImageContent : pi/ai/core/ToolResultContentPart, pi/ai/core/UserContentPart {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/ImageContent;
+	public static synthetic fun copy$default (Lpi/ai/core/ImageContent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/ImageContent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/lang/String;
+	public final fun getMimeType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/InputModality : java/lang/Enum {
+	public static final field IMAGE Lpi/ai/core/InputModality;
+	public static final field TEXT Lpi/ai/core/InputModality;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/InputModality;
+	public static fun values ()[Lpi/ai/core/InputModality;
+}
+
+public final class pi/ai/core/JsonParsingKt {
+	public static final fun parseStreamingJson (Ljava/lang/String;)Lkotlinx/serialization/json/JsonObject;
+}
+
+public abstract interface class pi/ai/core/Message {
+	public abstract fun getRole ()Ljava/lang/String;
+	public abstract fun getTimestamp ()J
+}
+
+public final class pi/ai/core/Model {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()I
+	public final fun component11 ()Ljava/util/Map;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/util/Set;
+	public final fun component8 ()Lpi/ai/core/ModelCost;
+	public final fun component9 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;)Lpi/ai/core/Model;
+	public static synthetic fun copy$default (Lpi/ai/core/Model;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;ILjava/lang/Object;)Lpi/ai/core/Model;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApi ()Ljava/lang/String;
+	public final fun getBaseUrl ()Ljava/lang/String;
+	public final fun getContextWindow ()I
+	public final fun getCost ()Lpi/ai/core/ModelCost;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getInput ()Ljava/util/Set;
+	public final fun getMaxTokens ()I
+	public final fun getName ()Ljava/lang/String;
+	public final fun getProvider ()Ljava/lang/String;
+	public final fun getReasoning ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ModelCost {
+	public fun <init> (DDDD)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()D
+	public final fun component4 ()D
+	public final fun copy (DDDD)Lpi/ai/core/ModelCost;
+	public static synthetic fun copy$default (Lpi/ai/core/ModelCost;DDDDILjava/lang/Object;)Lpi/ai/core/ModelCost;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCacheRead ()D
+	public final fun getCacheWrite ()D
+	public final fun getInput ()D
+	public final fun getOutput ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ModelsKt {
+	public static final fun calculateCost (Lpi/ai/core/Model;Lpi/ai/core/Usage;)Lpi/ai/core/UsageCost;
+	public static final fun getModel (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/Model;
+	public static final fun getModels (Ljava/lang/String;)Ljava/util/List;
+	public static final fun getProviders ()Ljava/util/List;
+	public static final fun modelsAreEqual (Lpi/ai/core/Model;Lpi/ai/core/Model;)Z
+	public static final fun supportsXhigh (Lpi/ai/core/Model;)Z
+}
+
+public final class pi/ai/core/ProviderResponse {
+	public fun <init> (ILjava/util/Map;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (ILjava/util/Map;)Lpi/ai/core/ProviderResponse;
+	public static synthetic fun copy$default (Lpi/ai/core/ProviderResponse;ILjava/util/Map;ILjava/lang/Object;)Lpi/ai/core/ProviderResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getStatus ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/SimpleStreamOptions {
+	public fun <init> ()V
+	public fun <init> (Lpi/ai/core/ThinkingLevel;Lpi/ai/core/ThinkingBudgets;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;)V
+	public synthetic fun <init> (Lpi/ai/core/ThinkingLevel;Lpi/ai/core/ThinkingBudgets;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/ai/core/ThinkingLevel;
+	public final fun component10 ()Lkotlin/jvm/functions/Function3;
+	public final fun component11 ()Lkotlin/jvm/functions/Function3;
+	public final fun component12 ()Ljava/util/Map;
+	public final fun component13 ()Ljava/lang/Long;
+	public final fun component14 ()Ljava/util/Map;
+	public final fun component2 ()Lpi/ai/core/ThinkingBudgets;
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun component5 ()Lpi/ai/core/AbortSignal;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lpi/ai/core/Transport;
+	public final fun component8 ()Lpi/ai/core/CacheRetention;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Lpi/ai/core/ThinkingLevel;Lpi/ai/core/ThinkingBudgets;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;)Lpi/ai/core/SimpleStreamOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/SimpleStreamOptions;Lpi/ai/core/ThinkingLevel;Lpi/ai/core/ThinkingBudgets;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;ILjava/lang/Object;)Lpi/ai/core/SimpleStreamOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getMetadata ()Ljava/util/Map;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getReasoning ()Lpi/ai/core/ThinkingLevel;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getThinkingBudgets ()Lpi/ai/core/ThinkingBudgets;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/StopReason : java/lang/Enum {
+	public static final field ABORTED Lpi/ai/core/StopReason;
+	public static final field ERROR Lpi/ai/core/StopReason;
+	public static final field LENGTH Lpi/ai/core/StopReason;
+	public static final field STOP Lpi/ai/core/StopReason;
+	public static final field TOOL_USE Lpi/ai/core/StopReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/StopReason;
+	public static fun values ()[Lpi/ai/core/StopReason;
+}
+
+public final class pi/ai/core/StreamKt {
+	public static final fun complete (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun complete$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun completeSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun completeSimple$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun stream (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun stream$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public static final fun streamSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimple$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/StreamOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Double;
+	public final fun component10 ()Ljava/util/Map;
+	public final fun component11 ()Ljava/lang/Long;
+	public final fun component12 ()Ljava/util/Map;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lpi/ai/core/AbortSignal;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lpi/ai/core/Transport;
+	public final fun component6 ()Lpi/ai/core/CacheRetention;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Lkotlin/jvm/functions/Function3;
+	public final fun component9 ()Lkotlin/jvm/functions/Function3;
+	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;)Lpi/ai/core/StreamOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/StreamOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;ILjava/lang/Object;)Lpi/ai/core/StreamOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getMetadata ()Ljava/util/Map;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/TextContent : pi/ai/core/AssistantContentBlock, pi/ai/core/ToolResultContentPart, pi/ai/core/UserContentPart {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/TextContent;
+	public static synthetic fun copy$default (Lpi/ai/core/TextContent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/TextContent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public final fun getTextSignature ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ThinkingBudgets {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lpi/ai/core/ThinkingBudgets;
+	public static synthetic fun copy$default (Lpi/ai/core/ThinkingBudgets;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lpi/ai/core/ThinkingBudgets;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHigh ()Ljava/lang/Integer;
+	public final fun getLow ()Ljava/lang/Integer;
+	public final fun getMedium ()Ljava/lang/Integer;
+	public final fun getMinimal ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ThinkingContent : pi/ai/core/AssistantContentBlock {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Z)Lpi/ai/core/ThinkingContent;
+	public static synthetic fun copy$default (Lpi/ai/core/ThinkingContent;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lpi/ai/core/ThinkingContent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRedacted ()Z
+	public final fun getThinking ()Ljava/lang/String;
+	public final fun getThinkingSignature ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ThinkingLevel : java/lang/Enum {
+	public static final field HIGH Lpi/ai/core/ThinkingLevel;
+	public static final field LOW Lpi/ai/core/ThinkingLevel;
+	public static final field MEDIUM Lpi/ai/core/ThinkingLevel;
+	public static final field MINIMAL Lpi/ai/core/ThinkingLevel;
+	public static final field XHIGH Lpi/ai/core/ThinkingLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/ThinkingLevel;
+	public static fun values ()[Lpi/ai/core/ThinkingLevel;
+}
+
+public abstract interface class pi/ai/core/Tool {
+	public abstract fun getDescription ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getParameters ()Lkotlinx/serialization/json/JsonObject;
+	public abstract fun validateArguments (Lkotlinx/serialization/json/JsonObject;)Ljava/lang/Object;
+}
+
+public final class pi/ai/core/ToolCall : pi/ai/core/AssistantContentBlock {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;)Lpi/ai/core/ToolCall;
+	public static synthetic fun copy$default (Lpi/ai/core/ToolCall;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/ToolCall;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArguments ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getThoughtSignature ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/ToolResultContentPart {
+}
+
+public final class pi/ai/core/ToolResultMessage : pi/ai/core/Message {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;ZJ)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component5 ()Z
+	public final fun component6 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;ZJ)Lpi/ai/core/ToolResultMessage;
+	public static synthetic fun copy$default (Lpi/ai/core/ToolResultMessage;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;ZJILjava/lang/Object;)Lpi/ai/core/ToolResultMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/util/List;
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public fun getRole ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public final fun getToolCallId ()Ljava/lang/String;
+	public final fun getToolName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isError ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/Transport : java/lang/Enum {
+	public static final field AUTO Lpi/ai/core/Transport;
+	public static final field SSE Lpi/ai/core/Transport;
+	public static final field WEBSOCKET Lpi/ai/core/Transport;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/Transport;
+	public static fun values ()[Lpi/ai/core/Transport;
+}
+
+public final class pi/ai/core/TypesKt {
+	public static final field ANTHROPIC_MESSAGES_API Ljava/lang/String;
+	public static final field ANTHROPIC_PROVIDER Ljava/lang/String;
+}
+
+public final class pi/ai/core/Usage {
+	public fun <init> ()V
+	public fun <init> (IIIIILpi/ai/core/UsageCost;)V
+	public synthetic fun <init> (IIIIILpi/ai/core/UsageCost;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()Lpi/ai/core/UsageCost;
+	public final fun copy (IIIIILpi/ai/core/UsageCost;)Lpi/ai/core/Usage;
+	public static synthetic fun copy$default (Lpi/ai/core/Usage;IIIIILpi/ai/core/UsageCost;ILjava/lang/Object;)Lpi/ai/core/Usage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCacheRead ()I
+	public final fun getCacheWrite ()I
+	public final fun getCost ()Lpi/ai/core/UsageCost;
+	public final fun getInput ()I
+	public final fun getOutput ()I
+	public final fun getTotalTokens ()I
+	public fun hashCode ()I
+	public final fun setCacheRead (I)V
+	public final fun setCacheWrite (I)V
+	public final fun setCost (Lpi/ai/core/UsageCost;)V
+	public final fun setInput (I)V
+	public final fun setOutput (I)V
+	public final fun setTotalTokens (I)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/UsageCost {
+	public fun <init> ()V
+	public fun <init> (DDDDD)V
+	public synthetic fun <init> (DDDDDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()D
+	public final fun component4 ()D
+	public final fun component5 ()D
+	public final fun copy (DDDDD)Lpi/ai/core/UsageCost;
+	public static synthetic fun copy$default (Lpi/ai/core/UsageCost;DDDDDILjava/lang/Object;)Lpi/ai/core/UsageCost;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCacheRead ()D
+	public final fun getCacheWrite ()D
+	public final fun getInput ()D
+	public final fun getOutput ()D
+	public final fun getTotal ()D
+	public fun hashCode ()I
+	public final fun setCacheRead (D)V
+	public final fun setCacheWrite (D)V
+	public final fun setInput (D)V
+	public final fun setOutput (D)V
+	public final fun setTotal (D)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/UserContentPart {
+}
+
+public final class pi/ai/core/UserMessage : pi/ai/core/Message {
+	public fun <init> (Lpi/ai/core/UserMessageContent;J)V
+	public final fun component1 ()Lpi/ai/core/UserMessageContent;
+	public final fun component2 ()J
+	public final fun copy (Lpi/ai/core/UserMessageContent;J)Lpi/ai/core/UserMessage;
+	public static synthetic fun copy$default (Lpi/ai/core/UserMessage;Lpi/ai/core/UserMessageContent;JILjava/lang/Object;)Lpi/ai/core/UserMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lpi/ai/core/UserMessageContent;
+	public fun getRole ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/UserMessageContent {
+}
+
+public final class pi/ai/core/UserMessageContent$Structured : pi/ai/core/UserMessageContent {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lpi/ai/core/UserMessageContent$Structured;
+	public static synthetic fun copy$default (Lpi/ai/core/UserMessageContent$Structured;Ljava/util/List;ILjava/lang/Object;)Lpi/ai/core/UserMessageContent$Structured;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParts ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/UserMessageContent$Text : pi/ai/core/UserMessageContent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lpi/ai/core/UserMessageContent$Text;
+	public static synthetic fun copy$default (Lpi/ai/core/UserMessageContent$Text;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/UserMessageContent$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ValidationKt {
+	public static final fun validateToolArguments (Lpi/ai/core/Tool;Lpi/ai/core/ToolCall;)Ljava/lang/Object;
+	public static final fun validateToolCall (Ljava/util/List;Lpi/ai/core/ToolCall;)Ljava/lang/Object;
+}
+
+public final class pi/ai/core/providers/AnthropicApiProvider : pi/ai/core/ApiProvider {
+	public static final field INSTANCE Lpi/ai/core/providers/AnthropicApiProvider;
+	public fun getApi ()Ljava/lang/String;
+	public fun stream (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public fun streamSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/AnthropicKt {
+	public static final fun streamAnthropic (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/AnthropicOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamAnthropic$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/AnthropicOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public static final fun streamSimpleAnthropic (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimpleAnthropic$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/AnthropicOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;)V
+	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Double;
+	public final fun component10 ()Ljava/lang/Long;
+	public final fun component11 ()Ljava/util/Map;
+	public final fun component12 ()Ljava/lang/Boolean;
+	public final fun component13 ()Ljava/lang/Integer;
+	public final fun component14 ()Ljava/lang/String;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Lpi/ai/core/providers/ToolChoice;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lpi/ai/core/AbortSignal;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lpi/ai/core/CacheRetention;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lkotlin/jvm/functions/Function3;
+	public final fun component8 ()Lkotlin/jvm/functions/Function3;
+	public final fun component9 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;)Lpi/ai/core/providers/AnthropicOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/AnthropicOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;ILjava/lang/Object;)Lpi/ai/core/providers/AnthropicOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getEffort ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getMetadata ()Ljava/util/Map;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getThinkingBudgetTokens ()Ljava/lang/Integer;
+	public final fun getThinkingDisplay ()Ljava/lang/String;
+	public final fun getThinkingEnabled ()Ljava/lang/Boolean;
+	public final fun getToolChoice ()Lpi/ai/core/providers/ToolChoice;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/RegisterBuiltinsKt {
+	public static final fun registerBuiltins ()V
+}
+
+public final class pi/ai/core/providers/SimpleOptionsKt {
+	public static final fun adjustMaxTokensForThinking (IILpi/ai/core/ThinkingLevel;Lpi/ai/core/ThinkingBudgets;)Lpi/ai/core/providers/ThinkingAdjustment;
+	public static final fun buildBaseOptions (Lpi/ai/core/Model;Lpi/ai/core/SimpleStreamOptions;Ljava/lang/String;)Lpi/ai/core/StreamOptions;
+	public static synthetic fun buildBaseOptions$default (Lpi/ai/core/Model;Lpi/ai/core/SimpleStreamOptions;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/StreamOptions;
+	public static final fun clampReasoning (Lpi/ai/core/ThinkingLevel;)Lpi/ai/core/ThinkingLevel;
+}
+
+public final class pi/ai/core/providers/ThinkingAdjustment {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lpi/ai/core/providers/ThinkingAdjustment;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/ThinkingAdjustment;IIILjava/lang/Object;)Lpi/ai/core/providers/ThinkingAdjustment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxTokens ()I
+	public final fun getThinkingBudget ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/providers/ToolChoice {
+}
+
+public final class pi/ai/core/providers/ToolChoice$Any : pi/ai/core/providers/ToolChoice {
+	public static final field INSTANCE Lpi/ai/core/providers/ToolChoice$Any;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/ToolChoice$Auto : pi/ai/core/providers/ToolChoice {
+	public static final field INSTANCE Lpi/ai/core/providers/ToolChoice$Auto;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/ToolChoice$Named : pi/ai/core/providers/ToolChoice {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lpi/ai/core/providers/ToolChoice$Named;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/ToolChoice$Named;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/ToolChoice$Named;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/ToolChoice$None : pi/ai/core/providers/ToolChoice {
+	public static final field INSTANCE Lpi/ai/core/providers/ToolChoice$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

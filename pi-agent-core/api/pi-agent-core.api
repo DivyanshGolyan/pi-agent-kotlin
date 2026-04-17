@@ -1,0 +1,467 @@
+public final class pi/agent/core/AfterToolCallContext {
+	public fun <init> (Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentToolResult;ZLpi/agent/core/AgentContext;)V
+	public final fun component1 ()Lpi/ai/core/AssistantMessage;
+	public final fun component2 ()Lpi/ai/core/ToolCall;
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Lpi/agent/core/AgentToolResult;
+	public final fun component5 ()Z
+	public final fun component6 ()Lpi/agent/core/AgentContext;
+	public final fun copy (Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentToolResult;ZLpi/agent/core/AgentContext;)Lpi/agent/core/AfterToolCallContext;
+	public static synthetic fun copy$default (Lpi/agent/core/AfterToolCallContext;Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentToolResult;ZLpi/agent/core/AgentContext;ILjava/lang/Object;)Lpi/agent/core/AfterToolCallContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Ljava/lang/Object;
+	public final fun getAssistantMessage ()Lpi/ai/core/AssistantMessage;
+	public final fun getContext ()Lpi/agent/core/AgentContext;
+	public final fun getResult ()Lpi/agent/core/AgentToolResult;
+	public final fun getToolCall ()Lpi/ai/core/ToolCall;
+	public fun hashCode ()I
+	public final fun isError ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AfterToolCallResult {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component3 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)Lpi/agent/core/AfterToolCallResult;
+	public static synthetic fun copy$default (Lpi/agent/core/AfterToolCallResult;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/agent/core/AfterToolCallResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/util/List;
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public fun hashCode ()I
+	public final fun isError ()Ljava/lang/Boolean;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/Agent {
+	public fun <init> ()V
+	public fun <init> (Lpi/agent/core/AgentOptions;)V
+	public synthetic fun <init> (Lpi/agent/core/AgentOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun abort ()V
+	public final fun clearAllQueues ()V
+	public final fun clearFollowUpQueue ()V
+	public final fun clearSteeringQueue ()V
+	public final fun continue (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun followUp (Lpi/ai/core/Message;)V
+	public final fun getAfterToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getBeforeToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getConvertToLlm ()Lkotlin/jvm/functions/Function2;
+	public final fun getFollowUpMode ()Lpi/agent/core/QueueMode;
+	public final fun getGetApiKey ()Lkotlin/jvm/functions/Function2;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getState ()Lpi/agent/core/AgentState;
+	public final fun getSteeringMode ()Lpi/agent/core/QueueMode;
+	public final fun getStreamFn ()Lkotlin/jvm/functions/Function4;
+	public final fun getThinkingBudgets ()Lpi/ai/core/ThinkingBudgets;
+	public final fun getToolExecution ()Lpi/agent/core/ToolExecutionMode;
+	public final fun getTransformContext ()Lkotlin/jvm/functions/Function3;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public final fun hasQueuedMessages ()Z
+	public final fun prompt (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun prompt (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun prompt (Lpi/ai/core/Message;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun prompt$default (Lpi/agent/core/Agent;Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun reset ()V
+	public final fun setAfterToolCall (Lkotlin/jvm/functions/Function3;)V
+	public final fun setBeforeToolCall (Lkotlin/jvm/functions/Function3;)V
+	public final fun setCacheRetention (Lpi/ai/core/CacheRetention;)V
+	public final fun setConvertToLlm (Lkotlin/jvm/functions/Function2;)V
+	public final fun setFollowUpMode (Lpi/agent/core/QueueMode;)V
+	public final fun setGetApiKey (Lkotlin/jvm/functions/Function2;)V
+	public final fun setMaxRetryDelayMs (Ljava/lang/Long;)V
+	public final fun setOnPayload (Lkotlin/jvm/functions/Function3;)V
+	public final fun setOnResponse (Lkotlin/jvm/functions/Function3;)V
+	public final fun setSessionId (Ljava/lang/String;)V
+	public final fun setSteeringMode (Lpi/agent/core/QueueMode;)V
+	public final fun setStreamFn (Lkotlin/jvm/functions/Function4;)V
+	public final fun setThinkingBudgets (Lpi/ai/core/ThinkingBudgets;)V
+	public final fun setToolExecution (Lpi/agent/core/ToolExecutionMode;)V
+	public final fun setTransformContext (Lkotlin/jvm/functions/Function3;)V
+	public final fun setTransport (Lpi/ai/core/Transport;)V
+	public final fun steer (Lpi/ai/core/Message;)V
+	public final fun subscribe (Lkotlin/jvm/functions/Function3;)Lkotlin/jvm/functions/Function0;
+	public final fun waitForIdle (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class pi/agent/core/AgentContext {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lpi/agent/core/AgentContext;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentContext;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/agent/core/AgentContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/agent/core/AgentEvent {
+}
+
+public final class pi/agent/core/AgentEvent$AgentEnd : pi/agent/core/AgentEvent {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lpi/agent/core/AgentEvent$AgentEnd;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$AgentEnd;Ljava/util/List;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$AgentEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessages ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$AgentStart : pi/agent/core/AgentEvent {
+	public static final field INSTANCE Lpi/agent/core/AgentEvent$AgentStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$MessageEnd : pi/agent/core/AgentEvent {
+	public fun <init> (Lpi/ai/core/Message;)V
+	public final fun component1 ()Lpi/ai/core/Message;
+	public final fun copy (Lpi/ai/core/Message;)Lpi/agent/core/AgentEvent$MessageEnd;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$MessageEnd;Lpi/ai/core/Message;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$MessageEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Lpi/ai/core/Message;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$MessageStart : pi/agent/core/AgentEvent {
+	public fun <init> (Lpi/ai/core/Message;)V
+	public final fun component1 ()Lpi/ai/core/Message;
+	public final fun copy (Lpi/ai/core/Message;)Lpi/agent/core/AgentEvent$MessageStart;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$MessageStart;Lpi/ai/core/Message;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$MessageStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Lpi/ai/core/Message;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$MessageUpdate : pi/agent/core/AgentEvent {
+	public fun <init> (Lpi/ai/core/Message;Lpi/ai/core/AssistantMessageEvent;)V
+	public final fun component1 ()Lpi/ai/core/Message;
+	public final fun component2 ()Lpi/ai/core/AssistantMessageEvent;
+	public final fun copy (Lpi/ai/core/Message;Lpi/ai/core/AssistantMessageEvent;)Lpi/agent/core/AgentEvent$MessageUpdate;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$MessageUpdate;Lpi/ai/core/Message;Lpi/ai/core/AssistantMessageEvent;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$MessageUpdate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAssistantMessageEvent ()Lpi/ai/core/AssistantMessageEvent;
+	public final fun getMessage ()Lpi/ai/core/Message;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$ToolExecutionEnd : pi/agent/core/AgentEvent {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/agent/core/AgentToolResult;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/agent/core/AgentToolResult;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lpi/agent/core/AgentToolResult;Z)Lpi/agent/core/AgentEvent$ToolExecutionEnd;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$ToolExecutionEnd;Ljava/lang/String;Ljava/lang/String;Lpi/agent/core/AgentToolResult;ZILjava/lang/Object;)Lpi/agent/core/AgentEvent$ToolExecutionEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResult ()Lpi/agent/core/AgentToolResult;
+	public final fun getToolCallId ()Ljava/lang/String;
+	public final fun getToolName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isError ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$ToolExecutionStart : pi/agent/core/AgentEvent {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Lpi/agent/core/AgentEvent$ToolExecutionStart;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$ToolExecutionStart;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$ToolExecutionStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getToolCallId ()Ljava/lang/String;
+	public final fun getToolName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$ToolExecutionUpdate : pi/agent/core/AgentEvent {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lpi/agent/core/AgentToolResult;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component4 ()Lpi/agent/core/AgentToolResult;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lpi/agent/core/AgentToolResult;)Lpi/agent/core/AgentEvent$ToolExecutionUpdate;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$ToolExecutionUpdate;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lpi/agent/core/AgentToolResult;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$ToolExecutionUpdate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getPartialResult ()Lpi/agent/core/AgentToolResult;
+	public final fun getToolCallId ()Ljava/lang/String;
+	public final fun getToolName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$TurnEnd : pi/agent/core/AgentEvent {
+	public fun <init> (Lpi/ai/core/Message;Ljava/util/List;)V
+	public final fun component1 ()Lpi/ai/core/Message;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Lpi/ai/core/Message;Ljava/util/List;)Lpi/agent/core/AgentEvent$TurnEnd;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentEvent$TurnEnd;Lpi/ai/core/Message;Ljava/util/List;ILjava/lang/Object;)Lpi/agent/core/AgentEvent$TurnEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Lpi/ai/core/Message;
+	public final fun getToolResults ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentEvent$TurnStart : pi/agent/core/AgentEvent {
+	public static final field INSTANCE Lpi/agent/core/AgentEvent$TurnStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentLoopConfig {
+	public fun <init> (Lpi/ai/core/Model;Lkotlin/jvm/functions/Function2;Lpi/agent/core/AgentThinkingLevel;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lpi/agent/core/ToolExecutionMode;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Lpi/ai/core/ThinkingBudgets;)V
+	public synthetic fun <init> (Lpi/ai/core/Model;Lkotlin/jvm/functions/Function2;Lpi/agent/core/AgentThinkingLevel;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lpi/agent/core/ToolExecutionMode;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Lpi/ai/core/ThinkingBudgets;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/ai/core/Model;
+	public final fun component10 ()Lkotlin/jvm/functions/Function3;
+	public final fun component11 ()Ljava/lang/Double;
+	public final fun component12 ()Ljava/lang/Integer;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Lpi/ai/core/Transport;
+	public final fun component15 ()Lpi/ai/core/CacheRetention;
+	public final fun component16 ()Ljava/lang/String;
+	public final fun component17 ()Lkotlin/jvm/functions/Function3;
+	public final fun component18 ()Lkotlin/jvm/functions/Function3;
+	public final fun component19 ()Ljava/util/Map;
+	public final fun component2 ()Lkotlin/jvm/functions/Function2;
+	public final fun component20 ()Ljava/lang/Long;
+	public final fun component21 ()Ljava/util/Map;
+	public final fun component22 ()Lpi/ai/core/ThinkingBudgets;
+	public final fun component3 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun component4 ()Lkotlin/jvm/functions/Function3;
+	public final fun component5 ()Lkotlin/jvm/functions/Function2;
+	public final fun component6 ()Lkotlin/jvm/functions/Function1;
+	public final fun component7 ()Lkotlin/jvm/functions/Function1;
+	public final fun component8 ()Lpi/agent/core/ToolExecutionMode;
+	public final fun component9 ()Lkotlin/jvm/functions/Function3;
+	public final fun copy (Lpi/ai/core/Model;Lkotlin/jvm/functions/Function2;Lpi/agent/core/AgentThinkingLevel;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lpi/agent/core/ToolExecutionMode;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Lpi/ai/core/ThinkingBudgets;)Lpi/agent/core/AgentLoopConfig;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentLoopConfig;Lpi/ai/core/Model;Lkotlin/jvm/functions/Function2;Lpi/agent/core/AgentThinkingLevel;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lpi/agent/core/ToolExecutionMode;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/String;Lpi/ai/core/Transport;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Lpi/ai/core/ThinkingBudgets;ILjava/lang/Object;)Lpi/agent/core/AgentLoopConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAfterToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getBeforeToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getConvertToLlm ()Lkotlin/jvm/functions/Function2;
+	public final fun getGetApiKey ()Lkotlin/jvm/functions/Function2;
+	public final fun getGetFollowUpMessages ()Lkotlin/jvm/functions/Function1;
+	public final fun getGetSteeringMessages ()Lkotlin/jvm/functions/Function1;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getMetadata ()Ljava/util/Map;
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getReasoning ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getThinkingBudgets ()Lpi/ai/core/ThinkingBudgets;
+	public final fun getToolExecution ()Lpi/agent/core/ToolExecutionMode;
+	public final fun getTransformContext ()Lkotlin/jvm/functions/Function3;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/AgentLoopKt {
+	public static final fun agentLoop (Ljava/util/List;Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;)Lpi/ai/core/EventStream;
+	public static synthetic fun agentLoop$default (Ljava/util/List;Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;ILjava/lang/Object;)Lpi/ai/core/EventStream;
+	public static final fun agentLoopContinue (Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;)Lpi/ai/core/EventStream;
+	public static synthetic fun agentLoopContinue$default (Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;ILjava/lang/Object;)Lpi/ai/core/EventStream;
+	public static final fun runAgentLoop (Ljava/util/List;Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lkotlin/jvm/functions/Function2;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun runAgentLoop$default (Ljava/util/List;Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lkotlin/jvm/functions/Function2;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun runAgentLoopContinue (Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lkotlin/jvm/functions/Function2;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun runAgentLoopContinue$default (Lpi/agent/core/AgentContext;Lpi/agent/core/AgentLoopConfig;Lkotlin/jvm/functions/Function2;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function4;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class pi/agent/core/AgentOptions {
+	public fun <init> ()V
+	public fun <init> (Lpi/agent/core/InitialAgentState;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lpi/agent/core/QueueMode;Lpi/agent/core/QueueMode;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lpi/ai/core/ThinkingBudgets;Lpi/ai/core/Transport;Ljava/lang/Long;Lpi/agent/core/ToolExecutionMode;)V
+	public synthetic fun <init> (Lpi/agent/core/InitialAgentState;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lpi/agent/core/QueueMode;Lpi/agent/core/QueueMode;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lpi/ai/core/ThinkingBudgets;Lpi/ai/core/Transport;Ljava/lang/Long;Lpi/agent/core/ToolExecutionMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/agent/core/InitialAgentState;
+	public final fun component10 ()Lpi/agent/core/QueueMode;
+	public final fun component11 ()Lpi/agent/core/QueueMode;
+	public final fun component12 ()Lpi/ai/core/CacheRetention;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Lpi/ai/core/ThinkingBudgets;
+	public final fun component15 ()Lpi/ai/core/Transport;
+	public final fun component16 ()Ljava/lang/Long;
+	public final fun component17 ()Lpi/agent/core/ToolExecutionMode;
+	public final fun component2 ()Lkotlin/jvm/functions/Function2;
+	public final fun component3 ()Lkotlin/jvm/functions/Function3;
+	public final fun component4 ()Lkotlin/jvm/functions/Function4;
+	public final fun component5 ()Lkotlin/jvm/functions/Function2;
+	public final fun component6 ()Lkotlin/jvm/functions/Function3;
+	public final fun component7 ()Lkotlin/jvm/functions/Function3;
+	public final fun component8 ()Lkotlin/jvm/functions/Function3;
+	public final fun component9 ()Lkotlin/jvm/functions/Function3;
+	public final fun copy (Lpi/agent/core/InitialAgentState;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lpi/agent/core/QueueMode;Lpi/agent/core/QueueMode;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lpi/ai/core/ThinkingBudgets;Lpi/ai/core/Transport;Ljava/lang/Long;Lpi/agent/core/ToolExecutionMode;)Lpi/agent/core/AgentOptions;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentOptions;Lpi/agent/core/InitialAgentState;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lpi/agent/core/QueueMode;Lpi/agent/core/QueueMode;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lpi/ai/core/ThinkingBudgets;Lpi/ai/core/Transport;Ljava/lang/Long;Lpi/agent/core/ToolExecutionMode;ILjava/lang/Object;)Lpi/agent/core/AgentOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAfterToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getBeforeToolCall ()Lkotlin/jvm/functions/Function3;
+	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
+	public final fun getConvertToLlm ()Lkotlin/jvm/functions/Function2;
+	public final fun getFollowUpMode ()Lpi/agent/core/QueueMode;
+	public final fun getGetApiKey ()Lkotlin/jvm/functions/Function2;
+	public final fun getInitialState ()Lpi/agent/core/InitialAgentState;
+	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSteeringMode ()Lpi/agent/core/QueueMode;
+	public final fun getStreamFn ()Lkotlin/jvm/functions/Function4;
+	public final fun getThinkingBudgets ()Lpi/ai/core/ThinkingBudgets;
+	public final fun getToolExecution ()Lpi/agent/core/ToolExecutionMode;
+	public final fun getTransformContext ()Lkotlin/jvm/functions/Function3;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/agent/core/AgentState {
+	public abstract fun getErrorMessage ()Ljava/lang/String;
+	public abstract fun getMessages ()Ljava/util/List;
+	public abstract fun getModel ()Lpi/ai/core/Model;
+	public abstract fun getPendingToolCalls ()Ljava/util/Set;
+	public abstract fun getStreamingMessage ()Lpi/ai/core/Message;
+	public abstract fun getSystemPrompt ()Ljava/lang/String;
+	public abstract fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public abstract fun getTools ()Ljava/util/List;
+	public abstract fun isStreaming ()Z
+	public abstract fun setMessages (Ljava/util/List;)V
+	public abstract fun setModel (Lpi/ai/core/Model;)V
+	public abstract fun setSystemPrompt (Ljava/lang/String;)V
+	public abstract fun setThinkingLevel (Lpi/agent/core/AgentThinkingLevel;)V
+	public abstract fun setTools (Ljava/util/List;)V
+}
+
+public final class pi/agent/core/AgentThinkingLevel : java/lang/Enum {
+	public static final field HIGH Lpi/agent/core/AgentThinkingLevel;
+	public static final field LOW Lpi/agent/core/AgentThinkingLevel;
+	public static final field MEDIUM Lpi/agent/core/AgentThinkingLevel;
+	public static final field MINIMAL Lpi/agent/core/AgentThinkingLevel;
+	public static final field OFF Lpi/agent/core/AgentThinkingLevel;
+	public static final field XHIGH Lpi/agent/core/AgentThinkingLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/agent/core/AgentThinkingLevel;
+	public static fun values ()[Lpi/agent/core/AgentThinkingLevel;
+}
+
+public abstract interface class pi/agent/core/AgentTool : pi/ai/core/Tool {
+	public abstract fun execute (Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun execute$default (Lpi/agent/core/AgentTool;Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getLabel ()Ljava/lang/String;
+	public fun prepareArguments (Lkotlinx/serialization/json/JsonObject;)Lkotlinx/serialization/json/JsonObject;
+}
+
+public final class pi/agent/core/AgentTool$DefaultImpls {
+	public static synthetic fun execute$default (Lpi/agent/core/AgentTool;Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun prepareArguments (Lpi/agent/core/AgentTool;Lkotlinx/serialization/json/JsonObject;)Lkotlinx/serialization/json/JsonObject;
+}
+
+public final class pi/agent/core/AgentToolResult {
+	public fun <init> (Ljava/util/List;Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/Object;
+	public final fun copy (Ljava/util/List;Ljava/lang/Object;)Lpi/agent/core/AgentToolResult;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentToolResult;Ljava/util/List;Ljava/lang/Object;ILjava/lang/Object;)Lpi/agent/core/AgentToolResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/util/List;
+	public final fun getDetails ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/BeforeToolCallContext {
+	public fun <init> (Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentContext;)V
+	public final fun component1 ()Lpi/ai/core/AssistantMessage;
+	public final fun component2 ()Lpi/ai/core/ToolCall;
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Lpi/agent/core/AgentContext;
+	public final fun copy (Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentContext;)Lpi/agent/core/BeforeToolCallContext;
+	public static synthetic fun copy$default (Lpi/agent/core/BeforeToolCallContext;Lpi/ai/core/AssistantMessage;Lpi/ai/core/ToolCall;Ljava/lang/Object;Lpi/agent/core/AgentContext;ILjava/lang/Object;)Lpi/agent/core/BeforeToolCallContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Ljava/lang/Object;
+	public final fun getAssistantMessage ()Lpi/ai/core/AssistantMessage;
+	public final fun getContext ()Lpi/agent/core/AgentContext;
+	public final fun getToolCall ()Lpi/ai/core/ToolCall;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/BeforeToolCallResult {
+	public fun <init> ()V
+	public fun <init> (ZLjava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;)Lpi/agent/core/BeforeToolCallResult;
+	public static synthetic fun copy$default (Lpi/agent/core/BeforeToolCallResult;ZLjava/lang/String;ILjava/lang/Object;)Lpi/agent/core/BeforeToolCallResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBlock ()Z
+	public final fun getReason ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/InitialAgentState {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lpi/ai/core/Model;
+	public final fun component3 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;)Lpi/agent/core/InitialAgentState;
+	public static synthetic fun copy$default (Lpi/agent/core/InitialAgentState;Ljava/lang/String;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/agent/core/InitialAgentState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/agent/core/QueueMode : java/lang/Enum {
+	public static final field ALL Lpi/agent/core/QueueMode;
+	public static final field ONE_AT_A_TIME Lpi/agent/core/QueueMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/agent/core/QueueMode;
+	public static fun values ()[Lpi/agent/core/QueueMode;
+}
+
+public final class pi/agent/core/ToolExecutionMode : java/lang/Enum {
+	public static final field PARALLEL Lpi/agent/core/ToolExecutionMode;
+	public static final field SEQUENTIAL Lpi/agent/core/ToolExecutionMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/agent/core/ToolExecutionMode;
+	public static fun values ()[Lpi/agent/core/ToolExecutionMode;
+}
+
