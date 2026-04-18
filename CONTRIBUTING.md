@@ -7,7 +7,7 @@ This repository is a Kotlin port of selected `pi-mono` packages. Contributions s
 - do not generalize beyond the supported slice without a clear need
 - document intentional divergences explicitly
 
-## Before Opening A PR
+## Before opening a PR
 
 Run the verification gate:
 
@@ -27,7 +27,7 @@ Run the verification gate:
   :android-consumer:testDebugUnitTest
 ```
 
-If a change affects parity, inspect the pinned upstream reference under `reference/upstream/pi-mono/e3f6912`.
+If a change touches parity-sensitive behavior, start with the pinned upstream reference under `reference/upstream/pi-mono/e3f6912`.
 
 If you change behavior covered by the deterministic parity harness, refresh and verify the fixtures:
 
@@ -37,7 +37,7 @@ npm ci
 ./gradlew parityTest
 ```
 
-## Contribution Guidelines
+## Contribution guidelines
 
 - Keep Android API 31+ compatibility intact.
 - Keep JDK 17 as the canonical development toolchain.
@@ -45,9 +45,9 @@ npm ci
 - Prefer additive changes over API churn while the project is still `0.x`.
 - Be explicit when a change is a deliberate divergence from upstream semantics.
 
-## Reporting Gaps
+## Reporting gaps
 
-Good issues include:
+A useful issue includes:
 - the upstream file or behavior being targeted
 - the Kotlin file or API involved
 - whether the issue is a parity bug, unsupported scope, or intentional divergence

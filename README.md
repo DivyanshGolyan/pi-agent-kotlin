@@ -1,48 +1,48 @@
 # pi-agent-kotlin
 
-`pi-agent-kotlin` is an open-source Kotlin port of selected [`pi-mono`](https://github.com/badlogic/pi-mono) packages.
+`pi-agent-kotlin` is a Kotlin port of selected [`pi-mono`](https://github.com/badlogic/pi-mono) packages.
 
-This repository is intentionally honest about what it is:
+This repo is explicit about what it is:
 - a port, not the original implementation
-- scoped to the subset needed for direct Anthropic API-key usage
-- verified against a pinned upstream TypeScript snapshot
+- scoped to the slice needed for direct Anthropic API-key usage
+- checked against a pinned upstream TypeScript snapshot
 
-## Status
+## What is here today
 
-Current modules:
-- `pi-ai-core`: scoped `pi-ai` port for direct Anthropic API-key usage
-- `pi-agent-core`: scoped `pi-agent` port on top of `pi-ai-core`
-- `android-consumer`: Android API 31+ verification module
+Modules:
+- `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic API-key usage
+- `pi-agent-core`: the `pi-agent` slice built on top of `pi-ai-core`
+- `android-consumer`: an Android API 31+ verification module
 
-Current support:
-- direct Anthropic Messages API with API key auth
-- streaming text responses
+What works:
+- direct Anthropic Messages API calls with API key auth
+- streaming text
 - thinking blocks
 - tool calls and tool results
 - prompt caching
 - image input
-- stateful agent loop and tool execution
+- the stateful agent loop and tool execution path
 
-Not implemented yet:
+What is still out of scope:
 - non-Anthropic providers
 - OAuth-based provider flows
 - the full upstream `pi-ai` surface
-- the full upstream `pi-agent` / `pi-ai` test matrix
+- the full upstream `pi-agent` and `pi-ai` test matrix
 
-## Parity Model
+## How parity works
 
-This project targets the TypeScript packages semantically.
+The goal is semantic parity with the TypeScript packages for the supported slice.
 
-Behavior is checked against a pinned upstream snapshot stored in [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912). That snapshot is tracked intentionally as the porting oracle for:
-- behavior inspection
-- regression checks
+Behavior is checked against the pinned snapshot in [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912). That snapshot stays in the repo on purpose. It is the source we use for:
+- behavior checks
+- regression work
 - parity decisions
-- fixture generation for deterministic TS vs Kotlin parity tests
+- deterministic TS vs Kotlin fixture generation
 
-This does **not** mean the Kotlin implementation is byte-for-byte or API-for-API identical. It means the goal is faithful behavior for the supported slice.
+That does **not** mean this repo is byte-for-byte identical to the TypeScript code, or that every public API matches one for one. It means the Kotlin port is trying to behave the same way where it matters for the supported scope.
 
 Known intentional divergence:
-- `AgentOptions.cacheRetention` is first-class in this Kotlin port. Upstream TypeScript supports `cacheRetention` in lower layers but currently does not surface it on `AgentOptions`.
+- `AgentOptions.cacheRetention` is first-class in this Kotlin port. Upstream TypeScript supports `cacheRetention` in lower layers, but does not currently expose it on `AgentOptions`.
 
 ## Compatibility
 
@@ -54,13 +54,13 @@ Verified baseline:
 - JVM target `11`
 - Android `minSdk 31`
 
-The runtime modules do not expose Android framework types, but they are verified through the Android consumer module so the published libraries stay usable in Android 12+ apps.
+The runtime modules do not expose Android framework types. Android support is checked through the `android-consumer` module so the published libraries stay usable in Android 12+ apps.
 
 ## Installation
 
-Publication is being prepared for Maven Central. Until then, use `publishToMavenLocal`.
+Maven Central publication is being wired up. Until then, use `publishToMavenLocal`.
 
-Coordinates planned for release:
+Planned coordinates:
 
 ```kotlin
 implementation("io.github.divyanshgolyan:pi-ai-core:<version>")
@@ -73,7 +73,7 @@ Local install:
 ./gradlew publishToMavenLocal
 ```
 
-## Quick Start: `pi-ai-core`
+## Quick start: `pi-ai-core`
 
 ```kotlin
 import kotlinx.coroutines.flow.collect
@@ -115,7 +115,7 @@ fun main() = runBlocking {
 }
 ```
 
-## Quick Start: `pi-agent-core`
+## Quick start: `pi-agent-core`
 
 ```kotlin
 import kotlinx.coroutines.runBlocking
@@ -148,7 +148,7 @@ fun main() = runBlocking {
 }
 ```
 
-## Android Notes
+## Android notes
 
 - The repository verifies Android compatibility through `android-consumer`.
 - The core libraries are published as JVM libraries and are intended to be consumed from Android applications.
@@ -156,7 +156,7 @@ fun main() = runBlocking {
 
 ## Development
 
-Primary verification command:
+Main verification command:
 
 ```bash
 ./gradlew --no-configuration-cache \
@@ -192,13 +192,13 @@ npm ci
 ./gradlew parityTest
 ```
 
-The committed fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshot and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests remain separate.
+The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshot and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests are separate.
 
 ## Versioning
 
-The project uses `0.x` versions while parity and API stability are still settling.
+The project uses `0.x` versions while the API and parity story are still settling.
 
-Expectation during `0.x`:
+What that means in practice:
 - public APIs may still change
 - unsupported upstream areas may be added incrementally
 - parity gaps are documented rather than hidden
@@ -209,4 +209,4 @@ Expectation during `0.x`:
 - Pinned snapshot used here: `e3f6912d49d14b6e6ffe96bb053644922004ecf3`
 - Upstream snapshot and license are preserved under [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912)
 
-This project is not affiliated with or endorsed by the upstream maintainers.
+This project is not affiliated with the upstream maintainers.

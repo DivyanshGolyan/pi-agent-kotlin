@@ -1,4 +1,4 @@
-# Upstream Snapshot
+# Upstream snapshot
 
 This directory contains a pinned upstream reference snapshot from `badlogic/pi-mono`.
 
@@ -12,8 +12,7 @@ Tracked packages:
 
 Why this snapshot is tracked:
 - It is the behavioral oracle for the Kotlin port.
-- It keeps parity investigation reproducible against a fixed upstream state.
-- It supports local verification and source-level debugging without depending on a moving upstream branch.
+- It keeps parity work reproducible against a fixed upstream state.
+- It lets contributors debug behavior locally without depending on a moving upstream branch.
 
 The upstream project is MIT licensed. The upstream license text is copied into the sibling `LICENSE` file in this directory.
-

@@ -1,25 +1,25 @@
 # Roadmap
 
-## Current Focus
+## Current focus
 
-- Keep the Kotlin port semantically aligned with the scoped upstream TypeScript surface.
-- Maintain Android 12+ compatibility as a release gate.
-- Improve the open-source experience without overstating parity.
+- Keep the Kotlin port aligned with the scoped upstream TypeScript behavior.
+- Keep Android 12+ compatibility as a release gate.
+- Make the open-source experience easier to use without pretending the port is further along than it is.
 
 ## Next
 
-- Add fixture-driven TypeScript versus Kotlin parity tests.
+- Keep expanding the fixture-based TS vs Kotlin parity coverage.
 - Expand KDoc coverage on public APIs.
 - Publish the first Maven Central pre-release.
 - Add runnable samples for Android and plain JVM usage.
 
 ## Later
 
-- Broaden the `pi-ai` port beyond the Anthropic direct path only when needed.
+- Broaden the `pi-ai` port beyond the Anthropic direct path only when there is a real need.
 - Expand supported upstream `pi-agent` behavior beyond the current scoped surface.
 - Add CI release automation for signed Central publication.
 
-## Non-Goals For Now
+## Not doing right now
 
 - Claiming full upstream compatibility.
 - Supporting every upstream provider immediately.

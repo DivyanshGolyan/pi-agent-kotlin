@@ -8,6 +8,7 @@ The format is intentionally simple while the port is still pre-`1.0`.
 
 - Improved repository documentation for open-source use.
 - Added Maven publication metadata and signing-ready build scaffolding for `pi-ai-core` and `pi-agent-core`.
+- Added fixture-based TS vs Kotlin parity tests and the supporting refresh workflow.
 
 ## 0.1.0-SNAPSHOT
 
