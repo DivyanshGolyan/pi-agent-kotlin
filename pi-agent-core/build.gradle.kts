@@ -1,5 +1,7 @@
 plugins {
     `java-library`
+    `maven-publish`
+    signing
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
@@ -8,9 +10,25 @@ plugins {
     alias(libs.plugins.dokka)
 }
 
+description = "Kotlin port of the pi-agent runtime on top of the scoped pi-ai port."
+
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.named<Jar>("javadocJar") {
+    dependsOn(tasks.named("dokkaGeneratePublicationHtml"))
+    from(layout.buildDirectory.dir("dokka/html"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifactId = "pi-agent-core"
+        }
+    }
 }
 
 dependencies {

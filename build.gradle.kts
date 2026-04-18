@@ -1,5 +1,9 @@
 import org.jetbrains.dokka.gradle.DokkaExtension
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.jvm.tasks.Jar
+import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -15,8 +19,8 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-group = "pi.port"
-version = "0.1.0-SNAPSHOT"
+group = providers.gradleProperty("GROUP").get()
+version = providers.gradleProperty("VERSION_NAME").get()
 
 subprojects {
     group = rootProject.group
@@ -71,6 +75,64 @@ subprojects {
             allRules = false
             ignoreFailures = false
             config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+        }
+    }
+
+    pluginManager.withPlugin("org.jetbrains.dokka") {
+        extensions.configure<DokkaExtension> {
+            dokkaSourceSets.configureEach {
+                val sourceRoot = project.file("src/main/kotlin")
+                if (sourceRoot.exists()) {
+                    sourceLink {
+                        localDirectory.set(sourceRoot)
+                        remoteUrl("${providers.gradleProperty("POM_URL").get()}/tree/main/${project.name}/src/main/kotlin")
+                        remoteLineSuffix.set("#L")
+                    }
+                }
+            }
+        }
+    }
+
+    pluginManager.withPlugin("maven-publish") {
+        extensions.configure<PublishingExtension> {
+            publications.withType(MavenPublication::class.java).configureEach {
+                pom {
+                    name.set(project.name)
+                    description.set(project.description ?: "Kotlin port of selected pi-mono packages.")
+                    url.set(providers.gradleProperty("POM_URL"))
+                    licenses {
+                        license {
+                            name.set(providers.gradleProperty("POM_LICENSE_NAME"))
+                            url.set(providers.gradleProperty("POM_LICENSE_URL"))
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set(providers.gradleProperty("POM_DEVELOPER_ID"))
+                            name.set(providers.gradleProperty("POM_DEVELOPER_NAME"))
+                            url.set(providers.gradleProperty("POM_DEVELOPER_URL"))
+                        }
+                    }
+                    scm {
+                        url.set(providers.gradleProperty("POM_SCM_URL"))
+                        connection.set(providers.gradleProperty("POM_SCM_CONNECTION"))
+                        developerConnection.set(providers.gradleProperty("POM_SCM_DEV_CONNECTION"))
+                    }
+                }
+            }
+        }
+    }
+
+    pluginManager.withPlugin("signing") {
+        val signingKey = providers.gradleProperty("signingInMemoryKey").orNull
+        val signingPassword = providers.gradleProperty("signingInMemoryKeyPassword").orNull
+        val signingKeyId = providers.gradleProperty("signingInMemoryKeyId").orNull
+
+        if (!signingKey.isNullOrBlank() && !signingPassword.isNullOrBlank()) {
+            extensions.configure<SigningExtension> {
+                useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+                sign(extensions.getByType(PublishingExtension::class.java).publications)
+            }
         }
     }
 }
