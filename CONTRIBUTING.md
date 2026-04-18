@@ -37,6 +37,8 @@ npm ci
 ./gradlew parityTest
 ```
 
+Live Anthropic integration tests are optional. They require `ANTHROPIC_API_KEY` and are meant for direct provider verification, not the default contributor workflow.
+
 ## Contribution guidelines
 
 - Keep Android API 31+ compatibility intact.

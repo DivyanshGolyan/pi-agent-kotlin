@@ -58,7 +58,7 @@ The runtime modules do not expose Android framework types. Android support is ch
 
 ## Installation
 
-Maven Central publication is being wired up. Until then, use `publishToMavenLocal`.
+This project is not published yet. For now, install it locally with `publishToMavenLocal`.
 
 Planned coordinates:
 
@@ -193,6 +193,12 @@ npm ci
 ```
 
 The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshot and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests are separate.
+
+## Live tests
+
+The repo also contains live Anthropic integration tests. They are opt-in and require `ANTHROPIC_API_KEY`.
+
+The regular verification command does not depend on them. Run them only when you want to check the direct provider path against the real API.
 
 ## Versioning
 
