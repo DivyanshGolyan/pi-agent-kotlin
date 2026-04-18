@@ -1,0 +1,61 @@
+{
+  "id": "agent-prompt-tool-execution",
+  "suite": "pi-agent-core",
+  "kind": "agent_prompt_scripted",
+  "model": {
+    "id": "mock",
+    "name": "Mock Model",
+    "api": "anthropic-messages",
+    "provider": "anthropic",
+    "reasoning": true,
+    "input": [
+      "text"
+    ],
+    "contextWindow": 8192,
+    "maxTokens": 2048
+  },
+  "initialState": {
+    "systemPrompt": "You are a helpful assistant. Always use the calculator tool for math.",
+    "thinkingLevel": "off"
+  },
+  "tools": [
+    "calculate"
+  ],
+  "prompt": {
+    "text": "Calculate 123 * 456 using the calculator tool."
+  },
+  "stream": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Let me calculate that."
+        },
+        {
+          "type": "toolCall",
+          "id": "calc-1",
+          "name": "calculate",
+          "arguments": {
+            "expression": "123 * 456"
+          }
+        }
+      ],
+      "stopReason": "toolUse"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "The result is 56088."
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ]
+}

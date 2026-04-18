@@ -2,6 +2,7 @@ import org.jetbrains.dokka.gradle.DokkaExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.Exec
 import org.gradle.jvm.tasks.Jar
 import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -135,6 +136,37 @@ subprojects {
             }
         }
     }
+}
+
+tasks.register("checkParityEnvironment") {
+    group = "verification"
+    description = "Checks that Node/npm parity tooling is installed."
+
+    doLast {
+        val nodeModules = rootProject.file("node_modules")
+        require(nodeModules.exists()) {
+            "Parity tooling is not installed. Run `npm ci` from ${rootProject.projectDir} first."
+        }
+        require(rootProject.file("package.json").exists()) {
+            "Missing package.json required for parity tooling."
+        }
+    }
+}
+
+tasks.register<Exec>("refreshParityFixtures") {
+    group = "verification"
+    description = "Regenerates committed TS parity fixtures from the pinned upstream snapshot."
+    dependsOn("checkParityEnvironment")
+    workingDir = rootProject.projectDir
+    commandLine("npm", "run", "refresh-parity-fixtures")
+}
+
+tasks.register("parityTest") {
+    group = "verification"
+    description = "Runs fixture-based TS vs Kotlin parity tests."
+    dependsOn("checkParityEnvironment")
+    dependsOn(":pi-ai-core:parityTest")
+    dependsOn(":pi-agent-core:parityTest")
 }
 
 extensions.configure<DokkaExtension> {

@@ -1,0 +1,16 @@
+{
+  "name": "pi-agent-kotlin-parity",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "reference/upstream/pi-mono/e3f6912/packages/ai",
+    "reference/upstream/pi-mono/e3f6912/packages/agent"
+  ],
+  "scripts": {
+    "refresh-parity-fixtures": "tsx --tsconfig parity/ts-harness/tsconfig.json parity/ts-harness/src/refresh-fixtures.ts",
+    "check-parity-env": "node -e \"process.exit(0)\""
+  },
+  "devDependencies": {
+    "tsx": "^4.20.6"
+  }
+}

@@ -236,13 +236,8 @@ internal fun stringPromptMessage(
     parts.addAll(images)
     return pi.ai.core.UserMessage(
         content =
-            if (images.isEmpty()) {
-                pi.ai.core.UserMessageContent
-                    .Text(text)
-            } else {
-                pi.ai.core.UserMessageContent
-                    .Structured(parts)
-            },
+            pi.ai.core.UserMessageContent
+                .Structured(parts),
         timestamp = System.currentTimeMillis(),
     )
 }

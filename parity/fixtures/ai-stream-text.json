@@ -1,0 +1,192 @@
+{
+  "scenarioId": "ai-stream-text",
+  "suite": "pi-ai-core",
+  "events": [
+    {
+      "type": "start",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "text_start",
+      "contentIndex": 0,
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "text_delta",
+      "contentIndex": 0,
+      "delta": "hell",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hell"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "text_delta",
+      "contentIndex": 0,
+      "delta": "o wo",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello wo"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "text_delta",
+      "contentIndex": 0,
+      "delta": "rld",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello world"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "text_end",
+      "contentIndex": 0,
+      "content": "hello world",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello world"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    },
+    {
+      "type": "done",
+      "reason": "stop",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello world"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-1",
+        "usage": {
+          "input": 9,
+          "output": 3,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 12
+        }
+      }
+    }
+  ],
+  "result": {
+    "role": "assistant",
+    "stopReason": "stop",
+    "content": [
+      {
+        "type": "text",
+        "text": "hello world"
+      }
+    ],
+    "api": "faux:parity",
+    "provider": "faux",
+    "model": "faux-1",
+    "usage": {
+      "input": 9,
+      "output": 3,
+      "cacheRead": 0,
+      "cacheWrite": 0,
+      "totalTokens": 12
+    }
+  }
+}

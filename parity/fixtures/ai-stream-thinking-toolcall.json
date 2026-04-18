@@ -1,0 +1,551 @@
+{
+  "scenarioId": "ai-stream-thinking-toolcall",
+  "suite": "pi-ai-core",
+  "events": [
+    {
+      "type": "start",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "thinking_start",
+      "contentIndex": 0,
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": ""
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "thinking_delta",
+      "contentIndex": 0,
+      "delta": "step",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "thinking_delta",
+      "contentIndex": 0,
+      "delta": " by ",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by "
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "thinking_delta",
+      "contentIndex": 0,
+      "delta": "step",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "thinking_end",
+      "contentIndex": 0,
+      "content": "step by step",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_start",
+      "contentIndex": 1,
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_delta",
+      "contentIndex": 1,
+      "delta": "{\"va",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_delta",
+      "contentIndex": 1,
+      "delta": "lue\"",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_delta",
+      "contentIndex": 1,
+      "delta": ":\"he",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_delta",
+      "contentIndex": 1,
+      "delta": "llo\"",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_delta",
+      "contentIndex": 1,
+      "delta": "}",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {}
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "toolcall_end",
+      "contentIndex": 1,
+      "toolCall": {
+        "type": "toolCall",
+        "id": "tool-1",
+        "name": "echo",
+        "arguments": {
+          "value": "hello"
+        }
+      },
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {
+              "value": "hello"
+            }
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "text_start",
+      "contentIndex": 2,
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {
+              "value": "hello"
+            }
+          },
+          {
+            "type": "text",
+            "text": ""
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "text_delta",
+      "contentIndex": 2,
+      "delta": "done",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {
+              "value": "hello"
+            }
+          },
+          {
+            "type": "text",
+            "text": "done"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "text_end",
+      "contentIndex": 2,
+      "content": "done",
+      "partial": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {
+              "value": "hello"
+            }
+          },
+          {
+            "type": "text",
+            "text": "done"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    },
+    {
+      "type": "done",
+      "reason": "toolUse",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "step by step"
+          },
+          {
+            "type": "toolCall",
+            "id": "tool-1",
+            "name": "echo",
+            "arguments": {
+              "value": "hello"
+            }
+          },
+          {
+            "type": "text",
+            "text": "done"
+          }
+        ],
+        "api": "faux:parity",
+        "provider": "faux",
+        "model": "faux-thinker",
+        "usage": {
+          "input": 13,
+          "output": 10,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 23
+        }
+      }
+    }
+  ],
+  "result": {
+    "role": "assistant",
+    "stopReason": "toolUse",
+    "content": [
+      {
+        "type": "thinking",
+        "thinking": "step by step"
+      },
+      {
+        "type": "toolCall",
+        "id": "tool-1",
+        "name": "echo",
+        "arguments": {
+          "value": "hello"
+        }
+      },
+      {
+        "type": "text",
+        "text": "done"
+      }
+    ],
+    "api": "faux:parity",
+    "provider": "faux",
+    "model": "faux-thinker",
+    "usage": {
+      "input": 13,
+      "output": 10,
+      "cacheRead": 0,
+      "cacheWrite": 0,
+      "totalTokens": 23
+    }
+  }
+}

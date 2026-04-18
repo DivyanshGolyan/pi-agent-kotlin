@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.jvm.tasks.Jar
+
 plugins {
     `java-library`
     `maven-publish`
@@ -43,6 +46,26 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags("parity")
+    }
+}
+
+tasks.register<Test>("parityTest") {
+    group = "verification"
+    description = "Runs pi-agent-core parity tests."
+    testClassesDirs =
+        sourceSets.test
+            .get()
+            .output.classesDirs
+    classpath =
+        sourceSets.test
+            .get()
+            .runtimeClasspath
+    systemProperty("parity.rootDir", rootProject.projectDir.absolutePath)
+    useJUnitPlatform {
+        includeTags("parity")
+    }
 }
 
 kover {

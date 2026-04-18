@@ -1,0 +1,44 @@
+{
+  "id": "agent-loop-basic",
+  "suite": "pi-agent-core",
+  "kind": "agent_loop_scripted",
+  "model": {
+    "id": "mock",
+    "name": "Mock Model",
+    "api": "anthropic-messages",
+    "provider": "anthropic",
+    "reasoning": true,
+    "input": [
+      "text"
+    ],
+    "contextWindow": 8192,
+    "maxTokens": 2048
+  },
+  "context": {
+    "systemPrompt": "You are helpful.",
+    "messages": []
+  },
+  "prompts": [
+    {
+      "role": "user",
+      "content": "Hello"
+    }
+  ],
+  "stream": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Hi there!"
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ]
+}

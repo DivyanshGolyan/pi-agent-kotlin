@@ -1,0 +1,44 @@
+{
+  "id": "ai-stream-text",
+  "suite": "pi-ai-core",
+  "kind": "ai_stream_faux",
+  "model": {
+    "id": "faux-1",
+    "name": "Faux Model",
+    "api": "faux:parity",
+    "provider": "faux",
+    "reasoning": false,
+    "input": [
+      "text",
+      "image"
+    ],
+    "contextWindow": 128000,
+    "maxTokens": 16384
+  },
+  "provider": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "context": {
+    "systemPrompt": "Be concise.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi there"
+      }
+    ]
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "hello world"
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ]
+}

@@ -1,0 +1,1100 @@
+{
+  "scenarioId": "agent-prompt-tool-execution",
+  "suite": "pi-agent-core",
+  "events": [
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Calculate 123 * 456 using the calculator tool."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Calculate 123 * 456 using the calculator tool."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let "
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "Let ",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me c"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "me c",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calcu"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "alcu",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calcu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "late",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate tha"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": " tha",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate tha"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "t.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "Let me calculate that.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_start",
+        "contentIndex": 1,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "{\"ex",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "pres",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "sion",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "\":\"1",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "23 *",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": " 456",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {}
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_delta",
+        "contentIndex": 1,
+        "delta": "\"}",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {
+              "expression": "123 * 456"
+            }
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "toolcall_end",
+        "contentIndex": 1,
+        "toolCall": {
+          "type": "toolCall",
+          "id": "calc-1",
+          "name": "calculate",
+          "arguments": {
+            "expression": "123 * 456"
+          }
+        },
+        "partial": {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {
+                "expression": "123 * 456"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {
+              "expression": "123 * 456"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "tool_execution_start",
+      "toolCallId": "calc-1",
+      "toolName": "calculate",
+      "args": {
+        "expression": "123 * 456"
+      }
+    },
+    {
+      "type": "tool_execution_end",
+      "toolCallId": "calc-1",
+      "toolName": "calculate",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "123 * 456 = 56088"
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "toolResult",
+        "toolCallId": "calc-1",
+        "toolName": "calculate",
+        "isError": false,
+        "content": [
+          {
+            "type": "text",
+            "text": "123 * 456 = 56088"
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "toolResult",
+        "toolCallId": "calc-1",
+        "toolName": "calculate",
+        "isError": false,
+        "content": [
+          {
+            "type": "text",
+            "text": "123 * 456 = 56088"
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {
+              "expression": "123 * 456"
+            }
+          }
+        ]
+      },
+      "toolResults": [
+        {
+          "role": "toolResult",
+          "toolCallId": "calc-1",
+          "toolName": "calculate",
+          "isError": false,
+          "content": [
+            {
+              "type": "text",
+              "text": "123 * 456 = 56088"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The "
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "The ",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The resu"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "resu",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The resu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result i"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "lt i",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The result i"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "s 56",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The result is 56"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56088."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "088.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The result is 56088."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56088."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "The result is 56088.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The result is 56088."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56088."
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56088."
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Calculate 123 * 456 using the calculator tool."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "toolUse",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let me calculate that."
+            },
+            {
+              "type": "toolCall",
+              "id": "calc-1",
+              "name": "calculate",
+              "arguments": {
+                "expression": "123 * 456"
+              }
+            }
+          ]
+        },
+        {
+          "role": "toolResult",
+          "toolCallId": "calc-1",
+          "toolName": "calculate",
+          "isError": false,
+          "content": [
+            {
+              "type": "text",
+              "text": "123 * 456 = 56088"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "The result is 56088."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pendingToolCallsTimeline": [
+    {
+      "event": "tool_execution_start",
+      "ids": [
+        "calc-1"
+      ]
+    },
+    {
+      "event": "tool_execution_end",
+      "ids": []
+    }
+  ],
+  "state": {
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Calculate 123 * 456 using the calculator tool."
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "stopReason": "toolUse",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me calculate that."
+          },
+          {
+            "type": "toolCall",
+            "id": "calc-1",
+            "name": "calculate",
+            "arguments": {
+              "expression": "123 * 456"
+            }
+          }
+        ]
+      },
+      {
+        "role": "toolResult",
+        "toolCallId": "calc-1",
+        "toolName": "calculate",
+        "isError": false,
+        "content": [
+          {
+            "type": "text",
+            "text": "123 * 456 = 56088"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "The result is 56088."
+          }
+        ]
+      }
+    ],
+    "isStreaming": false,
+    "pendingToolCalls": [],
+    "errorMessage": null
+  }
+}
