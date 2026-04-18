@@ -37,6 +37,7 @@ Behavior is checked against a pinned upstream snapshot stored in [reference/upst
 - behavior inspection
 - regression checks
 - parity decisions
+- fixture generation for deterministic TS vs Kotlin parity tests
 
 This does **not** mean the Kotlin implementation is byte-for-byte or API-for-API identical. It means the goal is faithful behavior for the supported slice.
 
@@ -177,9 +178,21 @@ Useful local tasks:
 
 ```bash
 ./gradlew publishToMavenLocal
+./gradlew parityTest
+./gradlew refreshParityFixtures
 ./gradlew :pi-ai-core:dokkaGeneratePublicationHtml
 ./gradlew :pi-agent-core:dokkaGeneratePublicationHtml
 ```
+
+Parity workflow:
+
+```bash
+npm ci
+./gradlew refreshParityFixtures
+./gradlew parityTest
+```
+
+The committed fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshot and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests remain separate.
 
 ## Versioning
 

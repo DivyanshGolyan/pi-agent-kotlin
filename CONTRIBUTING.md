@@ -29,6 +29,14 @@ Run the verification gate:
 
 If a change affects parity, inspect the pinned upstream reference under `reference/upstream/pi-mono/e3f6912`.
 
+If you change behavior covered by the deterministic parity harness, refresh and verify the fixtures:
+
+```bash
+npm ci
+./gradlew refreshParityFixtures
+./gradlew parityTest
+```
+
 ## Contribution Guidelines
 
 - Keep Android API 31+ compatibility intact.
