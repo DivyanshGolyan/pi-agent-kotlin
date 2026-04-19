@@ -30,6 +30,22 @@ What is still out of scope:
 - the full upstream `pi-ai` surface
 - the full upstream `pi-agent` and `pi-ai` test matrix
 
+## Proposed next package
+
+The current repository ports the `packages/ai` and `packages/agent` slices, but not
+the upstream package that products appear to build on top of them.
+
+If this repository grows toward the broader `pi-mono` model, the next module should
+come from upstream `packages/coding-agent`.
+
+The proposal in this repository now treats future work more strictly:
+
+- choose exact upstream files/slices
+- only port slices that are closed enough to remain faithful
+- do not invent replacement abstractions inside the claimed upstream slice
+
+See [docs/session-layer-proposal.md](docs/session-layer-proposal.md).
+
 ## How parity works
 
 The goal is semantic parity with the TypeScript packages for the supported slice.
