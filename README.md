@@ -19,6 +19,7 @@ What works:
 - streaming text
 - thinking blocks
 - tool calls and tool results
+- custom agent message conversion hooks
 - prompt caching
 - image input
 - the stateful agent loop and tool execution path
@@ -147,6 +148,12 @@ fun main() = runBlocking {
     agent.prompt("Give me three bullet points about Android library design.")
 }
 ```
+
+Custom agent messages:
+
+- custom messages can implement `pi.agent.core.CustomAgentMessage`
+- use `AgentOptions.customMessageToLlm` to convert them into LLM-compatible
+  `user`/`assistant`/`toolResult` messages or filter them out before provider calls
 
 ## Android notes
 

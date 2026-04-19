@@ -167,6 +167,51 @@ class AgentTest {
         }
 
     @Test
+    fun `agent default conversion can include custom messages`() =
+        runTest {
+            var seenContextMessages: List<pi.ai.core.Message> = emptyList()
+            val note = NotificationMessage("Carry this forward", 1L)
+            val agent =
+                Agent(
+                    AgentOptions(
+                        initialState =
+                            InitialAgentState(
+                                model = createModel(),
+                                messages = listOf(note),
+                            ),
+                        customMessageToLlm = { message ->
+                            when (message) {
+                                is NotificationMessage ->
+                                    UserMessage(
+                                        content = UserMessageContent.Text("Note: ${message.text}"),
+                                        timestamp = message.timestamp,
+                                    )
+                                else -> null
+                            }
+                        },
+                        streamFn = { _, context, _ ->
+                            seenContextMessages = context.messages
+                            AssistantMessageEventStream().also { stream ->
+                                stream.push(
+                                    AssistantMessageEvent.Done(
+                                        reason = StopReason.STOP,
+                                        message = createAssistantMessage("ok"),
+                                    ),
+                                )
+                            }
+                        },
+                    ),
+                )
+
+            agent.prompt("hello")
+
+            assertEquals(2, seenContextMessages.size)
+            val converted = seenContextMessages[0] as UserMessage
+            assertEquals("Note: Carry this forward", (converted.content as UserMessageContent.Text).value)
+            assertTrue(seenContextMessages[1] is UserMessage)
+        }
+
+    @Test
     fun `queue operations and reset update agent state`() {
         val agent =
             Agent(
@@ -301,3 +346,10 @@ private fun createUserMessage(text: String): UserMessage =
         content = UserMessageContent.Text(text),
         timestamp = System.currentTimeMillis(),
     )
+
+private data class NotificationMessage(
+    val text: String,
+    override val timestamp: Long,
+) : CustomAgentMessage {
+    override val role: String = "notification"
+}

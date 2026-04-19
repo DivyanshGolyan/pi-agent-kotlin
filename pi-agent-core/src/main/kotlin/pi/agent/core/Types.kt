@@ -21,6 +21,12 @@ import pi.ai.core.ToolResultContentPart
 import pi.ai.core.ToolResultMessage
 import pi.ai.core.Transport
 
+/**
+ * Agent-level message contract.
+ *
+ * This includes the base pi-ai messages plus any custom messages that implement
+ * [CustomAgentMessage].
+ */
 public typealias AgentMessage = Message
 public typealias AgentToolCall = ToolCall
 public typealias StreamFn = suspend (Model<*>, Context, SimpleStreamOptions?) -> pi.ai.core.AssistantMessageEventStream
@@ -205,6 +211,7 @@ public data class AgentOptions(
     val transport: Transport = Transport.SSE,
     val maxRetryDelayMs: Long? = null,
     val toolExecution: ToolExecutionMode = ToolExecutionMode.PARALLEL,
+    val customMessageToLlm: CustomMessageToLlm? = null,
 )
 
 public data class InitialAgentState(
