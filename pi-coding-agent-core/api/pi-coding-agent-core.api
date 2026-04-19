@@ -1,0 +1,1547 @@
+public final class pi/coding/agent/core/AgentSession {
+	public fun <init> (Lpi/coding/agent/core/AgentSessionConfig;)V
+	public final fun abort (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun abortBranchSummary ()V
+	public final fun abortCompaction ()V
+	public final fun clearQueue ()Lkotlin/Pair;
+	public final fun compact (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun compact$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun cycleModel (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun cycleModel$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun cycleThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun dispose ()V
+	public final fun followUp (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun followUp$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getAgent ()Lpi/agent/core/Agent;
+	public final fun getAutoCompactionEnabledValue ()Z
+	public final fun getAvailableThinkingLevels ()Ljava/util/List;
+	public final fun getContextUsage ()Lpi/coding/agent/core/ContextUsage;
+	public final fun getFollowUpMessages ()Ljava/util/List;
+	public final fun getFollowUpMode ()Lpi/agent/core/QueueMode;
+	public final fun getLastAssistantText ()Ljava/lang/String;
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getModelRegistry ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun getPendingMessageCount ()I
+	public final fun getResourceLoader ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun getScopedModels ()Ljava/util/List;
+	public final fun getSessionFile ()Ljava/lang/String;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSessionManager ()Lpi/coding/agent/core/SessionManager;
+	public final fun getSessionName ()Ljava/lang/String;
+	public final fun getSessionStats ()Lpi/coding/agent/core/SessionStats;
+	public final fun getSettingsManager ()Lpi/coding/agent/core/SettingsManager;
+	public final fun getState ()Lpi/agent/core/AgentState;
+	public final fun getSteeringMessages ()Ljava/util/List;
+	public final fun getSteeringMode ()Lpi/agent/core/QueueMode;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getUserMessagesForForking ()Ljava/util/List;
+	public final fun isCompacting ()Z
+	public final fun isStreaming ()Z
+	public final fun navigateTree (Ljava/lang/String;Lpi/coding/agent/core/TreeNavigationOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun navigateTree$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Lpi/coding/agent/core/TreeNavigationOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun prompt (Ljava/lang/String;Lpi/coding/agent/core/PromptOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun prompt$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Lpi/coding/agent/core/PromptOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun sendCustomMessage (Lpi/coding/agent/core/CustomMessage;ZLpi/coding/agent/core/StreamingBehavior;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun sendCustomMessage$default (Lpi/coding/agent/core/AgentSession;Lpi/coding/agent/core/CustomMessage;ZLpi/coding/agent/core/StreamingBehavior;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun sendUserMessage (Ljava/lang/String;Lpi/coding/agent/core/StreamingBehavior;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun sendUserMessage$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Lpi/coding/agent/core/StreamingBehavior;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun setAutoCompactionEnabled (Z)V
+	public final fun setFollowUpMode (Lpi/agent/core/QueueMode;)V
+	public final fun setModel (Lpi/ai/core/Model;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setScopedModels (Ljava/util/List;)V
+	public final fun setSessionName (Ljava/lang/String;)V
+	public final fun setSteeringMode (Lpi/agent/core/QueueMode;)V
+	public final fun setThinkingLevel (Lpi/agent/core/AgentThinkingLevel;)V
+	public final fun steer (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun steer$default (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun subscribe (Lkotlin/jvm/functions/Function1;)Lkotlin/jvm/functions/Function0;
+	public final fun supportsThinking ()Z
+	public final fun supportsXhighThinking ()Z
+}
+
+public final class pi/coding/agent/core/AgentSessionConfig {
+	public fun <init> (Lpi/agent/core/Agent;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Ljava/lang/String;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/ModelRegistry;Ljava/util/List;)V
+	public synthetic fun <init> (Lpi/agent/core/Agent;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Ljava/lang/String;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/ModelRegistry;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/agent/core/Agent;
+	public final fun component2 ()Lpi/coding/agent/core/SessionManager;
+	public final fun component3 ()Lpi/coding/agent/core/SettingsManager;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun component6 ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy (Lpi/agent/core/Agent;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Ljava/lang/String;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/ModelRegistry;Ljava/util/List;)Lpi/coding/agent/core/AgentSessionConfig;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionConfig;Lpi/agent/core/Agent;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Ljava/lang/String;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/ModelRegistry;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgent ()Lpi/agent/core/Agent;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getModelRegistry ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun getResourceLoader ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun getScopedModels ()Ljava/util/List;
+	public final fun getSessionManager ()Lpi/coding/agent/core/SessionManager;
+	public final fun getSettingsManager ()Lpi/coding/agent/core/SettingsManager;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/coding/agent/core/AgentSessionEvent {
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionEvent$Agent : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Lpi/agent/core/AgentEvent;)V
+	public final fun component1 ()Lpi/agent/core/AgentEvent;
+	public final fun copy (Lpi/agent/core/AgentEvent;)Lpi/coding/agent/core/AgentSessionEvent$Agent;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$Agent;Lpi/agent/core/AgentEvent;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$Agent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEvent ()Lpi/agent/core/AgentEvent;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionEvent$CompactionEnd : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/CompactionReason;
+	public final fun component2 ()Lpi/coding/agent/core/compaction/CompactionResult;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAborted ()Z
+	public final fun getErrorMessage ()Ljava/lang/String;
+	public final fun getReason ()Lpi/coding/agent/core/CompactionReason;
+	public final fun getResult ()Lpi/coding/agent/core/compaction/CompactionResult;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionEvent$CompactionStart : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Lpi/coding/agent/core/CompactionReason;)V
+	public final fun component1 ()Lpi/coding/agent/core/CompactionReason;
+	public final fun copy (Lpi/coding/agent/core/CompactionReason;)Lpi/coding/agent/core/AgentSessionEvent$CompactionStart;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$CompactionStart;Lpi/coding/agent/core/CompactionReason;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$CompactionStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReason ()Lpi/coding/agent/core/CompactionReason;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionEvent$QueueUpdate : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lpi/coding/agent/core/AgentSessionEvent$QueueUpdate;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$QueueUpdate;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$QueueUpdate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFollowUp ()Ljava/util/List;
+	public final fun getSteering ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionRuntime {
+	public final fun dispose (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun fork (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getDiagnostics ()Ljava/util/List;
+	public final fun getModelFallbackMessage ()Ljava/lang/String;
+	public final fun getServices ()Lpi/coding/agent/core/AgentSessionServices;
+	public final fun getSession ()Lpi/coding/agent/core/AgentSession;
+	public final fun importFromJsonl (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun importFromJsonl$default (Lpi/coding/agent/core/AgentSessionRuntime;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun newSession (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun newSession$default (Lpi/coding/agent/core/AgentSessionRuntime;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun switchSession (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun switchSession$default (Lpi/coding/agent/core/AgentSessionRuntime;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/AgentSessionRuntimeDiagnostic {
+	public fun <init> (Lpi/coding/agent/core/DiagnosticType;Ljava/lang/String;)V
+	public final fun component1 ()Lpi/coding/agent/core/DiagnosticType;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/DiagnosticType;Ljava/lang/String;)Lpi/coding/agent/core/AgentSessionRuntimeDiagnostic;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionRuntimeDiagnostic;Lpi/coding/agent/core/DiagnosticType;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionRuntimeDiagnostic;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getType ()Lpi/coding/agent/core/DiagnosticType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionRuntimeKt {
+	public static final fun createAgentSessionRuntime (Lkotlin/jvm/functions/Function5;Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SessionStartEvent;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun createAgentSessionRuntime$default (Lkotlin/jvm/functions/Function5;Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SessionStartEvent;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/AgentSessionServices {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/coding/agent/core/AuthStorage;
+	public final fun component4 ()Lpi/coding/agent/core/SettingsManager;
+	public final fun component5 ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun component6 ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;Ljava/util/List;)Lpi/coding/agent/core/AgentSessionServices;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionServices;Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionServices;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgentDir ()Ljava/lang/String;
+	public final fun getAuthStorage ()Lpi/coding/agent/core/AuthStorage;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getDiagnostics ()Ljava/util/List;
+	public final fun getModelRegistry ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun getResourceLoader ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun getSettingsManager ()Lpi/coding/agent/core/SettingsManager;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionServicesKt {
+	public static final fun createAgentSessionFromServices (Lpi/coding/agent/core/CreateAgentSessionFromServicesOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createAgentSessionServices (Lpi/coding/agent/core/CreateAgentSessionServicesOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/AgentsFile {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/AgentsFile;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentsFile;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentsFile;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentsFileResources {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lpi/coding/agent/core/AgentsFileResources;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentsFileResources;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/AgentsFileResources;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgentsFiles ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ApiKeyLookupResult {
+	public fun <init> (ZLjava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;Ljava/util/Map;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;Ljava/util/Map;Ljava/lang/String;)Lpi/coding/agent/core/ApiKeyLookupResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ApiKeyLookupResult;ZLjava/lang/String;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/ApiKeyLookupResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getError ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getOk ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AuthStorage {
+	public static final field Companion Lpi/coding/agent/core/AuthStorage$Companion;
+	public synthetic fun <init> (Ljava/nio/file/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clear (Ljava/lang/String;)V
+	public final fun getApiKey (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getHeaders (Ljava/lang/String;)Ljava/util/Map;
+	public final fun setApiKey (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public static synthetic fun setApiKey$default (Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)V
+}
+
+public final class pi/coding/agent/core/AuthStorage$Companion {
+	public final fun create (Ljava/lang/String;)Lpi/coding/agent/core/AuthStorage;
+	public static synthetic fun create$default (Lpi/coding/agent/core/AuthStorage$Companion;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AuthStorage;
+}
+
+public final class pi/coding/agent/core/BashExecutionMessage : pi/agent/core/CustomAgentMessage {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;ZZLjava/lang/String;JZ)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;ZZLjava/lang/String;JZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()J
+	public final fun component8 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;ZZLjava/lang/String;JZ)Lpi/coding/agent/core/BashExecutionMessage;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/BashExecutionMessage;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;ZZLjava/lang/String;JZILjava/lang/Object;)Lpi/coding/agent/core/BashExecutionMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCancelled ()Z
+	public final fun getCommand ()Ljava/lang/String;
+	public final fun getExcludeFromContext ()Z
+	public final fun getExitCode ()Ljava/lang/Integer;
+	public final fun getFullOutputPath ()Ljava/lang/String;
+	public final fun getOutput ()Ljava/lang/String;
+	public fun getRole ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public final fun getTruncated ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/BranchSummaryEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component7 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)Lpi/coding/agent/core/BranchSummaryEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/BranchSummaryEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/coding/agent/core/BranchSummaryEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public final fun getFromHook ()Ljava/lang/Boolean;
+	public final fun getFromId ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/BranchSummaryMessage : pi/agent/core/CustomAgentMessage {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;J)Lpi/coding/agent/core/BranchSummaryMessage;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/BranchSummaryMessage;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lpi/coding/agent/core/BranchSummaryMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFromId ()Ljava/lang/String;
+	public fun getRole ()Ljava/lang/String;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CompactionEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()I
+	public final fun component7 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component8 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)Lpi/coding/agent/core/CompactionEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CompactionEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/coding/agent/core/CompactionEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public final fun getFirstKeptEntryId ()Ljava/lang/String;
+	public final fun getFromHook ()Ljava/lang/Boolean;
+	public fun getId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public final fun getTokensBefore ()I
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CompactionReason : java/lang/Enum {
+	public static final field MANUAL Lpi/coding/agent/core/CompactionReason;
+	public static final field THRESHOLD Lpi/coding/agent/core/CompactionReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/CompactionReason;
+	public static fun values ()[Lpi/coding/agent/core/CompactionReason;
+}
+
+public final class pi/coding/agent/core/CompactionSummaryMessage : pi/agent/core/CustomAgentMessage {
+	public fun <init> (Ljava/lang/String;IJ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;IJ)Lpi/coding/agent/core/CompactionSummaryMessage;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CompactionSummaryMessage;Ljava/lang/String;IJILjava/lang/Object;)Lpi/coding/agent/core/CompactionSummaryMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getRole ()Ljava/lang/String;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public final fun getTokensBefore ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ConfigKt {
+	public static final field PI_CODING_AGENT_DIR_ENV Ljava/lang/String;
+	public static final fun getAgentDir ()Ljava/lang/String;
+	public static final fun getSessionsDir ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ContextUsage {
+	public fun <init> (IIIII)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun copy (IIIII)Lpi/coding/agent/core/ContextUsage;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ContextUsage;IIIIIILjava/lang/Object;)Lpi/coding/agent/core/ContextUsage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContextWindow ()I
+	public final fun getRemainingTokens ()I
+	public final fun getTokens ()I
+	public final fun getTrailingTokens ()I
+	public final fun getUsageTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CreateAgentSessionFromServicesOptions {
+	public fun <init> (Lpi/coding/agent/core/AgentSessionServices;Lpi/coding/agent/core/SessionManager;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function4;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/AgentSessionServices;Lpi/coding/agent/core/SessionManager;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function4;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/AgentSessionServices;
+	public final fun component2 ()Lpi/coding/agent/core/SessionManager;
+	public final fun component3 ()Lpi/ai/core/Model;
+	public final fun component4 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Lkotlin/jvm/functions/Function4;
+	public final fun copy (Lpi/coding/agent/core/AgentSessionServices;Lpi/coding/agent/core/SessionManager;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function4;)Lpi/coding/agent/core/CreateAgentSessionFromServicesOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CreateAgentSessionFromServicesOptions;Lpi/coding/agent/core/AgentSessionServices;Lpi/coding/agent/core/SessionManager;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function4;ILjava/lang/Object;)Lpi/coding/agent/core/CreateAgentSessionFromServicesOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getScopedModels ()Ljava/util/List;
+	public final fun getServices ()Lpi/coding/agent/core/AgentSessionServices;
+	public final fun getSessionManager ()Lpi/coding/agent/core/SessionManager;
+	public final fun getStreamFn ()Lkotlin/jvm/functions/Function4;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CreateAgentSessionOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/ModelRegistry;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Lkotlin/jvm/functions/Function4;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/ModelRegistry;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Lkotlin/jvm/functions/Function4;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lpi/coding/agent/core/SessionManager;
+	public final fun component11 ()Lpi/coding/agent/core/SettingsManager;
+	public final fun component12 ()Lkotlin/jvm/functions/Function4;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/coding/agent/core/AuthStorage;
+	public final fun component4 ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun component5 ()Lpi/ai/core/Model;
+	public final fun component6 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/util/List;
+	public final fun component9 ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/ModelRegistry;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Lkotlin/jvm/functions/Function4;)Lpi/coding/agent/core/CreateAgentSessionOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CreateAgentSessionOptions;Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/ModelRegistry;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Ljava/util/List;Ljava/util/List;Lpi/coding/agent/core/ResourceLoader;Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/SettingsManager;Lkotlin/jvm/functions/Function4;ILjava/lang/Object;)Lpi/coding/agent/core/CreateAgentSessionOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgentDir ()Ljava/lang/String;
+	public final fun getAuthStorage ()Lpi/coding/agent/core/AuthStorage;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getModelRegistry ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun getResourceLoader ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun getScopedModels ()Ljava/util/List;
+	public final fun getSessionManager ()Lpi/coding/agent/core/SessionManager;
+	public final fun getSettingsManager ()Lpi/coding/agent/core/SettingsManager;
+	public final fun getStreamFn ()Lkotlin/jvm/functions/Function4;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CreateAgentSessionResult {
+	public fun <init> (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/AgentSession;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/AgentSession;Ljava/lang/String;)Lpi/coding/agent/core/CreateAgentSessionResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CreateAgentSessionResult;Lpi/coding/agent/core/AgentSession;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/CreateAgentSessionResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModelFallbackMessage ()Ljava/lang/String;
+	public final fun getSession ()Lpi/coding/agent/core/AgentSession;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CreateAgentSessionRuntimeResult {
+	public fun <init> (Lpi/coding/agent/core/AgentSession;Lpi/coding/agent/core/AgentSessionServices;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/AgentSession;Lpi/coding/agent/core/AgentSessionServices;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/AgentSession;
+	public final fun component2 ()Lpi/coding/agent/core/AgentSessionServices;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/AgentSession;Lpi/coding/agent/core/AgentSessionServices;Ljava/util/List;Ljava/lang/String;)Lpi/coding/agent/core/CreateAgentSessionRuntimeResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CreateAgentSessionRuntimeResult;Lpi/coding/agent/core/AgentSession;Lpi/coding/agent/core/AgentSessionServices;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/CreateAgentSessionRuntimeResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDiagnostics ()Ljava/util/List;
+	public final fun getModelFallbackMessage ()Ljava/lang/String;
+	public final fun getServices ()Lpi/coding/agent/core/AgentSessionServices;
+	public final fun getSession ()Lpi/coding/agent/core/AgentSession;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CreateAgentSessionServicesOptions {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/coding/agent/core/AuthStorage;
+	public final fun component4 ()Lpi/coding/agent/core/SettingsManager;
+	public final fun component5 ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun component6 ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;)Lpi/coding/agent/core/CreateAgentSessionServicesOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CreateAgentSessionServicesOptions;Ljava/lang/String;Ljava/lang/String;Lpi/coding/agent/core/AuthStorage;Lpi/coding/agent/core/SettingsManager;Lpi/coding/agent/core/ModelRegistry;Lpi/coding/agent/core/ResourceLoader;ILjava/lang/Object;)Lpi/coding/agent/core/CreateAgentSessionServicesOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgentDir ()Ljava/lang/String;
+	public final fun getAuthStorage ()Lpi/coding/agent/core/AuthStorage;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getModelRegistry ()Lpi/coding/agent/core/ModelRegistry;
+	public final fun getResourceLoader ()Lpi/coding/agent/core/ResourceLoader;
+	public final fun getSettingsManager ()Lpi/coding/agent/core/SettingsManager;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CustomEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)Lpi/coding/agent/core/CustomEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CustomEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Lpi/coding/agent/core/CustomEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCustomType ()Ljava/lang/String;
+	public final fun getData ()Lkotlinx/serialization/json/JsonElement;
+	public fun getId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CustomMessage : pi/agent/core/CustomAgentMessage {
+	public fun <init> (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;J)V
+	public synthetic fun <init> (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lpi/ai/core/UserMessageContent;
+	public final fun component3 ()Z
+	public final fun component4 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component5 ()J
+	public final fun copy (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;J)Lpi/coding/agent/core/CustomMessage;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CustomMessage;Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;JILjava/lang/Object;)Lpi/coding/agent/core/CustomMessage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lpi/ai/core/UserMessageContent;
+	public final fun getCustomType ()Ljava/lang/String;
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public final fun getDisplay ()Z
+	public fun getRole ()Ljava/lang/String;
+	public fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/CustomMessageEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/UserMessageContent;Lkotlinx/serialization/json/JsonElement;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/UserMessageContent;Lkotlinx/serialization/json/JsonElement;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lpi/ai/core/UserMessageContent;
+	public final fun component6 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/UserMessageContent;Lkotlinx/serialization/json/JsonElement;Z)Lpi/coding/agent/core/CustomMessageEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/CustomMessageEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/UserMessageContent;Lkotlinx/serialization/json/JsonElement;ZILjava/lang/Object;)Lpi/coding/agent/core/CustomMessageEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lpi/ai/core/UserMessageContent;
+	public final fun getCustomType ()Ljava/lang/String;
+	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
+	public final fun getDisplay ()Z
+	public fun getId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/DefaultResourceLoader : pi/coding/agent/core/ResourceLoader {
+	public fun <init> (Lpi/coding/agent/core/DefaultResourceLoaderOptions;)V
+	public fun getAgentsFiles ()Lpi/coding/agent/core/AgentsFileResources;
+	public fun getAppendSystemPrompt ()Ljava/util/List;
+	public fun getPrompts ()Lpi/coding/agent/core/PromptResources;
+	public fun getSkills ()Lpi/coding/agent/core/SkillResources;
+	public fun getSystemPrompt ()Ljava/lang/String;
+	public fun reload (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/DefaultResourceLoaderOptions {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lpi/coding/agent/core/DefaultResourceLoaderOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/DefaultResourceLoaderOptions;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/DefaultResourceLoaderOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgentDir ()Ljava/lang/String;
+	public final fun getAppendSystemPrompt ()Ljava/util/List;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/DefaultsKt {
+	public static final fun getDEFAULT_THINKING_LEVEL ()Lpi/agent/core/AgentThinkingLevel;
+}
+
+public final class pi/coding/agent/core/DiagnosticType : java/lang/Enum {
+	public static final field ERROR Lpi/coding/agent/core/DiagnosticType;
+	public static final field INFO Lpi/coding/agent/core/DiagnosticType;
+	public static final field WARNING Lpi/coding/agent/core/DiagnosticType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/DiagnosticType;
+	public static fun values ()[Lpi/coding/agent/core/DiagnosticType;
+}
+
+public abstract interface class pi/coding/agent/core/FileEntry {
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/LabelEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/LabelEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/LabelEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/LabelEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public final fun getTargetId ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/MessagesKt {
+	public static final field BRANCH_SUMMARY_PREFIX Ljava/lang/String;
+	public static final field BRANCH_SUMMARY_SUFFIX Ljava/lang/String;
+	public static final field COMPACTION_SUMMARY_PREFIX Ljava/lang/String;
+	public static final field COMPACTION_SUMMARY_SUFFIX Ljava/lang/String;
+	public static final fun bashExecutionToText (Lpi/coding/agent/core/BashExecutionMessage;)Ljava/lang/String;
+	public static final fun codingMessageToLlm (Lpi/agent/core/CustomAgentMessage;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun convertToLlm (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createBranchSummaryMessage (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/BranchSummaryMessage;
+	public static final fun createCompactionSummaryMessage (Ljava/lang/String;ILjava/lang/String;)Lpi/coding/agent/core/CompactionSummaryMessage;
+	public static final fun createCustomMessage (Ljava/lang/String;Ljava/lang/String;ZLkotlinx/serialization/json/JsonElement;Ljava/lang/String;)Lpi/coding/agent/core/CustomMessage;
+	public static final fun createCustomMessage (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;Ljava/lang/String;)Lpi/coding/agent/core/CustomMessage;
+	public static synthetic fun createCustomMessage$default (Ljava/lang/String;Ljava/lang/String;ZLkotlinx/serialization/json/JsonElement;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/CustomMessage;
+	public static synthetic fun createCustomMessage$default (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/CustomMessage;
+}
+
+public final class pi/coding/agent/core/MissingSessionCwdError : java/lang/IllegalStateException {
+	public fun <init> (Lpi/coding/agent/core/SessionCwdIssue;)V
+	public final fun getIssue ()Lpi/coding/agent/core/SessionCwdIssue;
+}
+
+public final class pi/coding/agent/core/ModelChangeEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/ModelChangeEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ModelChangeEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/ModelChangeEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getModelId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public final fun getProvider ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ModelCycleResult {
+	public fun <init> (Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Z)V
+	public final fun component1 ()Lpi/ai/core/Model;
+	public final fun component2 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun component3 ()Z
+	public final fun copy (Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;Z)Lpi/coding/agent/core/ModelCycleResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ModelCycleResult;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;ZILjava/lang/Object;)Lpi/coding/agent/core/ModelCycleResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public fun hashCode ()I
+	public final fun isScoped ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ModelRegistry {
+	public static final field Companion Lpi/coding/agent/core/ModelRegistry$Companion;
+	public synthetic fun <init> (Lpi/coding/agent/core/AuthStorage;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun find (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/Model;
+	public final fun getApiKey (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getApiKeyAndHeaders (Lpi/ai/core/Model;)Lpi/coding/agent/core/ApiKeyLookupResult;
+	public final fun getAvailable ()Ljava/util/List;
+	public final fun hasConfiguredAuth (Lpi/ai/core/Model;)Z
+	public final fun hasConfiguredAuthForProvider (Ljava/lang/String;)Z
+	public final fun isUsingOAuth (Lpi/ai/core/Model;)Z
+	public final fun registerProvider (Ljava/lang/String;Ljava/util/List;)V
+}
+
+public final class pi/coding/agent/core/ModelRegistry$Companion {
+	public final fun create (Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;)Lpi/coding/agent/core/ModelRegistry;
+	public static synthetic fun create$default (Lpi/coding/agent/core/ModelRegistry$Companion;Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/ModelRegistry;
+}
+
+public final class pi/coding/agent/core/ModelScope {
+	public fun <init> (Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;)V
+	public synthetic fun <init> (Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/ai/core/Model;
+	public final fun component2 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun copy (Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;)Lpi/coding/agent/core/ModelScope;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ModelScope;Lpi/ai/core/Model;Lpi/agent/core/AgentThinkingLevel;ILjava/lang/Object;)Lpi/coding/agent/core/ModelScope;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/NewSessionOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/NewSessionOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/NewSessionOptions;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/NewSessionOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getParentSession ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/PromptOptions {
+	public fun <init> ()V
+	public fun <init> (ZLjava/util/List;Lpi/coding/agent/core/StreamingBehavior;)V
+	public synthetic fun <init> (ZLjava/util/List;Lpi/coding/agent/core/StreamingBehavior;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Lpi/coding/agent/core/StreamingBehavior;
+	public final fun copy (ZLjava/util/List;Lpi/coding/agent/core/StreamingBehavior;)Lpi/coding/agent/core/PromptOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/PromptOptions;ZLjava/util/List;Lpi/coding/agent/core/StreamingBehavior;ILjava/lang/Object;)Lpi/coding/agent/core/PromptOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpandPromptTemplates ()Z
+	public final fun getImages ()Ljava/util/List;
+	public final fun getStreamingBehavior ()Lpi/coding/agent/core/StreamingBehavior;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/PromptResources {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lpi/coding/agent/core/PromptResources;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/PromptResources;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/PromptResources;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrompts ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/PromptTemplate {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/PromptTemplate;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/PromptTemplate;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/PromptTemplate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/coding/agent/core/ReadonlySessionManager {
+	public abstract fun getBranch (Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun getBranch$default (Lpi/coding/agent/core/ReadonlySessionManager;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public abstract fun getCwd ()Ljava/lang/String;
+	public abstract fun getEntries ()Ljava/util/List;
+	public abstract fun getEntry (Ljava/lang/String;)Lpi/coding/agent/core/SessionEntry;
+	public abstract fun getHeader ()Lpi/coding/agent/core/SessionHeader;
+	public abstract fun getLabel (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun getLeafEntry ()Lpi/coding/agent/core/SessionEntry;
+	public abstract fun getLeafId ()Ljava/lang/String;
+	public abstract fun getSessionDir ()Ljava/lang/String;
+	public abstract fun getSessionFile ()Ljava/lang/String;
+	public abstract fun getSessionId ()Ljava/lang/String;
+	public abstract fun getSessionName ()Ljava/lang/String;
+	public abstract fun getTree ()Ljava/util/List;
+}
+
+public final class pi/coding/agent/core/ReadonlySessionManager$DefaultImpls {
+	public static synthetic fun getBranch$default (Lpi/coding/agent/core/ReadonlySessionManager;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+}
+
+public abstract interface class pi/coding/agent/core/ResourceLoader {
+	public abstract fun getAgentsFiles ()Lpi/coding/agent/core/AgentsFileResources;
+	public abstract fun getAppendSystemPrompt ()Ljava/util/List;
+	public abstract fun getPrompts ()Lpi/coding/agent/core/PromptResources;
+	public abstract fun getSkills ()Lpi/coding/agent/core/SkillResources;
+	public abstract fun getSystemPrompt ()Ljava/lang/String;
+	public abstract fun reload (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/RetrySettings {
+	public fun <init> ()V
+	public fun <init> (ZJ)V
+	public synthetic fun <init> (ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()J
+	public final fun copy (ZJ)Lpi/coding/agent/core/RetrySettings;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/RetrySettings;ZJILjava/lang/Object;)Lpi/coding/agent/core/RetrySettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getMaxDelayMs ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SdkKt {
+	public static final fun createAgentSession (Lpi/coding/agent/core/CreateAgentSessionOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun createAgentSession$default (Lpi/coding/agent/core/CreateAgentSessionOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class pi/coding/agent/core/SessionContext {
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Lpi/coding/agent/core/SessionModel;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lpi/coding/agent/core/SessionModel;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;Lpi/coding/agent/core/SessionModel;)Lpi/coding/agent/core/SessionContext;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionContext;Ljava/util/List;Ljava/lang/String;Lpi/coding/agent/core/SessionModel;ILjava/lang/Object;)Lpi/coding/agent/core/SessionContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getModel ()Lpi/coding/agent/core/SessionModel;
+	public final fun getThinkingLevel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionCwdIssue {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionCwdIssue;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionCwdIssue;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionCwdIssue;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFallbackCwd ()Ljava/lang/String;
+	public final fun getSessionCwd ()Ljava/lang/String;
+	public final fun getSessionFile ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionCwdKt {
+	public static final fun assertSessionCwdExists (Lpi/coding/agent/core/ReadonlySessionManager;Ljava/lang/String;)V
+	public static final fun formatMissingSessionCwdError (Lpi/coding/agent/core/SessionCwdIssue;)Ljava/lang/String;
+	public static final fun getMissingSessionCwdIssue (Lpi/coding/agent/core/ReadonlySessionManager;Ljava/lang/String;)Lpi/coding/agent/core/SessionCwdIssue;
+}
+
+public abstract interface class pi/coding/agent/core/SessionEntry : pi/coding/agent/core/FileEntry {
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getParentId ()Ljava/lang/String;
+	public abstract fun getTimestamp ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionHeader : pi/coding/agent/core/FileEntry {
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionHeader;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionHeader;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionHeader;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getParentSession ()Ljava/lang/String;
+	public final fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public final fun getVersion ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionImportFileNotFoundError : java/lang/IllegalArgumentException {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getFilePath ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionInfo {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/Instant;Ljava/time/Instant;ILjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/Instant;Ljava/time/Instant;ILjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/time/Instant;
+	public final fun component7 ()Ljava/time/Instant;
+	public final fun component8 ()I
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/Instant;Ljava/time/Instant;ILjava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionInfo;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/Instant;Ljava/time/Instant;ILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllMessagesText ()Ljava/lang/String;
+	public final fun getCreated ()Ljava/time/Instant;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getFirstMessage ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getMessageCount ()I
+	public final fun getModified ()Ljava/time/Instant;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getParentSessionPath ()Ljava/lang/String;
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionInfoEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionInfoEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionInfoEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionInfoEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionManager : pi/coding/agent/core/ReadonlySessionManager {
+	public static final field Companion Lpi/coding/agent/core/SessionManager$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun appendCompaction (Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)Ljava/lang/String;
+	public static synthetic fun appendCompaction$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun appendCustomEntry (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)Ljava/lang/String;
+	public static synthetic fun appendCustomEntry$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun appendCustomMessageEntry (Ljava/lang/String;Ljava/lang/String;ZLkotlinx/serialization/json/JsonElement;)Ljava/lang/String;
+	public final fun appendCustomMessageEntry (Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;)Ljava/lang/String;
+	public static synthetic fun appendCustomMessageEntry$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Ljava/lang/String;ZLkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun appendCustomMessageEntry$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Lpi/ai/core/UserMessageContent;ZLkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun appendLabelChange (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public final fun appendMessage (Lpi/ai/core/Message;)Ljava/lang/String;
+	public final fun appendModelChange (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public final fun appendSessionInfo (Ljava/lang/String;)Ljava/lang/String;
+	public final fun appendThinkingLevelChange (Ljava/lang/String;)Ljava/lang/String;
+	public final fun branch (Ljava/lang/String;)V
+	public final fun branchWithSummary (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;)Ljava/lang/String;
+	public static synthetic fun branchWithSummary$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun buildSessionContext ()Lpi/coding/agent/core/SessionContext;
+	public final fun createBranchedSession (Ljava/lang/String;)Ljava/lang/String;
+	public fun getBranch (Ljava/lang/String;)Ljava/util/List;
+	public final fun getChildren (Ljava/lang/String;)Ljava/util/List;
+	public fun getCwd ()Ljava/lang/String;
+	public fun getEntries ()Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;)Lpi/coding/agent/core/SessionEntry;
+	public fun getHeader ()Lpi/coding/agent/core/SessionHeader;
+	public fun getLabel (Ljava/lang/String;)Ljava/lang/String;
+	public fun getLeafEntry ()Lpi/coding/agent/core/SessionEntry;
+	public fun getLeafId ()Ljava/lang/String;
+	public fun getSessionDir ()Ljava/lang/String;
+	public fun getSessionFile ()Ljava/lang/String;
+	public fun getSessionId ()Ljava/lang/String;
+	public fun getSessionName ()Ljava/lang/String;
+	public fun getTree ()Ljava/util/List;
+	public final fun isPersisted ()Z
+	public final fun newSession (Lpi/coding/agent/core/NewSessionOptions;)Ljava/lang/String;
+	public static synthetic fun newSession$default (Lpi/coding/agent/core/SessionManager;Lpi/coding/agent/core/NewSessionOptions;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun resetLeaf ()V
+	public final fun setSessionFile (Ljava/lang/String;)V
+}
+
+public final class pi/coding/agent/core/SessionManager$Companion {
+	public final fun continueRecent (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionManager;
+	public static synthetic fun continueRecent$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionManager;
+	public final fun create (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionManager;
+	public static synthetic fun create$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionManager;
+	public final fun forkFrom (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionManager;
+	public static synthetic fun forkFrom$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionManager;
+	public final fun inMemory (Ljava/lang/String;)Lpi/coding/agent/core/SessionManager;
+	public static synthetic fun inMemory$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionManager;
+	public final fun list (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static synthetic fun list$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/util/List;
+	public final fun listAll (Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static synthetic fun listAll$default (Lpi/coding/agent/core/SessionManager$Companion;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/util/List;
+	public final fun open (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionManager;
+	public static synthetic fun open$default (Lpi/coding/agent/core/SessionManager$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionManager;
+}
+
+public final class pi/coding/agent/core/SessionManagerKt {
+	public static final field CURRENT_SESSION_VERSION I
+	public static final fun buildSessionContext (Ljava/util/List;)Lpi/coding/agent/core/SessionContext;
+	public static final fun buildSessionContext (Ljava/util/List;Ljava/lang/String;Ljava/util/Map;)Lpi/coding/agent/core/SessionContext;
+	public static synthetic fun buildSessionContext$default (Ljava/util/List;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lpi/coding/agent/core/SessionContext;
+	public static final fun findMostRecentSession (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun getDefaultSessionDir (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun getDefaultSessionDir$default (Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun getLatestCompactionEntry (Ljava/util/List;)Lpi/coding/agent/core/CompactionEntry;
+	public static final fun loadEntriesFromFile (Ljava/lang/String;)Ljava/util/List;
+	public static final fun migrateSessionEntries (Ljava/util/List;)V
+	public static final fun parseSessionEntries (Ljava/lang/String;)Ljava/util/List;
+}
+
+public final class pi/coding/agent/core/SessionMessageEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Message;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lpi/ai/core/Message;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Message;)Lpi/coding/agent/core/SessionMessageEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionMessageEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Message;ILjava/lang/Object;)Lpi/coding/agent/core/SessionMessageEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getMessage ()Lpi/ai/core/Message;
+	public fun getParentId ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionModel {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionModel;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionModel;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionModel;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModelId ()Ljava/lang/String;
+	public final fun getProvider ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionStartEvent {
+	public fun <init> (Lpi/coding/agent/core/SessionStartReason;Ljava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/SessionStartReason;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/SessionStartReason;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/SessionStartReason;Ljava/lang/String;)Lpi/coding/agent/core/SessionStartEvent;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionStartEvent;Lpi/coding/agent/core/SessionStartReason;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPreviousSessionFile ()Ljava/lang/String;
+	public final fun getReason ()Lpi/coding/agent/core/SessionStartReason;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionStartReason : java/lang/Enum {
+	public static final field FORK Lpi/coding/agent/core/SessionStartReason;
+	public static final field NEW Lpi/coding/agent/core/SessionStartReason;
+	public static final field RESUME Lpi/coding/agent/core/SessionStartReason;
+	public static final field STARTUP Lpi/coding/agent/core/SessionStartReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/SessionStartReason;
+	public static fun values ()[Lpi/coding/agent/core/SessionStartReason;
+}
+
+public final class pi/coding/agent/core/SessionStats {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;IIIIIIIIIDLpi/coding/agent/core/ContextUsage;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()I
+	public final fun component11 ()I
+	public final fun component12 ()D
+	public final fun component13 ()Lpi/coding/agent/core/ContextUsage;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun component9 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;IIIIIIIIIDLpi/coding/agent/core/ContextUsage;)Lpi/coding/agent/core/SessionStats;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionStats;Ljava/lang/String;Ljava/lang/String;IIIIIIIIIDLpi/coding/agent/core/ContextUsage;ILjava/lang/Object;)Lpi/coding/agent/core/SessionStats;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAssistantMessages ()I
+	public final fun getCacheReadTokens ()I
+	public final fun getCacheWriteTokens ()I
+	public final fun getContextUsage ()Lpi/coding/agent/core/ContextUsage;
+	public final fun getInputTokens ()I
+	public final fun getOutputTokens ()I
+	public final fun getSessionFile ()Ljava/lang/String;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getToolResults ()I
+	public final fun getTotalCost ()D
+	public final fun getTotalMessages ()I
+	public final fun getTotalTokens ()I
+	public final fun getUserMessages ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SessionTreeNode {
+	public fun <init> (Lpi/coding/agent/core/SessionEntry;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/SessionEntry;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/SessionEntry;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/SessionEntry;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SessionTreeNode;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SessionTreeNode;Lpi/coding/agent/core/SessionEntry;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SessionTreeNode;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChildren ()Ljava/util/List;
+	public final fun getEntry ()Lpi/coding/agent/core/SessionEntry;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLabelTimestamp ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SettingsManager {
+	public static final field Companion Lpi/coding/agent/core/SettingsManager$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAgentDir ()Ljava/lang/String;
+	public final fun getBlockImages ()Z
+	public final fun getBranchSummarySettings ()Lpi/coding/agent/core/compaction/BranchSummarySettings;
+	public final fun getCompactionSettings ()Lpi/coding/agent/core/compaction/CompactionSettings;
+	public final fun getCwd ()Ljava/lang/String;
+	public final fun getDefaultModel ()Ljava/lang/String;
+	public final fun getDefaultProvider ()Ljava/lang/String;
+	public final fun getDefaultThinkingLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun getFollowUpMode ()Lpi/agent/core/QueueMode;
+	public final fun getRetrySettings ()Lpi/coding/agent/core/RetrySettings;
+	public final fun getSteeringMode ()Lpi/agent/core/QueueMode;
+	public final fun getThinkingBudgets ()Lpi/ai/core/ThinkingBudgets;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public final fun setBlockImages (Z)V
+	public final fun setBranchSummarySettings (Lpi/coding/agent/core/compaction/BranchSummarySettings;)V
+	public final fun setCompactionSettings (Lpi/coding/agent/core/compaction/CompactionSettings;)V
+	public final fun setDefaultModelAndProvider (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setDefaultThinkingLevel (Lpi/agent/core/AgentThinkingLevel;)V
+	public final fun setFollowUpMode (Lpi/agent/core/QueueMode;)V
+	public final fun setRetrySettings (Lpi/coding/agent/core/RetrySettings;)V
+	public final fun setSteeringMode (Lpi/agent/core/QueueMode;)V
+	public final fun setThinkingBudgets (Lpi/ai/core/ThinkingBudgets;)V
+	public final fun setTransport (Lpi/ai/core/Transport;)V
+}
+
+public final class pi/coding/agent/core/SettingsManager$Companion {
+	public final fun create (Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/SettingsManager;
+	public static synthetic fun create$default (Lpi/coding/agent/core/SettingsManager$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/SettingsManager;
+}
+
+public final class pi/coding/agent/core/Skill {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/Skill;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/Skill;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/Skill;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBaseDir ()Ljava/lang/String;
+	public final fun getFilePath ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/SkillResources {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lpi/coding/agent/core/SkillResources;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/SkillResources;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/SkillResources;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSkills ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/StreamingBehavior : java/lang/Enum {
+	public static final field FOLLOW_UP Lpi/coding/agent/core/StreamingBehavior;
+	public static final field STEER Lpi/coding/agent/core/StreamingBehavior;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/StreamingBehavior;
+	public static fun values ()[Lpi/coding/agent/core/StreamingBehavior;
+}
+
+public final class pi/coding/agent/core/ThinkingLevelChangeEntry : pi/coding/agent/core/SessionEntry {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/ThinkingLevelChangeEntry;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ThinkingLevelChangeEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/ThinkingLevelChangeEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public fun getParentId ()Ljava/lang/String;
+	public final fun getThinkingLevel ()Ljava/lang/String;
+	public fun getTimestamp ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/TreeNavigationOptions {
+	public fun <init> ()V
+	public fun <init> (ZLjava/lang/String;ZLjava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;ZLjava/lang/String;)Lpi/coding/agent/core/TreeNavigationOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/TreeNavigationOptions;ZLjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/TreeNavigationOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCustomInstructions ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getReplaceInstructions ()Z
+	public final fun getSummarize ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/TreeNavigationResult {
+	public fun <init> (Ljava/lang/String;ZZLpi/coding/agent/core/BranchSummaryEntry;)V
+	public synthetic fun <init> (Ljava/lang/String;ZZLpi/coding/agent/core/BranchSummaryEntry;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Lpi/coding/agent/core/BranchSummaryEntry;
+	public final fun copy (Ljava/lang/String;ZZLpi/coding/agent/core/BranchSummaryEntry;)Lpi/coding/agent/core/TreeNavigationResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/TreeNavigationResult;Ljava/lang/String;ZZLpi/coding/agent/core/BranchSummaryEntry;ILjava/lang/Object;)Lpi/coding/agent/core/TreeNavigationResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAborted ()Z
+	public final fun getCancelled ()Z
+	public final fun getEditorText ()Ljava/lang/String;
+	public final fun getSummaryEntry ()Lpi/coding/agent/core/BranchSummaryEntry;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/BranchPreparation {
+	public fun <init> (Ljava/util/List;Lpi/coding/agent/core/compaction/FileOperations;I)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Lpi/coding/agent/core/compaction/FileOperations;
+	public final fun component3 ()I
+	public final fun copy (Ljava/util/List;Lpi/coding/agent/core/compaction/FileOperations;I)Lpi/coding/agent/core/compaction/BranchPreparation;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/BranchPreparation;Ljava/util/List;Lpi/coding/agent/core/compaction/FileOperations;IILjava/lang/Object;)Lpi/coding/agent/core/compaction/BranchPreparation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFileOps ()Lpi/coding/agent/core/compaction/FileOperations;
+	public final fun getMessages ()Ljava/util/List;
+	public final fun getTotalTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/BranchSummarizationKt {
+	public static final fun collectEntriesForBranchSummary (Lpi/coding/agent/core/ReadonlySessionManager;Ljava/lang/String;Ljava/lang/String;)Lpi/coding/agent/core/compaction/CollectEntriesResult;
+	public static final fun generateBranchSummary (Ljava/util/List;Lpi/coding/agent/core/compaction/GenerateBranchSummaryOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun getDEFAULT_BRANCH_SUMMARY_SETTINGS ()Lpi/coding/agent/core/compaction/BranchSummarySettings;
+	public static final fun prepareBranchEntries (Ljava/util/List;I)Lpi/coding/agent/core/compaction/BranchPreparation;
+	public static synthetic fun prepareBranchEntries$default (Ljava/util/List;IILjava/lang/Object;)Lpi/coding/agent/core/compaction/BranchPreparation;
+}
+
+public final class pi/coding/agent/core/compaction/BranchSummaryDetails {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lpi/coding/agent/core/compaction/BranchSummaryDetails;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/BranchSummaryDetails;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/BranchSummaryDetails;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModifiedFiles ()Ljava/util/List;
+	public final fun getReadFiles ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/BranchSummaryResult {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZLjava/lang/String;)Lpi/coding/agent/core/compaction/BranchSummaryResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/BranchSummaryResult;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZLjava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/BranchSummaryResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAborted ()Z
+	public final fun getError ()Ljava/lang/String;
+	public final fun getModifiedFiles ()Ljava/util/List;
+	public final fun getReadFiles ()Ljava/util/List;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/BranchSummarySettings {
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun copy (I)Lpi/coding/agent/core/compaction/BranchSummarySettings;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/BranchSummarySettings;IILjava/lang/Object;)Lpi/coding/agent/core/compaction/BranchSummarySettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReserveTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CollectEntriesResult {
+	public fun <init> (Ljava/util/List;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;)Lpi/coding/agent/core/compaction/CollectEntriesResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CollectEntriesResult;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/CollectEntriesResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCommonAncestorId ()Ljava/lang/String;
+	public final fun getEntries ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CompactionDetails {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lpi/coding/agent/core/compaction/CompactionDetails;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CompactionDetails;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/CompactionDetails;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModifiedFiles ()Ljava/util/List;
+	public final fun getReadFiles ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CompactionKt {
+	public static final fun calculateContextTokens (Lpi/ai/core/Usage;)I
+	public static final fun compact (Lpi/coding/agent/core/compaction/CompactionPreparation;Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lpi/ai/core/AbortSignal;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun compact$default (Lpi/coding/agent/core/compaction/CompactionPreparation;Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lpi/ai/core/AbortSignal;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun estimateContextTokens (Ljava/util/List;)Lpi/coding/agent/core/compaction/ContextUsageEstimate;
+	public static final fun estimateTokens (Lpi/ai/core/Message;)I
+	public static final fun findCutPoint (Ljava/util/List;III)Lpi/coding/agent/core/compaction/CutPointResult;
+	public static final fun findTurnStartIndex (Ljava/util/List;II)I
+	public static final fun generateSummary (Ljava/util/List;Lpi/ai/core/Model;ILjava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun generateSummary$default (Ljava/util/List;Lpi/ai/core/Model;ILjava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun getDEFAULT_COMPACTION_SETTINGS ()Lpi/coding/agent/core/compaction/CompactionSettings;
+	public static final fun getLastAssistantUsage (Ljava/util/List;)Lpi/ai/core/Usage;
+	public static final fun prepareCompaction (Ljava/util/List;Lpi/coding/agent/core/compaction/CompactionSettings;)Lpi/coding/agent/core/compaction/CompactionPreparation;
+	public static final fun shouldCompact (IILpi/coding/agent/core/compaction/CompactionSettings;)Z
+}
+
+public final class pi/coding/agent/core/compaction/CompactionPreparation {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZILjava/lang/String;Lpi/coding/agent/core/compaction/FileOperations;Lpi/coding/agent/core/compaction/CompactionSettings;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZILjava/lang/String;Lpi/coding/agent/core/compaction/FileOperations;Lpi/coding/agent/core/compaction/CompactionSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Z
+	public final fun component5 ()I
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lpi/coding/agent/core/compaction/FileOperations;
+	public final fun component8 ()Lpi/coding/agent/core/compaction/CompactionSettings;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZILjava/lang/String;Lpi/coding/agent/core/compaction/FileOperations;Lpi/coding/agent/core/compaction/CompactionSettings;)Lpi/coding/agent/core/compaction/CompactionPreparation;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CompactionPreparation;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ZILjava/lang/String;Lpi/coding/agent/core/compaction/FileOperations;Lpi/coding/agent/core/compaction/CompactionSettings;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/CompactionPreparation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFileOps ()Lpi/coding/agent/core/compaction/FileOperations;
+	public final fun getFirstKeptEntryId ()Ljava/lang/String;
+	public final fun getMessagesToSummarize ()Ljava/util/List;
+	public final fun getPreviousSummary ()Ljava/lang/String;
+	public final fun getSettings ()Lpi/coding/agent/core/compaction/CompactionSettings;
+	public final fun getTokensBefore ()I
+	public final fun getTurnPrefixMessages ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun isSplitTurn ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CompactionResult {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/CompactionResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CompactionResult;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/CompactionResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetails ()Ljava/lang/Object;
+	public final fun getFirstKeptEntryId ()Ljava/lang/String;
+	public final fun getSummary ()Ljava/lang/String;
+	public final fun getTokensBefore ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CompactionSettings {
+	public fun <init> ()V
+	public fun <init> (ZII)V
+	public synthetic fun <init> (ZIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (ZII)Lpi/coding/agent/core/compaction/CompactionSettings;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CompactionSettings;ZIIILjava/lang/Object;)Lpi/coding/agent/core/compaction/CompactionSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getKeepRecentTokens ()I
+	public final fun getReserveTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CompactionUtilsKt {
+	public static final field SUMMARIZATION_SYSTEM_PROMPT Ljava/lang/String;
+	public static final fun computeFileLists (Lpi/coding/agent/core/compaction/FileOperations;)Lpi/coding/agent/core/compaction/FileLists;
+	public static final fun createFileOps ()Lpi/coding/agent/core/compaction/FileOperations;
+	public static final fun extractFileOpsFromMessage (Lpi/ai/core/Message;Lpi/coding/agent/core/compaction/FileOperations;)V
+	public static final fun formatFileOperations (Ljava/util/List;Ljava/util/List;)Ljava/lang/String;
+	public static final fun serializeConversation (Ljava/util/List;)Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/ContextUsageEstimate {
+	public fun <init> (IIILjava/lang/Integer;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun copy (IIILjava/lang/Integer;)Lpi/coding/agent/core/compaction/ContextUsageEstimate;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/ContextUsageEstimate;IIILjava/lang/Integer;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/ContextUsageEstimate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLastUsageIndex ()Ljava/lang/Integer;
+	public final fun getTokens ()I
+	public final fun getTrailingTokens ()I
+	public final fun getUsageTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/CutPointResult {
+	public fun <init> (IIZ)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()Z
+	public final fun copy (IIZ)Lpi/coding/agent/core/compaction/CutPointResult;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/CutPointResult;IIZILjava/lang/Object;)Lpi/coding/agent/core/compaction/CutPointResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirstKeptEntryIndex ()I
+	public final fun getTurnStartIndex ()I
+	public fun hashCode ()I
+	public final fun isSplitTurn ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/FileLists {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lpi/coding/agent/core/compaction/FileLists;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/FileLists;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/FileLists;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModifiedFiles ()Ljava/util/List;
+	public final fun getReadFiles ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/FileOperations {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V
+	public synthetic fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun component2 ()Ljava/util/Set;
+	public final fun component3 ()Ljava/util/Set;
+	public final fun copy (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)Lpi/coding/agent/core/compaction/FileOperations;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/FileOperations;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;ILjava/lang/Object;)Lpi/coding/agent/core/compaction/FileOperations;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEdited ()Ljava/util/Set;
+	public final fun getRead ()Ljava/util/Set;
+	public final fun getWritten ()Ljava/util/Set;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/compaction/GenerateBranchSummaryOptions {
+	public fun <init> (Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;ZI)V
+	public synthetic fun <init> (Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;ZIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/ai/core/Model;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()Lpi/ai/core/AbortSignal;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()I
+	public final fun copy (Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;ZI)Lpi/coding/agent/core/compaction/GenerateBranchSummaryOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/compaction/GenerateBranchSummaryOptions;Lpi/ai/core/Model;Ljava/lang/String;Ljava/util/Map;Lpi/ai/core/AbortSignal;Ljava/lang/String;ZIILjava/lang/Object;)Lpi/coding/agent/core/compaction/GenerateBranchSummaryOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getCustomInstructions ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getModel ()Lpi/ai/core/Model;
+	public final fun getReplaceInstructions ()Z
+	public final fun getReserveTokens ()I
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
