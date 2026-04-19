@@ -141,13 +141,15 @@ subprojects {
 tasks.register("checkParityEnvironment") {
     group = "verification"
     description = "Checks that Node/npm parity tooling is installed."
+    val nodeModulesDir = layout.projectDirectory.dir("node_modules")
+    val packageJsonFile = layout.projectDirectory.file("package.json")
+    val rootPath = layout.projectDirectory.asFile.absolutePath
 
     doLast {
-        val nodeModules = rootProject.file("node_modules")
-        require(nodeModules.exists()) {
-            "Parity tooling is not installed. Run `npm ci` from ${rootProject.projectDir} first."
+        require(nodeModulesDir.asFile.exists()) {
+            "Parity tooling is not installed. Run `npm ci` from $rootPath first."
         }
-        require(rootProject.file("package.json").exists()) {
+        require(packageJsonFile.asFile.exists()) {
             "Missing package.json required for parity tooling."
         }
     }
@@ -167,6 +169,14 @@ tasks.register("parityTest") {
     dependsOn("checkParityEnvironment")
     dependsOn(":pi-ai-core:parityTest")
     dependsOn(":pi-agent-core:parityTest")
+    dependsOn(":pi-coding-agent-core:parityTest")
+}
+
+tasks.register("coverageReport") {
+    group = "verification"
+    description = "Generates non-blocking JVM coverage reports."
+    dependsOn("koverHtmlReport")
+    dependsOn("koverXmlReport")
 }
 
 extensions.configure<DokkaExtension> {

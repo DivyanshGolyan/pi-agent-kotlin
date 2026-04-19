@@ -12,6 +12,7 @@ This repo is explicit about what it is:
 Modules:
 - `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic API-key usage
 - `pi-agent-core`: the `pi-agent` slice built on top of `pi-ai-core`
+- `pi-coding-agent-core`: the `coding-agent` session/runtime slice built on top of `pi-agent-core`
 - `android-consumer`: an Android API 31+ verification module
 
 What works:
@@ -23,26 +24,29 @@ What works:
 - prompt caching
 - image input
 - the stateful agent loop and tool execution path
+- coding-agent session persistence, branch trees, context rebuilding, compaction, and branch summarization
+- coding-agent SDK/runtime basics: `createAgentSession`, `AgentSession`, `createAgentSessionRuntime`, runtime session switching, forking, and tree navigation
 
 What is still out of scope:
 - non-Anthropic providers
 - OAuth-based provider flows
+- the upstream extension runtime, built-in coding tools, bash executor, and HTML export surface
 - the full upstream `pi-ai` surface
 - the full upstream `pi-agent` and `pi-ai` test matrix
 
-## Proposed next package
+## Coding-Agent status
 
-The current repository ports the `packages/ai` and `packages/agent` slices, but not
-the upstream package that products appear to build on top of them.
+The repository now includes the main `packages/coding-agent` SDK/runtime slices needed for durable sessions:
 
-If this repository grows toward the broader `pi-mono` model, the next module should
-come from upstream `packages/coding-agent`.
-
-The proposal in this repository now treats future work more strictly:
-
-- choose exact upstream files/slices
-- only port slices that are closed enough to remain faithful
-- do not invent replacement abstractions inside the claimed upstream slice
+- `src/core/session-manager.ts`
+- `src/core/messages.ts`
+- `src/core/compaction/compaction.ts`
+- `src/core/compaction/utils.ts`
+- `src/core/compaction/branch-summarization.ts`
+- `src/core/sdk.ts`
+- `src/core/agent-session.ts`
+- `src/core/agent-session-services.ts`
+- `src/core/agent-session-runtime.ts`
 
 See [docs/session-layer-proposal.md](docs/session-layer-proposal.md).
 
@@ -50,11 +54,21 @@ See [docs/session-layer-proposal.md](docs/session-layer-proposal.md).
 
 The goal is semantic parity with the TypeScript packages for the supported slice.
 
-Behavior is checked against the pinned snapshot in [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912). That snapshot stays in the repo on purpose. It is the source we use for:
+Behavior is checked against pinned upstream snapshots that stay in the repo on purpose:
+- [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) for `packages/ai` and `packages/agent`
+- [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18) for `packages/coding-agent`
+
+Those snapshots are the source we use for:
 - behavior checks
 - regression work
 - parity decisions
 - deterministic TS vs Kotlin fixture generation
+
+The coding-agent parity suite currently covers the supported Kotlin slice only:
+- session-manager persistence, trees, and context rebuilding
+- compaction and branch summarization
+- `createAgentSession`, `AgentSession`, and `createAgentSessionRuntime`
+- runtime session switching, forking, and JSONL import
 
 That does **not** mean this repo is byte-for-byte identical to the TypeScript code, or that every public API matches one for one. It means the Kotlin port is trying to behave the same way where it matters for the supported scope.
 
@@ -82,6 +96,7 @@ Planned coordinates:
 ```kotlin
 implementation("io.github.divyanshgolyan:pi-ai-core:<version>")
 implementation("io.github.divyanshgolyan:pi-agent-core:<version>")
+implementation("io.github.divyanshgolyan:pi-coding-agent-core:<version>")
 ```
 
 Local install:
@@ -184,17 +199,26 @@ Main verification command:
 ```bash
 ./gradlew --no-configuration-cache \
   apiCheck \
-  koverVerify \
+  parityTest \
   dokkaGenerate \
   :pi-ai-core:ktlintCheck \
   :pi-agent-core:ktlintCheck \
+  :pi-coding-agent-core:ktlintCheck \
   :android-consumer:ktlintCheck \
   :pi-ai-core:detekt \
   :pi-agent-core:detekt \
+  :pi-coding-agent-core:detekt \
   :android-consumer:detekt \
   :pi-ai-core:test \
   :pi-agent-core:test \
+  :pi-coding-agent-core:test \
   :android-consumer:testDebugUnitTest
+```
+
+Coverage is still available, but it is a reporting metric rather than a blocking correctness gate:
+
+```bash
+./gradlew coverageReport
 ```
 
 Useful local tasks:
@@ -205,6 +229,7 @@ Useful local tasks:
 ./gradlew refreshParityFixtures
 ./gradlew :pi-ai-core:dokkaGeneratePublicationHtml
 ./gradlew :pi-agent-core:dokkaGeneratePublicationHtml
+./gradlew :pi-coding-agent-core:dokkaGeneratePublicationHtml
 ```
 
 Parity workflow:

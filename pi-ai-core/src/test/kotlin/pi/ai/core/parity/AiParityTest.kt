@@ -108,7 +108,7 @@ class AiParityTest {
         return buildJsonObject {
             put("scenarioId", scenario.string("id"))
             put("suite", scenario.string("suite"))
-            put("events", JsonArray(normalizeAssistantEventSequence(rawEvents, suite = "pi-ai-core")))
+            put("events", JsonArray(normalizeAssistantEventSequence(rawEvents)))
             put("result", normalizeMessage(result))
         }
     }
@@ -385,13 +385,10 @@ private fun splitStringByTokenSize(
     return chunks
 }
 
-private fun normalizeAssistantEventSequence(
-    rawEvents: List<AssistantMessageEvent>,
-    suite: String,
-): List<JsonElement> {
+private fun normalizeAssistantEventSequence(rawEvents: List<AssistantMessageEvent>): List<JsonElement> {
     var partial: JsonObject? = null
     return rawEvents.map { event ->
-        val normalized = normalizeAssistantEvent(partial, event, suite)
+        val normalized = normalizeAssistantEvent(partial, event)
         partial = normalized.first
         normalized.second
     }
@@ -400,11 +397,10 @@ private fun normalizeAssistantEventSequence(
 private fun normalizeAssistantEvent(
     partial: JsonObject?,
     event: AssistantMessageEvent,
-    suite: String,
 ): Pair<JsonObject?, JsonElement> =
     when (event) {
         is AssistantMessageEvent.Start -> {
-            val next = baseAssistantMessage(event.partial, suite)
+            val next = baseAssistantMessage(event.partial)
             next to
                 buildJsonObject {
                     put("type", "start")
@@ -540,10 +536,7 @@ private fun normalizeAssistantEvent(
                 }
     }
 
-private fun baseAssistantMessage(
-    message: AssistantMessage,
-    suite: String,
-): JsonObject {
+private fun baseAssistantMessage(message: AssistantMessage): JsonObject {
     val normalized = normalizeMessage(message).jsonObject
     return buildJsonObject {
         normalized.forEach { (key, value) ->

@@ -67,15 +67,3 @@ tasks.register<Test>("parityTest") {
         includeTags("parity")
     }
 }
-
-kover {
-    reports {
-        total {
-            verify {
-                rule {
-                    minBound(70)
-                }
-            }
-        }
-    }
-}

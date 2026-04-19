@@ -11,7 +11,6 @@ import pi.ai.core.Model
 import pi.ai.core.StopReason
 import pi.ai.core.TextContent
 import pi.ai.core.ThinkingBudgets
-import pi.ai.core.ToolResultMessage
 import pi.ai.core.Transport
 import pi.ai.core.Usage
 import pi.ai.core.UsageCost
