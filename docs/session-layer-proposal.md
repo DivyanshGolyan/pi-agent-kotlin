@@ -1,6 +1,7 @@
 # `packages/coding-agent` port proposal
 
-This note records a stricter proposal for what `pi-agent-kotlin` should port next.
+This note records the stricter rule this repository used for the
+`packages/coding-agent` slices that have now been ported.
 
 The governing rule is:
 
@@ -15,14 +16,18 @@ The governing rule is:
 
 - upstream `packages/ai` as `pi-ai-core`
 - upstream `packages/agent` as `pi-agent-core`
+- upstream `packages/coding-agent` `session-manager.ts` + `messages.ts` as part
+  of `pi-coding-agent-core`
+- upstream `packages/coding-agent` `compaction.ts` + `utils.ts` +
+  `branch-summarization.ts` as part of `pi-coding-agent-core`
+- upstream `packages/coding-agent` `sdk.ts` + `agent-session.ts` +
+  `agent-session-runtime.ts` + `agent-session-services.ts` as the Kotlin
+  SDK/runtime layer in `pi-coding-agent-core`
 
-The next upstream package relevant to long-lived agent products is:
-
-- upstream `packages/coding-agent`
-
-The question is not whether `packages/coding-agent` is useful. It is.
-The question is which parts of that package form closed slices that can be ported
-faithfully without redesigning the contract.
+The question is no longer whether the session/context slice is closed enough. That
+part is now implemented. The remaining question is which broader
+`packages/coding-agent` CLI/extension surfaces, if any, should be ported next
+without stretching the repository beyond its stated scope.
 
 ## Investigation summary
 
@@ -45,7 +50,9 @@ The key result is:
 - `session-manager` + `messages` + `compaction` is a relatively clean upstream slice
 - this repository needed an explicit Kotlin custom-message extension point in
   `pi-agent-core` before that slice could be treated as closed enough
-- `agent-session` is not a small isolated slice; it pulls in a much larger chunk of `packages/coding-agent`
+- `agent-session` is not a small isolated slice; porting it required taking a
+  Kotlin-specific SDK/runtime view of the upstream contract rather than pretending
+  it was another tiny file-for-file slice
 
 ## Existing-port alignment prerequisite
 
@@ -119,9 +126,9 @@ That is a real upstream slice.
 In this repository it became closed enough only after aligning `pi-agent-core`
 with the upstream extensible `AgentMessage` contract in a Kotlin-appropriate way.
 
-### Recommendation
+### Status
 
-Port this slice on top of the now-aligned `pi-agent-core` message contract.
+This slice is now ported in `pi-coding-agent-core`.
 
 ## Closed slice 2: compaction
 
@@ -131,10 +138,6 @@ This is also a valid upstream slice, but it depends on slice 1.
 
 - `src/core/compaction/compaction.ts`
 - `src/core/compaction/utils.ts`
-
-Optional later addition from the same family:
-
-- `src/core/compaction/branch-summarization.ts`
 
 ### What this slice provides upstream
 
@@ -156,11 +159,11 @@ The compaction code depends on:
 
 That is still a coherent upstream slice.
 
-### Recommendation
+### Status
 
-Port this after the session-manager/messages slice.
+This slice is now ported in `pi-coding-agent-core`.
 
-## Not a small closed slice: `AgentSession`
+## Runtime slice: `AgentSession`
 
 `src/core/agent-session.ts` is important, but it is not a narrow next step.
 
@@ -182,11 +185,10 @@ It imports a large cross-section of `packages/coding-agent`, including:
 
 This means:
 
-- if we decide to port the `AgentSession` slice, we should treat it as a broader
-  `coding-agent` runtime slice
-- we should not pretend it is just “sessions”
-- we should not rewrite it into a narrower Kotlin-only abstraction and still call
-  it a faithful port
+- the `AgentSession` work should be treated as a broader `coding-agent` runtime slice
+- it is not just “sessions”
+- any Kotlin port should keep the upstream shape visible even when some support
+  services are implemented in lighter-weight Kotlin forms
 
 ## Consequence for the proposal
 
@@ -207,35 +209,30 @@ The proposal should instead name exact upstream files and slices.
 
 ### Step 1
 
-Port the session persistence/context slice from `packages/coding-agent`:
+Done: port the session persistence/context slice from `packages/coding-agent`:
 
 - `src/core/session-manager.ts`
 - `src/core/messages.ts`
 
 ### Step 2
 
-Port the compaction slice that depends on it:
+Done: port the compaction slice that depends on it:
 
 - `src/core/compaction/compaction.ts`
 - `src/core/compaction/utils.ts`
 
-Optional later addition from the same compaction family:
-
-- `src/core/compaction/branch-summarization.ts`
-
 ### Step 3
 
-Only after that, decide whether to port the larger `AgentSession` runtime slice.
-
-If yes, treat it as a broader faithful slice that includes at least:
+Done: port the larger `AgentSession` runtime slice used by the Kotlin SDK:
 
 - `src/core/agent-session.ts`
 - `src/core/sdk.ts`
 - `src/core/agent-session-runtime.ts`
 - `src/core/agent-session-services.ts`
-- their direct transitive dependencies
 
-That is no longer a tiny slice. It is a substantial chunk of `packages/coding-agent`.
+In the Kotlin port this landed with lightweight supporting implementations for
+the corresponding auth, settings, model-registry, resource-loader, and session-cwd
+services so the session/runtime APIs could exist as a coherent module.
 
 ## What this means for Claune
 
@@ -243,16 +240,18 @@ For Claune’s needs, the first useful faithful slices are:
 
 1. session persistence / session tree / context rebuilding
 2. compaction
+3. SDK/runtime session lifecycle around `AgentSession`
 
-Those directly support:
+Those now directly support:
 
 - durable sessions
 - continuing later
 - compacted model context
+- in-process session replacement via new/resume/fork/import
+- tree navigation from the SDK surface
 
-They do not yet provide the whole upstream `AgentSession` runtime contract.
-
-That distinction should stay explicit in `pi-agent-kotlin` docs and naming.
+What still remains out of scope is the larger CLI/extension family around
+upstream `extensions/*`, `tools/*`, `bash-executor`, and `export-html/*`.
 
 ## Documentation rule going forward
 
