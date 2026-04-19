@@ -1,0 +1,110 @@
+{
+  "id": "coding-agent-session-state",
+  "suite": "pi-coding-agent-core",
+  "kind": "coding_agent_session_scripted",
+  "modelCatalog": [
+    {
+      "id": "faux-1",
+      "name": "Faux One",
+      "api": "faux:parity:coding-session",
+      "provider": "faux-session",
+      "reasoning": true,
+      "input": [
+        "text"
+      ],
+      "contextWindow": 4096,
+      "maxTokens": 512
+    },
+    {
+      "id": "faux-2",
+      "name": "Faux Two",
+      "api": "faux:parity:coding-session",
+      "provider": "faux-session",
+      "reasoning": true,
+      "input": [
+        "text"
+      ],
+      "contextWindow": 4096,
+      "maxTokens": 512
+    }
+  ],
+  "initialModel": "faux-1",
+  "initialThinkingLevel": "off",
+  "settings": {
+    "compaction": {
+      "enabled": false
+    }
+  },
+  "scopedModels": [
+    {
+      "model": "faux-1",
+      "thinkingLevel": "medium"
+    },
+    {
+      "model": "faux-2",
+      "thinkingLevel": "low"
+    }
+  ],
+  "provider": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "hello reply"
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "second reply"
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ],
+  "operations": [
+    {
+      "op": "prompt",
+      "text": "hello"
+    },
+    {
+      "op": "sendCustomMessage",
+      "customType": "note",
+      "content": "saved note",
+      "display": true
+    },
+    {
+      "op": "cycleThinkingLevel"
+    },
+    {
+      "op": "cycleModel",
+      "direction": "forward"
+    },
+    {
+      "op": "setSessionName",
+      "name": "Parity Session"
+    },
+    {
+      "op": "prompt",
+      "text": "second"
+    },
+    {
+      "op": "navigateTree",
+      "selector": {
+        "role": "user",
+        "index": 0
+      },
+      "summarize": false,
+      "label": "revisit"
+    }
+  ]
+}

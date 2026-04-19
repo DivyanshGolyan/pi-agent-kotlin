@@ -1,10 +1,17 @@
-import { readdir, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { streamSimple, fauxAssistantMessage, fauxText, fauxThinking, fauxToolCall, registerFauxProvider, Type } from "../../../reference/upstream/pi-mono/e3f6912/packages/ai/src/index.ts";
 import { Agent, agentLoop } from "../../../reference/upstream/pi-mono/e3f6912/packages/agent/src/index.ts";
 import { createAssistantMessageEventStream } from "../../../reference/upstream/pi-mono/e3f6912/packages/ai/src/utils/event-stream.ts";
+import { createAgentSession } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/sdk.ts";
+import { createAgentSessionRuntime } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/agent-session-runtime.ts";
+import { AuthStorage } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/auth-storage.ts";
+import { ModelRegistry } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/model-registry.ts";
+import { DefaultResourceLoader } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/resource-loader.ts";
+import { SessionManager, buildSessionContext as buildCodingSessionContext } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/session-manager.ts";
+import { SettingsManager } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/settings-manager.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -246,6 +253,48 @@ function normalizeMessage(message: any, suite: string): any {
     }
     return normalized;
   }
+  if (message.role === "custom") {
+    const normalized: any = {
+      role: "custom",
+      customType: message.customType,
+      content: typeof message.content === "string" ? message.content : message.content.map(normalizeContentBlock),
+      display: message.display
+    };
+    if (message.details !== undefined && message.details !== null) {
+      normalized.details = message.details;
+    }
+    return normalized;
+  }
+  if (message.role === "branchSummary") {
+    return {
+      role: "branchSummary",
+      summary: message.summary,
+      fromId: message.fromId
+    };
+  }
+  if (message.role === "compactionSummary") {
+    return {
+      role: "compactionSummary",
+      summary: message.summary
+    };
+  }
+  if (message.role === "bashExecution") {
+    const normalized: any = {
+      role: "bashExecution",
+      command: message.command,
+      output: message.output,
+      cancelled: message.cancelled,
+      truncated: message.truncated,
+      excludeFromContext: message.excludeFromContext ?? false
+    };
+    if (message.exitCode !== undefined) {
+      normalized.exitCode = message.exitCode;
+    }
+    if (message.fullOutputPath !== undefined) {
+      normalized.fullOutputPath = message.fullOutputPath;
+    }
+    return normalized;
+  }
 
   const normalized: any = {
     role: "assistant",
@@ -361,7 +410,7 @@ function normalizeAssistantEventSequence(rawEvents: any[], suite: string): any[]
   return normalizedEvents;
 }
 
-function normalizeAgentEventSequence(rawEvents: any[]): any[] {
+function normalizeAgentEventSequence(rawEvents: any[], suite = "pi-agent-core"): any[] {
   let assistantPartial: any | null = null;
   const normalizedEvents: any[] = [];
 
@@ -374,26 +423,26 @@ function normalizeAgentEventSequence(rawEvents: any[]): any[] {
       case "agent_end":
         normalizedEvents.push({
           type: "agent_end",
-          messages: event.messages.map((message: any) => normalizeMessage(message, "pi-agent-core"))
+          messages: event.messages.map((message: any) => normalizeMessage(message, suite))
         });
         break;
       case "turn_end":
         normalizedEvents.push({
           type: "turn_end",
-          message: normalizeMessage(event.message, "pi-agent-core"),
-          toolResults: event.toolResults.map((message: any) => normalizeMessage(message, "pi-agent-core"))
+          message: normalizeMessage(event.message, suite),
+          toolResults: event.toolResults.map((message: any) => normalizeMessage(message, suite))
         });
         break;
       case "message_start":
         if (event.message.role === "assistant") {
-          assistantPartial = baseAssistantMessage(event.message, "pi-agent-core");
+          assistantPartial = baseAssistantMessage(event.message, suite);
           normalizedEvents.push({ type: "message_start", message: cloneJson(assistantPartial) });
         } else {
-          normalizedEvents.push({ type: "message_start", message: normalizeMessage(event.message, "pi-agent-core") });
+          normalizedEvents.push({ type: "message_start", message: normalizeMessage(event.message, suite) });
         }
         break;
       case "message_update": {
-        const [nextAssistantPartial, assistantMessageEvent] = normalizeAssistantEvent(assistantPartial, event.assistantMessageEvent, "pi-agent-core");
+        const [nextAssistantPartial, assistantMessageEvent] = normalizeAssistantEvent(assistantPartial, event.assistantMessageEvent, suite);
         assistantPartial = cloneJson(nextAssistantPartial);
         normalizedEvents.push({
           type: "message_update",
@@ -403,7 +452,7 @@ function normalizeAgentEventSequence(rawEvents: any[]): any[] {
         break;
       }
       case "message_end":
-        normalizedEvents.push({ type: "message_end", message: normalizeMessage(event.message, "pi-agent-core") });
+        normalizedEvents.push({ type: "message_end", message: normalizeMessage(event.message, suite) });
         if (event.message.role === "assistant") {
           assistantPartial = null;
         }
@@ -644,6 +693,733 @@ async function runAgentScenario(scenario: any, isContinue: boolean): Promise<any
   };
 }
 
+function scenarioModels(scenario: any): any[] {
+  const models = scenario.modelCatalog ?? (scenario.model ? [scenario.model] : []);
+  if (!models.length) {
+    throw new Error(`Scenario ${scenario.id} is missing modelCatalog/model`);
+  }
+  return models;
+}
+
+function createCodingTempDir(scenarioId: string): string {
+  return path.join(repoRoot, "build", "parity-working", scenarioId);
+}
+
+function createCodingProviderRegistration(scenario: any) {
+  const modelCatalog = scenarioModels(scenario);
+  const registration = registerFauxProvider({
+    api: modelCatalog[0].api,
+    provider: modelCatalog[0].provider,
+    tokenSize: scenario.provider?.tokenSize,
+    models: modelCatalog.map((model: any) => ({
+      id: model.id,
+      name: model.name,
+      reasoning: model.reasoning,
+      input: model.input,
+      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+      contextWindow: model.contextWindow,
+      maxTokens: model.maxTokens
+    }))
+  });
+
+  const materializeModel = registration.getModel(scenario.initialModel ?? modelCatalog[0].id) ?? registration.models[0];
+  registration.setResponses((scenario.responses ?? []).map((response: any) => materializeAssistantMessage(materializeModel, response)));
+  return registration;
+}
+
+function buildProviderConfig(registration: any) {
+  const model = registration.models[0];
+  return {
+    baseUrl: model.baseUrl,
+    apiKey: "faux-key",
+    api: registration.api,
+    models: registration.models.map((candidate: any) => ({
+      id: candidate.id,
+      name: candidate.name,
+      api: candidate.api,
+      reasoning: candidate.reasoning,
+      input: candidate.input,
+      cost: candidate.cost,
+      contextWindow: candidate.contextWindow,
+      maxTokens: candidate.maxTokens,
+      baseUrl: candidate.baseUrl
+    }))
+  };
+}
+
+async function createCodingServices(registration: any, cwd: string, agentDir: string, scenario: any) {
+  const authStorage = AuthStorage.inMemory();
+  authStorage.setRuntimeApiKey(registration.models[0].provider, "faux-key");
+  const modelRegistry = ModelRegistry.inMemory(authStorage);
+  modelRegistry.registerProvider(registration.models[0].provider, buildProviderConfig(registration));
+  const settingsManager = SettingsManager.inMemory(scenario.settings ?? {});
+  const resourceLoader = new DefaultResourceLoader({
+    cwd,
+    agentDir,
+    noExtensions: true,
+    noSkills: true,
+    noPromptTemplates: true,
+    noThemes: true,
+    noContextFiles: true,
+    systemPrompt: scenario.systemPrompt ?? "You are a parity test assistant."
+  });
+  await resourceLoader.reload();
+  return {
+    cwd,
+    agentDir,
+    authStorage,
+    modelRegistry,
+    settingsManager,
+    resourceLoader,
+    diagnostics: []
+  };
+}
+
+function resolveScenarioModel(registration: any, scenario: any, modelId?: string) {
+  const targetId = modelId ?? scenario.initialModel ?? scenarioModels(scenario)[0].id;
+  const model = registration.getModel(targetId);
+  if (!model) {
+    throw new Error(`Unknown model ${targetId} for scenario ${scenario.id}`);
+  }
+  return model;
+}
+
+function resolveScopedModels(registration: any, scenario: any): any[] {
+  return (scenario.scopedModels ?? []).map((scope: any) => ({
+    model: resolveScenarioModel(registration, scenario, scope.model),
+    thinkingLevel: scope.thinkingLevel
+  }));
+}
+
+function createCodingNormalizer() {
+  const entryIds = new Map<string, string>();
+  const sessionIds = new Map<string, string>();
+  const paths = new Map<string, string>();
+
+  function normalizeEntryId(value: string | null | undefined): string | null | undefined {
+    if (value === null || value === undefined) return value;
+    if (value === "root") return value;
+    if (!entryIds.has(value)) {
+      entryIds.set(value, `entry-${entryIds.size + 1}`);
+    }
+    return entryIds.get(value)!;
+  }
+
+  function normalizeSessionId(value: string | null | undefined): string | null | undefined {
+    if (value === null || value === undefined) return value;
+    if (!sessionIds.has(value)) {
+      sessionIds.set(value, `session-${sessionIds.size + 1}`);
+    }
+    return sessionIds.get(value)!;
+  }
+
+  function normalizePath(value: string | null | undefined): string | null | undefined {
+    if (value === null || value === undefined) return value;
+    if (!paths.has(value)) {
+      paths.set(value, `path-${paths.size + 1}`);
+    }
+    return paths.get(value)!;
+  }
+
+  function normalizeCodingMessage(message: any): any {
+    const normalized = normalizeMessage(message, "pi-coding-agent-core");
+    if (normalized.role === "branchSummary") {
+      normalized.fromId = normalizeEntryId(normalized.fromId);
+    }
+    if (normalized.role === "bashExecution" && normalized.fullOutputPath) {
+      normalized.fullOutputPath = normalizePath(normalized.fullOutputPath);
+    }
+    return normalized;
+  }
+
+  function normalizeSessionEntry(entry: any): any {
+    const normalized: any = {
+      type: entry.type,
+      id: normalizeEntryId(entry.id),
+      parentId: normalizeEntryId(entry.parentId)
+    };
+
+    switch (entry.type) {
+      case "message":
+        normalized.message = normalizeCodingMessage(entry.message);
+        break;
+      case "thinking_level_change":
+        normalized.thinkingLevel = entry.thinkingLevel;
+        break;
+      case "model_change":
+        normalized.provider = entry.provider;
+        normalized.modelId = entry.modelId;
+        break;
+      case "compaction":
+        normalized.summary = entry.summary;
+        normalized.firstKeptEntryId = normalizeEntryId(entry.firstKeptEntryId);
+        if (entry.details === undefined || entry.details === null) {
+          normalized.tokensBefore = entry.tokensBefore;
+        }
+        if (entry.details !== undefined) normalized.details = entry.details;
+        normalized.fromHook = entry.fromHook ?? false;
+        break;
+      case "branch_summary":
+        normalized.summary = entry.summary;
+        normalized.fromId = normalizeEntryId(entry.fromId);
+        if (entry.details !== undefined) normalized.details = entry.details;
+        if (entry.fromHook !== undefined) normalized.fromHook = entry.fromHook;
+        break;
+      case "custom":
+        normalized.customType = entry.customType;
+        if (entry.data !== undefined) normalized.data = entry.data;
+        break;
+      case "custom_message":
+        normalized.customType = entry.customType;
+        normalized.content = entry.content;
+        normalized.display = entry.display;
+        if (entry.details !== undefined) normalized.details = entry.details;
+        break;
+      case "label":
+        normalized.targetId = normalizeEntryId(entry.targetId);
+        if (entry.label !== undefined) normalized.label = entry.label;
+        break;
+      case "session_info":
+        if (entry.name !== undefined) normalized.name = entry.name;
+        break;
+      default:
+        break;
+    }
+
+    return normalized;
+  }
+
+  function normalizeTreeNode(node: any): any {
+    const normalized: any = {
+      entry: normalizeSessionEntry(node.entry),
+      children: node.children.map((child: any) => normalizeTreeNode(child))
+    };
+    if (node.label !== undefined) {
+      normalized.label = node.label;
+    }
+    return normalized;
+  }
+
+  function normalizeSessionContext(context: any): any {
+    return {
+      messages: context.messages.map((message: any) => normalizeCodingMessage(message)),
+      thinkingLevel: context.thinkingLevel,
+      model: context.model
+    };
+  }
+
+  function normalizeCompactionResult(result: any): any {
+    if (!result) return null;
+    const normalized: any = {
+      summary: result.summary,
+      firstKeptEntryId: normalizeEntryId(result.firstKeptEntryId)
+    };
+    if (result.details !== undefined && result.details !== null) {
+      normalized.details = result.details;
+    }
+    return normalized;
+  }
+
+  function normalizeTreeNavigationResult(result: any): any {
+    const normalized: any = {
+      cancelled: result.cancelled
+    };
+    if (result.aborted) normalized.aborted = result.aborted;
+    if (result.editorText !== undefined) normalized.editorText = result.editorText;
+    if (result.summaryEntry) normalized.summaryEntry = normalizeSessionEntry(result.summaryEntry);
+    return normalized;
+  }
+
+  function normalizeSessionSnapshot(session: any): any {
+    return {
+      sessionId: normalizeSessionId(session.sessionId),
+      sessionFile: normalizePath(session.sessionFile),
+      sessionName: session.sessionName ?? null,
+      model: { provider: session.model.provider, modelId: session.model.id },
+      thinkingLevel: session.thinkingLevel,
+      autoCompactionEnabled: session.autoCompactionEnabled,
+      isCompacting: session.isCompacting,
+      steeringMode: session.steeringMode,
+      followUpMode: session.followUpMode,
+      steeringMessages: session.getSteeringMessages(),
+      followUpMessages: session.getFollowUpMessages(),
+      messages: session.messages.map((message: any) => normalizeCodingMessage(message)),
+      entries: session.sessionManager.getEntries().map((entry: any) => normalizeSessionEntry(entry)),
+      tree: session.sessionManager.getTree().map((node: any) => normalizeTreeNode(node)),
+      leafId: normalizeEntryId(session.sessionManager.getLeafId()),
+      stats: normalizeSessionStats(session.getSessionStats())
+    };
+  }
+
+  function normalizeSessionStats(stats: any): any {
+    return {
+      sessionFile: normalizePath(stats.sessionFile),
+      sessionId: normalizeSessionId(stats.sessionId),
+      userMessages: stats.userMessages,
+      assistantMessages: stats.assistantMessages,
+      toolResults: stats.toolResults,
+      totalMessages: stats.totalMessages,
+      inputTokens: stats.inputTokens,
+      outputTokens: stats.outputTokens,
+      cacheReadTokens: stats.cacheReadTokens,
+      cacheWriteTokens: stats.cacheWriteTokens,
+      totalTokens: stats.totalTokens,
+      totalCost: stats.totalCost,
+      contextUsage:
+        stats.contextUsage == null
+          ? null
+          : {
+              tokens: null,
+              contextWindow: stats.contextUsage.contextWindow
+            }
+    };
+  }
+
+  return {
+    normalizeEntryId,
+    normalizeSessionId,
+    normalizePath,
+    normalizeCodingMessage,
+    normalizeSessionEntry,
+    normalizeTreeNode,
+    normalizeSessionContext,
+    normalizeCompactionResult,
+    normalizeTreeNavigationResult,
+    normalizeSessionSnapshot,
+    normalizeSessionStats
+  };
+}
+
+function resolveSessionSelector(sessionManager: any, selector: any): string {
+  if (typeof selector === "string") {
+    return selector;
+  }
+  if (selector.entryId) {
+    return selector.entryId;
+  }
+  if (selector.role) {
+    const matches = sessionManager.getEntries().filter((entry: any) => entry.type === "message" && entry.message.role === selector.role);
+    const target = matches[selector.index ?? 0];
+    if (!target) {
+      throw new Error(`Could not resolve selector ${JSON.stringify(selector)}`);
+    }
+    return target.id;
+  }
+  if (selector.type === "custom_message") {
+    const matches = sessionManager.getEntries().filter((entry: any) => entry.type === "custom_message");
+    const target = matches[selector.index ?? 0];
+    if (!target) {
+      throw new Error(`Could not resolve selector ${JSON.stringify(selector)}`);
+    }
+    return target.id;
+  }
+  throw new Error(`Unsupported selector ${JSON.stringify(selector)}`);
+}
+
+function normalizeCodingSessionEvents(rawEvents: any[], normalizer: ReturnType<typeof createCodingNormalizer>): any[] {
+  const agentEvents = rawEvents.filter((event) =>
+    [
+      "agent_start",
+      "turn_start",
+      "agent_end",
+      "turn_end",
+      "message_start",
+      "message_update",
+      "message_end",
+      "tool_execution_start",
+      "tool_execution_update",
+      "tool_execution_end"
+    ].includes(event.type)
+  );
+
+  const normalizedAgentEvents = normalizeAgentEventSequence(agentEvents, "pi-coding-agent-core");
+  let agentIndex = 0;
+
+  return rawEvents.map((event: any) => {
+    if (
+      [
+        "agent_start",
+        "turn_start",
+        "agent_end",
+        "turn_end",
+        "message_start",
+        "message_update",
+        "message_end",
+        "tool_execution_start",
+        "tool_execution_update",
+        "tool_execution_end"
+      ].includes(event.type)
+    ) {
+      const normalized = normalizedAgentEvents[agentIndex];
+      agentIndex += 1;
+      return normalized;
+    }
+    if (event.type === "queue_update") {
+      return {
+        type: "queue_update",
+        steering: [...event.steering],
+        followUp: [...event.followUp]
+      };
+    }
+    if (event.type === "compaction_start") {
+      return {
+        type: "compaction_start",
+        reason: event.reason
+      };
+    }
+    if (event.type === "compaction_end") {
+      const normalized: any = {
+        type: "compaction_end",
+        reason: event.reason,
+        aborted: event.aborted ?? false
+      };
+      if (event.errorMessage) normalized.errorMessage = event.errorMessage;
+      if (event.result) normalized.result = normalizer.normalizeCompactionResult(event.result);
+      return normalized;
+    }
+    throw new Error(`Unsupported coding-agent session event type: ${event.type}`);
+  });
+}
+
+async function runCodingSessionManagerScenario(scenario: any): Promise<any> {
+  const manager = SessionManager.inMemory();
+  const aliases = new Map<string, string>();
+
+  function resolveAlias(value: string | null | undefined): string | null | undefined {
+    if (value === null || value === undefined) return value;
+    return aliases.get(value) ?? value;
+  }
+
+  for (const operation of scenario.operations ?? []) {
+    switch (operation.op) {
+      case "appendMessage": {
+        const id =
+          operation.role === "user"
+            ? manager.appendMessage(createUserMessage(operation.text, toTimestamp(aliases.size + 1)))
+            : manager.appendMessage(
+                createAssistantMessage(
+                  {
+                    api: scenarioModels(scenario)[0].api,
+                    provider: scenarioModels(scenario)[0].provider,
+                    id: operation.model ?? scenarioModels(scenario)[0].id
+                  },
+                  {
+                    content: [{ type: "text", text: operation.text }],
+                    stopReason: operation.stopReason ?? "stop"
+                  },
+                  100 + aliases.size
+                )
+              );
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendThinkingLevel": {
+        const id = manager.appendThinkingLevelChange(operation.thinkingLevel);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendModelChange": {
+        const id = manager.appendModelChange(operation.provider, operation.modelId);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendCompaction": {
+        const id = manager.appendCompaction(operation.summary, resolveAlias(operation.firstKept), operation.tokensBefore ?? 1000, operation.details);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendCustomMessage": {
+        const id = manager.appendCustomMessageEntry(operation.customType, operation.content, operation.display, operation.details);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendLabel": {
+        const id = manager.appendLabelChange(resolveAlias(operation.target), operation.label);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "appendSessionInfo": {
+        const id = manager.appendSessionInfo(operation.name);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      case "branch":
+        manager.branch(resolveAlias(operation.target)!);
+        break;
+      case "resetLeaf":
+        manager.resetLeaf();
+        break;
+      case "branchWithSummary": {
+        const id = manager.branchWithSummary(resolveAlias(operation.parent) ?? null, operation.summary, operation.details, operation.fromHook);
+        if (operation.as) aliases.set(operation.as, id);
+        break;
+      }
+      default:
+        throw new Error(`Unsupported session-manager operation ${operation.op}`);
+    }
+  }
+
+  const normalizer = createCodingNormalizer();
+  const entries = manager.getEntries();
+  const byId = new Map(entries.map((entry: any) => [entry.id, entry]));
+  const contexts = Object.fromEntries(
+    Object.entries(scenario.inspect?.contexts ?? {}).map(([name, alias]) => [
+      name,
+      normalizer.normalizeSessionContext(buildCodingSessionContext(entries, resolveAlias(alias as string) ?? null, byId))
+    ])
+  );
+  const branches = Object.fromEntries(
+    Object.entries(scenario.inspect?.branches ?? {}).map(([name, alias]) => [
+      name,
+      manager.getBranch(resolveAlias(alias as string)).map((entry: any) => normalizer.normalizeSessionEntry(entry))
+    ])
+  );
+
+  return {
+    scenarioId: scenario.id,
+    suite: scenario.suite,
+    entries: entries.map((entry: any) => normalizer.normalizeSessionEntry(entry)),
+    tree: manager.getTree().map((node: any) => normalizer.normalizeTreeNode(node)),
+    leafId: normalizer.normalizeEntryId(manager.getLeafId()),
+    contexts,
+    branches
+  };
+}
+
+async function runCodingAgentSessionScenario(scenario: any): Promise<any> {
+  const tempDir = createCodingTempDir(scenario.id);
+  await rm(tempDir, { recursive: true, force: true });
+  await mkdir(tempDir, { recursive: true });
+  const cwd = path.join(tempDir, "cwd");
+  const agentDir = path.join(tempDir, "agent");
+  await mkdir(cwd, { recursive: true });
+  await mkdir(agentDir, { recursive: true });
+
+  const registration = createCodingProviderRegistration(scenario);
+  try {
+    const services = await createCodingServices(registration, cwd, agentDir, scenario);
+    const sessionManager = scenario.persisted ? SessionManager.create(cwd, path.join(tempDir, "sessions")) : SessionManager.inMemory();
+    const result = await createAgentSession({
+      cwd,
+      agentDir,
+      authStorage: services.authStorage,
+      modelRegistry: services.modelRegistry,
+      settingsManager: services.settingsManager,
+      resourceLoader: services.resourceLoader,
+      sessionManager,
+      model: resolveScenarioModel(registration, scenario),
+      thinkingLevel: scenario.initialThinkingLevel,
+      scopedModels: resolveScopedModels(registration, scenario)
+    });
+    const session = result.session;
+    const rawEvents: any[] = [];
+    session.subscribe((event: any) => {
+      rawEvents.push(event);
+    });
+
+    const operationResults: any[] = [];
+    for (const operation of scenario.operations ?? []) {
+      switch (operation.op) {
+        case "prompt":
+          await session.prompt(operation.text, operation.options);
+          operationResults.push({ op: operation.op });
+          break;
+        case "sendCustomMessage":
+          await session.sendCustomMessage(
+            {
+              role: "custom",
+              customType: operation.customType,
+              content: operation.content,
+              display: operation.display,
+              details: operation.details,
+              timestamp: Date.now()
+            },
+            operation.triggerTurn ?? false,
+            operation.deliverAs
+          );
+          operationResults.push({ op: operation.op });
+          break;
+        case "setThinkingLevel":
+          session.setThinkingLevel(operation.level);
+          operationResults.push({ op: operation.op, level: session.thinkingLevel });
+          break;
+        case "cycleThinkingLevel":
+          operationResults.push({ op: operation.op, level: session.cycleThinkingLevel() ?? null });
+          break;
+        case "cycleModel":
+          operationResults.push({ op: operation.op, result: await session.cycleModel(operation.direction ?? "forward") });
+          break;
+        case "setSessionName":
+          session.setSessionName(operation.name);
+          operationResults.push({ op: operation.op });
+          break;
+        case "navigateTree": {
+          const targetId = resolveSessionSelector(session.sessionManager, operation.selector);
+          operationResults.push({
+            op: operation.op,
+            result: await session.navigateTree(targetId, {
+              summarize: operation.summarize ?? false,
+              customInstructions: operation.customInstructions,
+              replaceInstructions: operation.replaceInstructions ?? false,
+              label: operation.label
+            })
+          });
+          break;
+        }
+        case "compact":
+          operationResults.push({ op: operation.op, result: await session.compact(operation.customInstructions) });
+          break;
+        default:
+          throw new Error(`Unsupported coding-agent session operation ${operation.op}`);
+      }
+    }
+
+    const normalizer = createCodingNormalizer();
+    return {
+      scenarioId: scenario.id,
+      suite: scenario.suite,
+      events: normalizeCodingSessionEvents(rawEvents, normalizer),
+      operationResults: operationResults.map((entry) => {
+        if (!entry.result) return entry;
+        if (entry.op === "cycleModel") {
+          return entry.result == null
+            ? { op: entry.op, result: null }
+            : {
+                op: entry.op,
+                result: {
+                  model: { provider: entry.result.model.provider, modelId: entry.result.model.id },
+                  thinkingLevel: entry.result.thinkingLevel,
+                  isScoped: entry.result.isScoped
+                }
+              };
+        }
+        if (entry.op === "compact") {
+          return { op: entry.op, result: normalizer.normalizeCompactionResult(entry.result) };
+        }
+        if (entry.op === "navigateTree") {
+          return { op: entry.op, result: normalizer.normalizeTreeNavigationResult(entry.result) };
+        }
+        return entry;
+      }),
+      finalState: normalizer.normalizeSessionSnapshot(session)
+    };
+  } finally {
+    registration.unregister();
+    await rm(tempDir, { recursive: true, force: true });
+  }
+}
+
+async function runCodingAgentRuntimeScenario(scenario: any): Promise<any> {
+  const tempDir = createCodingTempDir(scenario.id);
+  await rm(tempDir, { recursive: true, force: true });
+  await mkdir(tempDir, { recursive: true });
+  const cwd = path.join(tempDir, "cwd");
+  const agentDir = path.join(tempDir, "agent");
+  const sessionDir = path.join(tempDir, "sessions");
+  await mkdir(cwd, { recursive: true });
+  await mkdir(agentDir, { recursive: true });
+  await mkdir(sessionDir, { recursive: true });
+
+  const registration = createCodingProviderRegistration(scenario);
+  const capturedSessionFiles = new Map<string, string>();
+
+  try {
+    const createRuntime = async ({ cwd: runtimeCwd, agentDir: runtimeAgentDir, sessionManager, sessionStartEvent }: any) => {
+      const services = await createCodingServices(registration, runtimeCwd, runtimeAgentDir, scenario);
+      const result = await createAgentSession({
+        cwd: runtimeCwd,
+        agentDir: runtimeAgentDir,
+        authStorage: services.authStorage,
+        modelRegistry: services.modelRegistry,
+        settingsManager: services.settingsManager,
+        resourceLoader: services.resourceLoader,
+        sessionManager,
+        model: resolveScenarioModel(registration, scenario),
+        thinkingLevel: scenario.initialThinkingLevel,
+        scopedModels: resolveScopedModels(registration, scenario),
+        sessionStartEvent
+      });
+      return {
+        ...result,
+        services,
+        diagnostics: services.diagnostics
+      };
+    };
+
+    const runtime = await createAgentSessionRuntime(createRuntime, {
+      cwd,
+      agentDir,
+      sessionManager: SessionManager.create(cwd, sessionDir)
+    });
+
+    const operationResults: any[] = [];
+    for (const operation of scenario.operations ?? []) {
+      switch (operation.op) {
+        case "prompt":
+          await runtime.session.prompt(operation.text, operation.options);
+          operationResults.push({ op: operation.op });
+          break;
+        case "captureSessionFile":
+          capturedSessionFiles.set(operation.as, runtime.session.sessionFile);
+          operationResults.push({ op: operation.op, sessionFile: runtime.session.sessionFile });
+          break;
+        case "newSession":
+          operationResults.push({ op: operation.op, result: await runtime.newSession() });
+          break;
+        case "switchSession":
+          operationResults.push({
+            op: operation.op,
+            result: await runtime.switchSession(capturedSessionFiles.get(operation.sessionFile)!)
+          });
+          break;
+        case "fork": {
+          const targetId = resolveSessionSelector(runtime.session.sessionManager, operation.selector);
+          operationResults.push({ op: operation.op, result: await runtime.fork(targetId) });
+          break;
+        }
+        case "importFromJsonl":
+          operationResults.push({
+            op: operation.op,
+            result: await runtime.importFromJsonl(capturedSessionFiles.get(operation.sessionFile)!)
+          });
+          break;
+        default:
+          throw new Error(`Unsupported coding-agent runtime operation ${operation.op}`);
+      }
+    }
+
+    const normalizer = createCodingNormalizer();
+    return {
+      scenarioId: scenario.id,
+      suite: scenario.suite,
+      operationResults: operationResults.map((entry) => {
+        if (entry.op === "captureSessionFile") {
+          return { op: entry.op, sessionFile: normalizer.normalizePath(entry.sessionFile) };
+        }
+        if (entry.op === "fork") {
+          return {
+            op: entry.op,
+            result: {
+              cancelled: entry.result.cancelled,
+              selectedText: entry.result.selectedText ?? null
+            }
+          };
+        }
+        return entry.result ? { op: entry.op, result: entry.result } : entry;
+      }),
+      runtime: {
+        cwd: normalizer.normalizePath(runtime.cwd),
+        diagnostics: runtime.diagnostics,
+        modelFallbackMessage: runtime.modelFallbackMessage ?? null,
+        session: normalizer.normalizeSessionSnapshot(runtime.session)
+      }
+    };
+  } finally {
+    registration.unregister();
+    await rm(tempDir, { recursive: true, force: true });
+  }
+}
+
 async function runScenario(scenario: any): Promise<any> {
   if (scenario.kind === "ai_stream_faux") {
     return runAiScenario(scenario);
@@ -656,6 +1432,15 @@ async function runScenario(scenario: any): Promise<any> {
   }
   if (scenario.kind === "agent_continue_scripted") {
     return runAgentScenario(scenario, true);
+  }
+  if (scenario.kind === "coding_session_manager_scripted") {
+    return runCodingSessionManagerScenario(scenario);
+  }
+  if (scenario.kind === "coding_agent_session_scripted") {
+    return runCodingAgentSessionScenario(scenario);
+  }
+  if (scenario.kind === "coding_agent_runtime_scripted") {
+    return runCodingAgentRuntimeScenario(scenario);
   }
   throw new Error(`Unsupported scenario kind: ${scenario.kind}`);
 }

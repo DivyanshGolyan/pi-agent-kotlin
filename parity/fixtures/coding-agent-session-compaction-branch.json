@@ -1,0 +1,1194 @@
+{
+  "scenarioId": "coding-agent-session-compaction-branch",
+  "suite": "pi-coding-agent-core",
+  "events": [
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "First request with enough words to make compaction worthwhile and deterministic."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "First request with enough words to make compaction worthwhile and deterministic."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Firs"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "Firs",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Firs"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First an"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "t an",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First an"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "swer",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First answer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": ".",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "First answer.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer."
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer."
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "First request with enough words to make compaction worthwhile and deterministic."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First answer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Seco"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "Seco",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Seco"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second a"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "nd a",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second a"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second answe"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "nswe",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second answe"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "r.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "Second answer.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second answer."
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second answer."
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second answer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third request after enough accumulated context to allow manual compaction."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third request after enough accumulated context to allow manual compaction."
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Thir"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "Thir",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Thir"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third an"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "d an",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third an"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third answer"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "swer",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third answer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": ".",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third answer."
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "Third answer.",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third answer."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third answer."
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "Third answer."
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third request after enough accumulated context to allow manual compaction."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third answer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "compaction_start",
+      "reason": "manual"
+    },
+    {
+      "type": "compaction_end",
+      "reason": "manual",
+      "aborted": false,
+      "result": {
+        "summary": "Conversation summary before the latest turn.",
+        "firstKeptEntryId": "entry-1",
+        "details": {
+          "readFiles": [],
+          "modifiedFiles": []
+        }
+      }
+    }
+  ],
+  "operationResults": [
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "compact",
+      "result": {
+        "summary": "Conversation summary before the latest turn.",
+        "firstKeptEntryId": "entry-1",
+        "details": {
+          "readFiles": [],
+          "modifiedFiles": []
+        }
+      }
+    },
+    {
+      "op": "navigateTree",
+      "result": {
+        "cancelled": false,
+        "editorText": "Second request with similarly long phrasing so the token estimator has clear work to do.",
+        "summaryEntry": {
+          "type": "branch_summary",
+          "id": "entry-2",
+          "parentId": "entry-3",
+          "summary": "The user explored a different conversation branch before returning here.\nSummary of that exploration:\n\nWe explored the later turns before returning here.",
+          "fromId": "entry-3",
+          "details": {
+            "readFiles": [],
+            "modifiedFiles": []
+          },
+          "fromHook": false
+        }
+      }
+    }
+  ],
+  "finalState": {
+    "sessionId": "session-1",
+    "sessionName": null,
+    "model": {
+      "provider": "faux-compaction",
+      "modelId": "faux-1"
+    },
+    "thinkingLevel": "medium",
+    "autoCompactionEnabled": true,
+    "isCompacting": false,
+    "steeringMode": "one-at-a-time",
+    "followUpMode": "one-at-a-time",
+    "steeringMessages": [],
+    "followUpMessages": [],
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "First request with enough words to make compaction worthwhile and deterministic."
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "First answer."
+          }
+        ]
+      },
+      {
+        "role": "branchSummary",
+        "summary": "The user explored a different conversation branch before returning here.\nSummary of that exploration:\n\nWe explored the later turns before returning here.",
+        "fromId": "entry-3"
+      }
+    ],
+    "entries": [
+      {
+        "type": "model_change",
+        "id": "entry-4",
+        "parentId": null,
+        "provider": "faux-compaction",
+        "modelId": "faux-1"
+      },
+      {
+        "type": "thinking_level_change",
+        "id": "entry-5",
+        "parentId": "entry-4",
+        "thinkingLevel": "medium"
+      },
+      {
+        "type": "message",
+        "id": "entry-6",
+        "parentId": "entry-5",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "First request with enough words to make compaction worthwhile and deterministic."
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-3",
+        "parentId": "entry-6",
+        "message": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "First answer."
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-7",
+        "parentId": "entry-3",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-8",
+        "parentId": "entry-7",
+        "message": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Second answer."
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-1",
+        "parentId": "entry-8",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third request after enough accumulated context to allow manual compaction."
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-9",
+        "parentId": "entry-1",
+        "message": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "Third answer."
+            }
+          ]
+        }
+      },
+      {
+        "type": "compaction",
+        "id": "entry-10",
+        "parentId": "entry-9",
+        "summary": "Conversation summary before the latest turn.",
+        "firstKeptEntryId": "entry-1",
+        "details": {
+          "readFiles": [],
+          "modifiedFiles": []
+        },
+        "fromHook": false
+      },
+      {
+        "type": "branch_summary",
+        "id": "entry-2",
+        "parentId": "entry-3",
+        "summary": "The user explored a different conversation branch before returning here.\nSummary of that exploration:\n\nWe explored the later turns before returning here.",
+        "fromId": "entry-3",
+        "details": {
+          "readFiles": [],
+          "modifiedFiles": []
+        },
+        "fromHook": false
+      },
+      {
+        "type": "label",
+        "id": "entry-11",
+        "parentId": "entry-2",
+        "targetId": "entry-2",
+        "label": "branch-summary"
+      }
+    ],
+    "tree": [
+      {
+        "entry": {
+          "type": "model_change",
+          "id": "entry-4",
+          "parentId": null,
+          "provider": "faux-compaction",
+          "modelId": "faux-1"
+        },
+        "children": [
+          {
+            "entry": {
+              "type": "thinking_level_change",
+              "id": "entry-5",
+              "parentId": "entry-4",
+              "thinkingLevel": "medium"
+            },
+            "children": [
+              {
+                "entry": {
+                  "type": "message",
+                  "id": "entry-6",
+                  "parentId": "entry-5",
+                  "message": {
+                    "role": "user",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "First request with enough words to make compaction worthwhile and deterministic."
+                      }
+                    ]
+                  }
+                },
+                "children": [
+                  {
+                    "entry": {
+                      "type": "message",
+                      "id": "entry-3",
+                      "parentId": "entry-6",
+                      "message": {
+                        "role": "assistant",
+                        "stopReason": "stop",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "First answer."
+                          }
+                        ]
+                      }
+                    },
+                    "children": [
+                      {
+                        "entry": {
+                          "type": "message",
+                          "id": "entry-7",
+                          "parentId": "entry-3",
+                          "message": {
+                            "role": "user",
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+                              }
+                            ]
+                          }
+                        },
+                        "children": [
+                          {
+                            "entry": {
+                              "type": "message",
+                              "id": "entry-8",
+                              "parentId": "entry-7",
+                              "message": {
+                                "role": "assistant",
+                                "stopReason": "stop",
+                                "content": [
+                                  {
+                                    "type": "text",
+                                    "text": "Second answer."
+                                  }
+                                ]
+                              }
+                            },
+                            "children": [
+                              {
+                                "entry": {
+                                  "type": "message",
+                                  "id": "entry-1",
+                                  "parentId": "entry-8",
+                                  "message": {
+                                    "role": "user",
+                                    "content": [
+                                      {
+                                        "type": "text",
+                                        "text": "Third request after enough accumulated context to allow manual compaction."
+                                      }
+                                    ]
+                                  }
+                                },
+                                "children": [
+                                  {
+                                    "entry": {
+                                      "type": "message",
+                                      "id": "entry-9",
+                                      "parentId": "entry-1",
+                                      "message": {
+                                        "role": "assistant",
+                                        "stopReason": "stop",
+                                        "content": [
+                                          {
+                                            "type": "text",
+                                            "text": "Third answer."
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "entry": {
+                                          "type": "compaction",
+                                          "id": "entry-10",
+                                          "parentId": "entry-9",
+                                          "summary": "Conversation summary before the latest turn.",
+                                          "firstKeptEntryId": "entry-1",
+                                          "details": {
+                                            "readFiles": [],
+                                            "modifiedFiles": []
+                                          },
+                                          "fromHook": false
+                                        },
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "entry": {
+                          "type": "branch_summary",
+                          "id": "entry-2",
+                          "parentId": "entry-3",
+                          "summary": "The user explored a different conversation branch before returning here.\nSummary of that exploration:\n\nWe explored the later turns before returning here.",
+                          "fromId": "entry-3",
+                          "details": {
+                            "readFiles": [],
+                            "modifiedFiles": []
+                          },
+                          "fromHook": false
+                        },
+                        "children": [
+                          {
+                            "entry": {
+                              "type": "label",
+                              "id": "entry-11",
+                              "parentId": "entry-2",
+                              "targetId": "entry-2",
+                              "label": "branch-summary"
+                            },
+                            "children": []
+                          }
+                        ],
+                        "label": "branch-summary"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "leafId": "entry-11",
+    "stats": {
+      "sessionId": "session-1",
+      "userMessages": 1,
+      "assistantMessages": 1,
+      "toolResults": 0,
+      "totalMessages": 3,
+      "contextUsage": {
+        "tokens": null,
+        "contextWindow": 4096
+      }
+    }
+  }
+}

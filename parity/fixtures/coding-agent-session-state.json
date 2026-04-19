@@ -1,0 +1,817 @@
+{
+  "scenarioId": "coding-agent-session-state",
+  "suite": "pi-coding-agent-core",
+  "events": [
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello"
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello"
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hell"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "hell",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hell"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello re"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "o re",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello re"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello reply"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "ply",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello reply"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello reply"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "hello reply",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello reply"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello reply"
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "hello reply"
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello reply"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "custom",
+        "customType": "note",
+        "content": "saved note",
+        "display": true
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "custom",
+        "customType": "note",
+        "content": "saved note",
+        "display": true
+      }
+    },
+    {
+      "type": "agent_start"
+    },
+    {
+      "type": "turn_start"
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "second"
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "second"
+          }
+        ]
+      }
+    },
+    {
+      "type": "message_start",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": []
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_start",
+        "contentIndex": 0,
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "seco"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "seco",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "seco"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "second r"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "nd r",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "second r"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "second reply"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_delta",
+        "contentIndex": 0,
+        "delta": "eply",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "second reply"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_update",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "second reply"
+          }
+        ]
+      },
+      "assistantMessageEvent": {
+        "type": "text_end",
+        "contentIndex": 0,
+        "content": "second reply",
+        "partial": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "second reply"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "message_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "second reply"
+          }
+        ]
+      }
+    },
+    {
+      "type": "turn_end",
+      "message": {
+        "role": "assistant",
+        "stopReason": "stop",
+        "content": [
+          {
+            "type": "text",
+            "text": "second reply"
+          }
+        ]
+      },
+      "toolResults": []
+    },
+    {
+      "type": "agent_end",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "second"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "second reply"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "operationResults": [
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "sendCustomMessage"
+    },
+    {
+      "op": "cycleThinkingLevel",
+      "level": "minimal"
+    },
+    {
+      "op": "cycleModel",
+      "result": {
+        "model": {
+          "provider": "faux-session",
+          "modelId": "faux-2"
+        },
+        "thinkingLevel": "low",
+        "isScoped": true
+      }
+    },
+    {
+      "op": "setSessionName"
+    },
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "navigateTree",
+      "result": {
+        "cancelled": false,
+        "editorText": "hello"
+      }
+    }
+  ],
+  "finalState": {
+    "sessionId": "session-1",
+    "sessionName": "Parity Session",
+    "model": {
+      "provider": "faux-session",
+      "modelId": "faux-2"
+    },
+    "thinkingLevel": "low",
+    "autoCompactionEnabled": false,
+    "isCompacting": false,
+    "steeringMode": "one-at-a-time",
+    "followUpMode": "one-at-a-time",
+    "steeringMessages": [],
+    "followUpMessages": [],
+    "messages": [],
+    "entries": [
+      {
+        "type": "model_change",
+        "id": "entry-1",
+        "parentId": null,
+        "provider": "faux-session",
+        "modelId": "faux-1"
+      },
+      {
+        "type": "thinking_level_change",
+        "id": "entry-2",
+        "parentId": "entry-1",
+        "thinkingLevel": "off"
+      },
+      {
+        "type": "message",
+        "id": "entry-3",
+        "parentId": "entry-2",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-4",
+        "parentId": "entry-3",
+        "message": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello reply"
+            }
+          ]
+        }
+      },
+      {
+        "type": "custom_message",
+        "id": "entry-5",
+        "parentId": "entry-4",
+        "customType": "note",
+        "content": "saved note",
+        "display": true
+      },
+      {
+        "type": "thinking_level_change",
+        "id": "entry-6",
+        "parentId": "entry-5",
+        "thinkingLevel": "minimal"
+      },
+      {
+        "type": "model_change",
+        "id": "entry-7",
+        "parentId": "entry-6",
+        "provider": "faux-session",
+        "modelId": "faux-2"
+      },
+      {
+        "type": "thinking_level_change",
+        "id": "entry-8",
+        "parentId": "entry-7",
+        "thinkingLevel": "low"
+      },
+      {
+        "type": "session_info",
+        "id": "entry-9",
+        "parentId": "entry-8",
+        "name": "Parity Session"
+      },
+      {
+        "type": "message",
+        "id": "entry-10",
+        "parentId": "entry-9",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "second"
+            }
+          ]
+        }
+      },
+      {
+        "type": "message",
+        "id": "entry-11",
+        "parentId": "entry-10",
+        "message": {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "second reply"
+            }
+          ]
+        }
+      },
+      {
+        "type": "label",
+        "id": "entry-12",
+        "parentId": "entry-2",
+        "targetId": "entry-3",
+        "label": "revisit"
+      }
+    ],
+    "tree": [
+      {
+        "entry": {
+          "type": "model_change",
+          "id": "entry-1",
+          "parentId": null,
+          "provider": "faux-session",
+          "modelId": "faux-1"
+        },
+        "children": [
+          {
+            "entry": {
+              "type": "thinking_level_change",
+              "id": "entry-2",
+              "parentId": "entry-1",
+              "thinkingLevel": "off"
+            },
+            "children": [
+              {
+                "entry": {
+                  "type": "message",
+                  "id": "entry-3",
+                  "parentId": "entry-2",
+                  "message": {
+                    "role": "user",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "hello"
+                      }
+                    ]
+                  }
+                },
+                "children": [
+                  {
+                    "entry": {
+                      "type": "message",
+                      "id": "entry-4",
+                      "parentId": "entry-3",
+                      "message": {
+                        "role": "assistant",
+                        "stopReason": "stop",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "hello reply"
+                          }
+                        ]
+                      }
+                    },
+                    "children": [
+                      {
+                        "entry": {
+                          "type": "custom_message",
+                          "id": "entry-5",
+                          "parentId": "entry-4",
+                          "customType": "note",
+                          "content": "saved note",
+                          "display": true
+                        },
+                        "children": [
+                          {
+                            "entry": {
+                              "type": "thinking_level_change",
+                              "id": "entry-6",
+                              "parentId": "entry-5",
+                              "thinkingLevel": "minimal"
+                            },
+                            "children": [
+                              {
+                                "entry": {
+                                  "type": "model_change",
+                                  "id": "entry-7",
+                                  "parentId": "entry-6",
+                                  "provider": "faux-session",
+                                  "modelId": "faux-2"
+                                },
+                                "children": [
+                                  {
+                                    "entry": {
+                                      "type": "thinking_level_change",
+                                      "id": "entry-8",
+                                      "parentId": "entry-7",
+                                      "thinkingLevel": "low"
+                                    },
+                                    "children": [
+                                      {
+                                        "entry": {
+                                          "type": "session_info",
+                                          "id": "entry-9",
+                                          "parentId": "entry-8",
+                                          "name": "Parity Session"
+                                        },
+                                        "children": [
+                                          {
+                                            "entry": {
+                                              "type": "message",
+                                              "id": "entry-10",
+                                              "parentId": "entry-9",
+                                              "message": {
+                                                "role": "user",
+                                                "content": [
+                                                  {
+                                                    "type": "text",
+                                                    "text": "second"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "children": [
+                                              {
+                                                "entry": {
+                                                  "type": "message",
+                                                  "id": "entry-11",
+                                                  "parentId": "entry-10",
+                                                  "message": {
+                                                    "role": "assistant",
+                                                    "stopReason": "stop",
+                                                    "content": [
+                                                      {
+                                                        "type": "text",
+                                                        "text": "second reply"
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                "children": []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "label": "revisit"
+              },
+              {
+                "entry": {
+                  "type": "label",
+                  "id": "entry-12",
+                  "parentId": "entry-2",
+                  "targetId": "entry-3",
+                  "label": "revisit"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "leafId": "entry-12",
+    "stats": {
+      "sessionId": "session-1",
+      "userMessages": 0,
+      "assistantMessages": 0,
+      "toolResults": 0,
+      "totalMessages": 0,
+      "contextUsage": {
+        "tokens": null,
+        "contextWindow": 4096
+      }
+    }
+  }
+}

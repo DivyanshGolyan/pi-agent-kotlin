@@ -1,0 +1,111 @@
+{
+  "id": "coding-agent-session-compaction-branch",
+  "suite": "pi-coding-agent-core",
+  "kind": "coding_agent_session_scripted",
+  "modelCatalog": [
+    {
+      "id": "faux-1",
+      "name": "Faux One",
+      "api": "faux:parity:coding-compaction",
+      "provider": "faux-compaction",
+      "reasoning": true,
+      "input": [
+        "text"
+      ],
+      "contextWindow": 4096,
+      "maxTokens": 512
+    }
+  ],
+  "initialModel": "faux-1",
+  "initialThinkingLevel": "medium",
+  "provider": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "settings": {
+    "compaction": {
+      "enabled": true,
+      "reserveTokens": 200,
+      "keepRecentTokens": 20
+    },
+    "branchSummary": {
+      "reserveTokens": 200,
+      "skipPrompt": false
+    }
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "First answer."
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Second answer."
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Third answer."
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Conversation summary before the latest turn."
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "We explored the later turns before returning here."
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ],
+  "operations": [
+    {
+      "op": "prompt",
+      "text": "First request with enough words to make compaction worthwhile and deterministic."
+    },
+    {
+      "op": "prompt",
+      "text": "Second request with similarly long phrasing so the token estimator has clear work to do."
+    },
+    {
+      "op": "prompt",
+      "text": "Third request after enough accumulated context to allow manual compaction."
+    },
+    {
+      "op": "compact"
+    },
+    {
+      "op": "navigateTree",
+      "selector": {
+        "role": "user",
+        "index": 1
+      },
+      "summarize": true,
+      "label": "branch-summary"
+    }
+  ]
+}

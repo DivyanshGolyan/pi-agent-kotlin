@@ -1,0 +1,199 @@
+{
+  "scenarioId": "coding-agent-runtime-lifecycle",
+  "suite": "pi-coding-agent-core",
+  "operationResults": [
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "captureSessionFile",
+      "sessionFile": "path-1"
+    },
+    {
+      "op": "newSession",
+      "result": {
+        "cancelled": false
+      }
+    },
+    {
+      "op": "prompt"
+    },
+    {
+      "op": "switchSession",
+      "result": {
+        "cancelled": false
+      }
+    },
+    {
+      "op": "fork",
+      "result": {
+        "cancelled": false,
+        "selectedText": "persist me"
+      }
+    },
+    {
+      "op": "importFromJsonl",
+      "result": {
+        "cancelled": false
+      }
+    }
+  ],
+  "runtime": {
+    "cwd": "path-2",
+    "diagnostics": [],
+    "modelFallbackMessage": null,
+    "session": {
+      "sessionId": "session-1",
+      "sessionFile": "path-1",
+      "sessionName": null,
+      "model": {
+        "provider": "faux-runtime",
+        "modelId": "faux-1"
+      },
+      "thinkingLevel": "off",
+      "autoCompactionEnabled": false,
+      "isCompacting": false,
+      "steeringMode": "one-at-a-time",
+      "followUpMode": "one-at-a-time",
+      "steeringMessages": [],
+      "followUpMessages": [],
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "persist me"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "stopReason": "stop",
+          "content": [
+            {
+              "type": "text",
+              "text": "persisted reply"
+            }
+          ]
+        }
+      ],
+      "entries": [
+        {
+          "type": "model_change",
+          "id": "entry-1",
+          "parentId": null,
+          "provider": "faux-runtime",
+          "modelId": "faux-1"
+        },
+        {
+          "type": "thinking_level_change",
+          "id": "entry-2",
+          "parentId": "entry-1",
+          "thinkingLevel": "off"
+        },
+        {
+          "type": "message",
+          "id": "entry-3",
+          "parentId": "entry-2",
+          "message": {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "persist me"
+              }
+            ]
+          }
+        },
+        {
+          "type": "message",
+          "id": "entry-4",
+          "parentId": "entry-3",
+          "message": {
+            "role": "assistant",
+            "stopReason": "stop",
+            "content": [
+              {
+                "type": "text",
+                "text": "persisted reply"
+              }
+            ]
+          }
+        }
+      ],
+      "tree": [
+        {
+          "entry": {
+            "type": "model_change",
+            "id": "entry-1",
+            "parentId": null,
+            "provider": "faux-runtime",
+            "modelId": "faux-1"
+          },
+          "children": [
+            {
+              "entry": {
+                "type": "thinking_level_change",
+                "id": "entry-2",
+                "parentId": "entry-1",
+                "thinkingLevel": "off"
+              },
+              "children": [
+                {
+                  "entry": {
+                    "type": "message",
+                    "id": "entry-3",
+                    "parentId": "entry-2",
+                    "message": {
+                      "role": "user",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "persist me"
+                        }
+                      ]
+                    }
+                  },
+                  "children": [
+                    {
+                      "entry": {
+                        "type": "message",
+                        "id": "entry-4",
+                        "parentId": "entry-3",
+                        "message": {
+                          "role": "assistant",
+                          "stopReason": "stop",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "persisted reply"
+                            }
+                          ]
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "leafId": "entry-4",
+      "stats": {
+        "sessionFile": "path-1",
+        "sessionId": "session-1",
+        "userMessages": 1,
+        "assistantMessages": 1,
+        "toolResults": 0,
+        "totalMessages": 2,
+        "contextUsage": {
+          "tokens": null,
+          "contextWindow": 4096
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "coding-agent-session-manager-context",
+  "suite": "pi-coding-agent-core",
+  "kind": "coding_session_manager_scripted",
+  "modelCatalog": [
+    {
+      "id": "faux-1",
+      "name": "Faux One",
+      "api": "faux:parity:coding-session-manager",
+      "provider": "faux-session-manager",
+      "reasoning": true,
+      "input": [
+        "text"
+      ],
+      "contextWindow": 4096,
+      "maxTokens": 512
+    }
+  ],
+  "operations": [
+    {
+      "op": "appendMessage",
+      "role": "user",
+      "text": "start",
+      "as": "u1"
+    },
+    {
+      "op": "appendMessage",
+      "role": "assistant",
+      "text": "response one",
+      "as": "a1"
+    },
+    {
+      "op": "appendThinkingLevel",
+      "thinkingLevel": "high",
+      "as": "t1"
+    },
+    {
+      "op": "appendMessage",
+      "role": "user",
+      "text": "second turn",
+      "as": "u2"
+    },
+    {
+      "op": "appendMessage",
+      "role": "assistant",
+      "text": "response two",
+      "as": "a2"
+    },
+    {
+      "op": "appendCompaction",
+      "summary": "Compacted early turns",
+      "firstKept": "u2",
+      "tokensBefore": 1234,
+      "as": "c1"
+    },
+    {
+      "op": "appendMessage",
+      "role": "user",
+      "text": "third turn",
+      "as": "u3"
+    },
+    {
+      "op": "appendMessage",
+      "role": "assistant",
+      "text": "response three",
+      "as": "a3"
+    },
+    {
+      "op": "branchWithSummary",
+      "parent": "a1",
+      "summary": "We tried another path before coming back here.",
+      "as": "bs1"
+    },
+    {
+      "op": "appendMessage",
+      "role": "user",
+      "text": "better approach",
+      "as": "u4"
+    },
+    {
+      "op": "appendCustomMessage",
+      "customType": "note",
+      "content": "remember branch context",
+      "display": true,
+      "as": "cm1"
+    },
+    {
+      "op": "appendLabel",
+      "target": "bs1",
+      "label": "branch-note",
+      "as": "l1"
+    }
+  ],
+  "inspect": {
+    "contexts": {
+      "main": "a3",
+      "branch": "cm1"
+    },
+    "branches": {
+      "main": "a3",
+      "branch": "cm1"
+    }
+  }
+}

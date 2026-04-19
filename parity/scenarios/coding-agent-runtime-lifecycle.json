@@ -1,0 +1,84 @@
+{
+  "id": "coding-agent-runtime-lifecycle",
+  "suite": "pi-coding-agent-core",
+  "kind": "coding_agent_runtime_scripted",
+  "modelCatalog": [
+    {
+      "id": "faux-1",
+      "name": "Faux One",
+      "api": "faux:parity:coding-runtime",
+      "provider": "faux-runtime",
+      "reasoning": true,
+      "input": [
+        "text"
+      ],
+      "contextWindow": 4096,
+      "maxTokens": 512
+    }
+  ],
+  "initialModel": "faux-1",
+  "initialThinkingLevel": "off",
+  "settings": {
+    "compaction": {
+      "enabled": false
+    }
+  },
+  "provider": {
+    "tokenSize": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "responses": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "persisted reply"
+        }
+      ],
+      "stopReason": "stop"
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "fresh reply"
+        }
+      ],
+      "stopReason": "stop"
+    }
+  ],
+  "operations": [
+    {
+      "op": "prompt",
+      "text": "persist me"
+    },
+    {
+      "op": "captureSessionFile",
+      "as": "original"
+    },
+    {
+      "op": "newSession"
+    },
+    {
+      "op": "prompt",
+      "text": "fresh session"
+    },
+    {
+      "op": "switchSession",
+      "sessionFile": "original"
+    },
+    {
+      "op": "fork",
+      "selector": {
+        "role": "user",
+        "index": 0
+      }
+    },
+    {
+      "op": "importFromJsonl",
+      "sessionFile": "original"
+    }
+  ]
+}
