@@ -2,10 +2,10 @@
 
 `pi-agent-kotlin` is a Kotlin port of selected [`pi-mono`](https://github.com/badlogic/pi-mono) packages.
 
-This repo is explicit about what it is:
-- a port, not the original implementation
-- scoped to the slice needed for direct Anthropic API-key usage
-- checked against a pinned upstream TypeScript snapshot
+This repo is a scoped port:
+- it is not the original implementation
+- it focuses on the slice needed for direct Anthropic API-key usage
+- it checks behavior against pinned upstream TypeScript snapshots
 
 ## What is here today
 
@@ -32,11 +32,12 @@ What is still out of scope:
 - OAuth-based provider flows
 - the upstream extension runtime, built-in coding tools, bash executor, and HTML export surface
 - the full upstream `pi-ai` surface
-- the full upstream `pi-agent` and `pi-ai` test matrix
+- the full upstream CLI/app surface built around `packages/coding-agent`
+- the full upstream test matrix for `pi-ai`, `pi-agent`, and `coding-agent`
 
-## Coding-Agent status
+## Coding-agent status
 
-The repository now includes the main `packages/coding-agent` SDK/runtime slices needed for durable sessions:
+The repo now includes the main `packages/coding-agent` SDK/runtime pieces behind durable sessions:
 
 - `src/core/session-manager.ts`
 - `src/core/messages.ts`
@@ -48,7 +49,7 @@ The repository now includes the main `packages/coding-agent` SDK/runtime slices 
 - `src/core/agent-session-services.ts`
 - `src/core/agent-session-runtime.ts`
 
-See [docs/session-layer-proposal.md](docs/session-layer-proposal.md).
+That work ships as `pi-coding-agent-core`, with deterministic parity coverage for the supported Kotlin slice.
 
 ## How parity works
 
@@ -58,7 +59,7 @@ Behavior is checked against pinned upstream snapshots that stay in the repo on p
 - [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) for `packages/ai` and `packages/agent`
 - [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18) for `packages/coding-agent`
 
-Those snapshots are the source we use for:
+We keep those snapshots in the repo because they drive:
 - behavior checks
 - regression work
 - parity decisions
@@ -70,9 +71,9 @@ The coding-agent parity suite currently covers the supported Kotlin slice only:
 - `createAgentSession`, `AgentSession`, and `createAgentSessionRuntime`
 - runtime session switching, forking, and JSONL import
 
-That does **not** mean this repo is byte-for-byte identical to the TypeScript code, or that every public API matches one for one. It means the Kotlin port is trying to behave the same way where it matters for the supported scope.
+This does **not** mean the repo is byte-for-byte identical to the TypeScript code, or that every public API matches one for one. It means the Kotlin port tries to behave the same way across the supported slice.
 
-Known intentional divergence:
+One known divergence:
 - `AgentOptions.cacheRetention` is first-class in this Kotlin port. Upstream TypeScript supports `cacheRetention` in lower layers, but does not currently expose it on `AgentOptions`.
 
 ## Compatibility
@@ -85,7 +86,7 @@ Verified baseline:
 - JVM target `11`
 - Android `minSdk 31`
 
-The runtime modules do not expose Android framework types. Android support is checked through the `android-consumer` module so the published libraries stay usable in Android 12+ apps.
+The runtime modules do not expose Android framework types. Android support is checked through `android-consumer`, so the published libraries stay usable in Android 12+ apps.
 
 ## Installation
 
@@ -215,7 +216,7 @@ Main verification command:
   :android-consumer:testDebugUnitTest
 ```
 
-Coverage is still available, but it is a reporting metric rather than a blocking correctness gate:
+Coverage reports are still available, but they do not block the main verification gate:
 
 ```bash
 ./gradlew coverageReport
@@ -240,13 +241,13 @@ npm ci
 ./gradlew parityTest
 ```
 
-The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshot and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests are separate.
+The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshots and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests are separate.
 
 ## Live tests
 
 The repo also contains live Anthropic integration tests. They are opt-in and require `ANTHROPIC_API_KEY`.
 
-The regular verification command does not depend on them. Run them only when you want to check the direct provider path against the real API.
+The regular verification command does not depend on them. Run them when you want to check the direct provider path against the real API.
 
 ## Versioning
 
@@ -260,7 +261,11 @@ What that means in practice:
 ## Attribution
 
 - Upstream reference: [`badlogic/pi-mono`](https://github.com/badlogic/pi-mono)
-- Pinned snapshot used here: `e3f6912d49d14b6e6ffe96bb053644922004ecf3`
-- Upstream snapshot and license are preserved under [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912)
+- Pinned snapshots used here:
+  `e3f6912d49d14b6e6ffe96bb053644922004ecf3` for `pi-ai` and `pi-agent`
+  `9b28e18` for `coding-agent`
+- Upstream snapshots and licenses are preserved under
+  [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) and
+  [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18)
 
 This project is not affiliated with the upstream maintainers.
