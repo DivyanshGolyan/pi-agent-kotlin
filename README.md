@@ -4,19 +4,20 @@
 
 This repo is a scoped port:
 - it is not the original implementation
-- it focuses on the slice needed for direct Anthropic API-key usage
+- it focuses on the slice needed for direct Anthropic and Gemini API-key usage
 - it checks behavior against pinned upstream TypeScript snapshots
 
 ## What is here today
 
 Modules:
-- `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic API-key usage
+- `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic and Gemini API-key usage
 - `pi-agent-core`: the `pi-agent` slice built on top of `pi-ai-core`
 - `pi-coding-agent-core`: the `coding-agent` session/runtime slice built on top of `pi-agent-core`
 - `android-consumer`: an Android API 31+ verification module
 
 What works:
 - direct Anthropic Messages API calls with API key auth
+- direct Google Gemini API calls with API key auth
 - streaming text
 - thinking blocks
 - tool calls and tool results
@@ -28,7 +29,7 @@ What works:
 - coding-agent SDK/runtime basics: `createAgentSession`, `AgentSession`, `createAgentSessionRuntime`, runtime session switching, forking, and tree navigation
 
 What is still out of scope:
-- non-Anthropic providers
+- providers beyond direct Anthropic and direct Google Gemini
 - OAuth-based provider flows
 - the upstream extension runtime, built-in coding tools, bash executor, and HTML export surface
 - the full upstream `pi-ai` surface
@@ -248,6 +249,8 @@ The fixtures under `parity/fixtures` are generated from the pinned TypeScript sn
 The repo also contains live Anthropic integration tests. They are opt-in and require `ANTHROPIC_API_KEY`.
 
 The regular verification command does not depend on them. Run them when you want to check the direct provider path against the real API.
+
+Direct Gemini usage is covered by the same `pi-ai-core` APIs. Use `getModel(GOOGLE_PROVIDER, "...")` and pass `GEMINI_API_KEY` through `SimpleStreamOptions.apiKey` or the environment.
 
 ## Versioning
 

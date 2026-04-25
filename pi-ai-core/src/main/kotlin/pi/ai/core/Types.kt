@@ -8,6 +8,8 @@ public typealias Provider = String
 
 public const val ANTHROPIC_MESSAGES_API: String = "anthropic-messages"
 public const val ANTHROPIC_PROVIDER: String = "anthropic"
+public const val GOOGLE_GENERATIVE_AI_API: String = "google-generative-ai"
+public const val GOOGLE_PROVIDER: String = "google"
 
 public enum class ThinkingLevel {
     MINIMAL,

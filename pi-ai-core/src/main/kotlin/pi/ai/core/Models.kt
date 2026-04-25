@@ -234,9 +234,284 @@ private val anthropicModels: Map<String, Model<String>> =
             ),
     )
 
+private val googleModels: Map<String, Model<String>> =
+    linkedMapOf(
+        "gemini-1.5-flash" to
+            googleModel(
+                id = "gemini-1.5-flash",
+                name = "Gemini 1.5 Flash",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.075, 0.3, 0.01875, 0.0),
+                contextWindow = 1_000_000,
+                maxTokens = 8_192,
+            ),
+        "gemini-1.5-flash-8b" to
+            googleModel(
+                id = "gemini-1.5-flash-8b",
+                name = "Gemini 1.5 Flash-8B",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.0375, 0.15, 0.01, 0.0),
+                contextWindow = 1_000_000,
+                maxTokens = 8_192,
+            ),
+        "gemini-1.5-pro" to
+            googleModel(
+                id = "gemini-1.5-pro",
+                name = "Gemini 1.5 Pro",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(1.25, 5.0, 0.3125, 0.0),
+                contextWindow = 1_000_000,
+                maxTokens = 8_192,
+            ),
+        "gemini-2.0-flash" to
+            googleModel(
+                id = "gemini-2.0-flash",
+                name = "Gemini 2.0 Flash",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.1, 0.4, 0.025, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 8_192,
+            ),
+        "gemini-2.0-flash-lite" to
+            googleModel(
+                id = "gemini-2.0-flash-lite",
+                name = "Gemini 2.0 Flash Lite",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.075, 0.3, 0.0, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 8_192,
+            ),
+        "gemini-2.5-flash" to
+            googleModel(
+                id = "gemini-2.5-flash",
+                name = "Gemini 2.5 Flash",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.3, 2.5, 0.075, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-lite" to
+            googleModel(
+                id = "gemini-2.5-flash-lite",
+                name = "Gemini 2.5 Flash Lite",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.1, 0.4, 0.025, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-lite-preview-06-17" to
+            googleModel(
+                id = "gemini-2.5-flash-lite-preview-06-17",
+                name = "Gemini 2.5 Flash Lite Preview 06-17",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.1, 0.4, 0.025, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-lite-preview-09-2025" to
+            googleModel(
+                id = "gemini-2.5-flash-lite-preview-09-2025",
+                name = "Gemini 2.5 Flash Lite Preview 09-25",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.1, 0.4, 0.025, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-preview-04-17" to
+            googleModel(
+                id = "gemini-2.5-flash-preview-04-17",
+                name = "Gemini 2.5 Flash Preview 04-17",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.15, 0.6, 0.0375, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-preview-05-20" to
+            googleModel(
+                id = "gemini-2.5-flash-preview-05-20",
+                name = "Gemini 2.5 Flash Preview 05-20",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.15, 0.6, 0.0375, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-flash-preview-09-2025" to
+            googleModel(
+                id = "gemini-2.5-flash-preview-09-2025",
+                name = "Gemini 2.5 Flash Preview 09-25",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.3, 2.5, 0.075, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-pro" to
+            googleModel(
+                id = "gemini-2.5-pro",
+                name = "Gemini 2.5 Pro",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(1.25, 10.0, 0.31, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-pro-preview-05-06" to
+            googleModel(
+                id = "gemini-2.5-pro-preview-05-06",
+                name = "Gemini 2.5 Pro Preview 05-06",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(1.25, 10.0, 0.31, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-2.5-pro-preview-06-05" to
+            googleModel(
+                id = "gemini-2.5-pro-preview-06-05",
+                name = "Gemini 2.5 Pro Preview 06-05",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(1.25, 10.0, 0.31, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-3-flash-preview" to
+            googleModel(
+                id = "gemini-3-flash-preview",
+                name = "Gemini 3 Flash Preview",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.5, 3.0, 0.05, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-3-pro-preview" to
+            googleModel(
+                id = "gemini-3-pro-preview",
+                name = "Gemini 3 Pro Preview",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(2.0, 12.0, 0.2, 0.0),
+                contextWindow = 1_000_000,
+                maxTokens = 64_000,
+            ),
+        "gemini-3.1-flash-lite-preview" to
+            googleModel(
+                id = "gemini-3.1-flash-lite-preview",
+                name = "Gemini 3.1 Flash Lite Preview",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.25, 1.5, 0.025, 1.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-3.1-pro-preview" to
+            googleModel(
+                id = "gemini-3.1-pro-preview",
+                name = "Gemini 3.1 Pro Preview",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(2.0, 12.0, 0.2, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-3.1-pro-preview-customtools" to
+            googleModel(
+                id = "gemini-3.1-pro-preview-customtools",
+                name = "Gemini 3.1 Pro Preview Custom Tools",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(2.0, 12.0, 0.2, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-flash-latest" to
+            googleModel(
+                id = "gemini-flash-latest",
+                name = "Gemini Flash Latest",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.3, 2.5, 0.075, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-flash-lite-latest" to
+            googleModel(
+                id = "gemini-flash-lite-latest",
+                name = "Gemini Flash-Lite Latest",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.1, 0.4, 0.025, 0.0),
+                contextWindow = 1_048_576,
+                maxTokens = 65_536,
+            ),
+        "gemini-live-2.5-flash" to
+            googleModel(
+                id = "gemini-live-2.5-flash",
+                name = "Gemini Live 2.5 Flash",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.5, 2.0, 0.0, 0.0),
+                contextWindow = 128_000,
+                maxTokens = 8_000,
+            ),
+        "gemini-live-2.5-flash-preview-native-audio" to
+            googleModel(
+                id = "gemini-live-2.5-flash-preview-native-audio",
+                name = "Gemini Live 2.5 Flash Preview Native Audio",
+                reasoning = true,
+                input = setOf(InputModality.TEXT),
+                cost = ModelCost(0.5, 2.0, 0.0, 0.0),
+                contextWindow = 131_072,
+                maxTokens = 65_536,
+            ),
+        "gemma-3-27b-it" to
+            googleModel(
+                id = "gemma-3-27b-it",
+                name = "Gemma 3 27B",
+                reasoning = false,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.0, 0.0, 0.0, 0.0),
+                contextWindow = 131_072,
+                maxTokens = 8_192,
+            ),
+        "gemma-4-26b-it" to
+            googleModel(
+                id = "gemma-4-26b-it",
+                name = "Gemma 4 26B",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.0, 0.0, 0.0, 0.0),
+                contextWindow = 256_000,
+                maxTokens = 8_192,
+            ),
+        "gemma-4-31b-it" to
+            googleModel(
+                id = "gemma-4-31b-it",
+                name = "Gemma 4 31B",
+                reasoning = true,
+                input = setOf(InputModality.TEXT, InputModality.IMAGE),
+                cost = ModelCost(0.0, 0.0, 0.0, 0.0),
+                contextWindow = 256_000,
+                maxTokens = 8_192,
+            ),
+    )
+
 private val modelRegistry: Map<String, Map<String, Model<String>>> =
     mapOf(
         ANTHROPIC_PROVIDER to anthropicModels,
+        GOOGLE_PROVIDER to googleModels,
     )
 
 private fun anthropicModel(
@@ -254,6 +529,28 @@ private fun anthropicModel(
         api = ANTHROPIC_MESSAGES_API,
         provider = ANTHROPIC_PROVIDER,
         baseUrl = "https://api.anthropic.com",
+        reasoning = reasoning,
+        input = input,
+        cost = cost,
+        contextWindow = contextWindow,
+        maxTokens = maxTokens,
+    )
+
+private fun googleModel(
+    id: String,
+    name: String,
+    reasoning: Boolean,
+    input: Set<InputModality>,
+    cost: ModelCost,
+    contextWindow: Int,
+    maxTokens: Int,
+): Model<String> =
+    Model(
+        id = id,
+        name = name,
+        api = GOOGLE_GENERATIVE_AI_API,
+        provider = GOOGLE_PROVIDER,
+        baseUrl = "https://generativelanguage.googleapis.com/v1beta",
         reasoning = reasoning,
         input = input,
         cost = cost,

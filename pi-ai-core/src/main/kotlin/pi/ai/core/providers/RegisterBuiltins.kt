@@ -9,5 +9,6 @@ public fun registerBuiltins() {
         return
     }
     registerApiProvider(AnthropicApiProvider)
+    registerApiProvider(GoogleApiProvider)
     registered = true
 }

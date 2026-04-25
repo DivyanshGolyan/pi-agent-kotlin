@@ -22,6 +22,17 @@ class CoreSmokeTest {
     }
 
     @Test
+    fun `getModel returns direct google model metadata`() {
+        val model = requireNotNull(getModel(GOOGLE_PROVIDER, "gemini-2.5-flash"))
+
+        assertEquals("gemini-2.5-flash", model.id)
+        assertEquals(GOOGLE_GENERATIVE_AI_API, model.api)
+        assertEquals(GOOGLE_PROVIDER, model.provider)
+        assertTrue(model.reasoning)
+        assertTrue(model.input.contains(InputModality.IMAGE))
+    }
+
+    @Test
     fun `validateToolArguments delegates to runtime validator`() {
         val tool =
             object : Tool<String> {

@@ -48,7 +48,7 @@ npm ci
 ./gradlew parityTest
 ```
 
-Live Anthropic integration tests are optional. They require `ANTHROPIC_API_KEY` and are meant for direct provider verification, not the default contributor workflow.
+Live provider integration tests are optional. Anthropic tests require `ANTHROPIC_API_KEY`; Gemini direct-provider checks require `GEMINI_API_KEY`. They are meant for direct provider verification, not the default contributor workflow.
 
 ## Contribution guidelines
 

@@ -602,6 +602,8 @@ public final class pi/ai/core/Transport : java/lang/Enum {
 public final class pi/ai/core/TypesKt {
 	public static final field ANTHROPIC_MESSAGES_API Ljava/lang/String;
 	public static final field ANTHROPIC_PROVIDER Ljava/lang/String;
+	public static final field GOOGLE_GENERATIVE_AI_API Ljava/lang/String;
+	public static final field GOOGLE_PROVIDER Ljava/lang/String;
 }
 
 public final class pi/ai/core/Usage {
@@ -761,6 +763,84 @@ public final class pi/ai/core/providers/AnthropicOptions {
 	public final fun getToolChoice ()Lpi/ai/core/providers/ToolChoice;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/GoogleApiProvider : pi/ai/core/ApiProvider {
+	public static final field INSTANCE Lpi/ai/core/providers/GoogleApiProvider;
+	public fun getApi ()Ljava/lang/String;
+	public fun stream (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public fun streamSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/GoogleKt {
+	public static final fun streamGoogle (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/GoogleOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamGoogle$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/GoogleOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public static final fun streamSimpleGoogle (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimpleGoogle$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/GoogleOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/providers/GoogleThinkingOptions;Lpi/ai/core/providers/GoogleToolChoice;)V
+	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/providers/GoogleThinkingOptions;Lpi/ai/core/providers/GoogleToolChoice;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Double;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lpi/ai/core/AbortSignal;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lkotlin/jvm/functions/Function3;
+	public final fun component6 ()Lkotlin/jvm/functions/Function3;
+	public final fun component7 ()Ljava/util/Map;
+	public final fun component8 ()Lpi/ai/core/providers/GoogleThinkingOptions;
+	public final fun component9 ()Lpi/ai/core/providers/GoogleToolChoice;
+	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/providers/GoogleThinkingOptions;Lpi/ai/core/providers/GoogleToolChoice;)Lpi/ai/core/providers/GoogleOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/GoogleOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/providers/GoogleThinkingOptions;Lpi/ai/core/providers/GoogleToolChoice;ILjava/lang/Object;)Lpi/ai/core/providers/GoogleOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getThinking ()Lpi/ai/core/providers/GoogleThinkingOptions;
+	public final fun getToolChoice ()Lpi/ai/core/providers/GoogleToolChoice;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/GoogleThinkingLevel : java/lang/Enum {
+	public static final field HIGH Lpi/ai/core/providers/GoogleThinkingLevel;
+	public static final field LOW Lpi/ai/core/providers/GoogleThinkingLevel;
+	public static final field MEDIUM Lpi/ai/core/providers/GoogleThinkingLevel;
+	public static final field MINIMAL Lpi/ai/core/providers/GoogleThinkingLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/providers/GoogleThinkingLevel;
+	public static fun values ()[Lpi/ai/core/providers/GoogleThinkingLevel;
+}
+
+public final class pi/ai/core/providers/GoogleThinkingOptions {
+	public fun <init> (ZLjava/lang/Integer;Lpi/ai/core/providers/GoogleThinkingLevel;)V
+	public synthetic fun <init> (ZLjava/lang/Integer;Lpi/ai/core/providers/GoogleThinkingLevel;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lpi/ai/core/providers/GoogleThinkingLevel;
+	public final fun copy (ZLjava/lang/Integer;Lpi/ai/core/providers/GoogleThinkingLevel;)Lpi/ai/core/providers/GoogleThinkingOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/GoogleThinkingOptions;ZLjava/lang/Integer;Lpi/ai/core/providers/GoogleThinkingLevel;ILjava/lang/Object;)Lpi/ai/core/providers/GoogleThinkingOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBudgetTokens ()Ljava/lang/Integer;
+	public final fun getEnabled ()Z
+	public final fun getLevel ()Lpi/ai/core/providers/GoogleThinkingLevel;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/GoogleToolChoice : java/lang/Enum {
+	public static final field ANY Lpi/ai/core/providers/GoogleToolChoice;
+	public static final field AUTO Lpi/ai/core/providers/GoogleToolChoice;
+	public static final field NONE Lpi/ai/core/providers/GoogleToolChoice;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/providers/GoogleToolChoice;
+	public static fun values ()[Lpi/ai/core/providers/GoogleToolChoice;
 }
 
 public final class pi/ai/core/providers/RegisterBuiltinsKt {
