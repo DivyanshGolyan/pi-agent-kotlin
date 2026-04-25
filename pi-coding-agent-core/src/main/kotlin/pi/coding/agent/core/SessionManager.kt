@@ -356,6 +356,15 @@ public class SessionManager private constructor(
 
     override fun getSessionFile(): String? = sessionFile
 
+    public fun ensureSessionFileWritten(): String? {
+        if (!persist || sessionFile == null) {
+            return null
+        }
+        rewriteFile()
+        flushed = true
+        return sessionFile
+    }
+
     public fun appendMessage(message: Message): String {
         require(message !is BranchSummaryMessage && message !is CompactionSummaryMessage) {
             "Use branch/session entry APIs for summary messages."

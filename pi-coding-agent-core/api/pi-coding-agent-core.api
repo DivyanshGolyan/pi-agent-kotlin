@@ -993,6 +993,7 @@ public final class pi/coding/agent/core/SessionManager : pi/coding/agent/core/Re
 	public static synthetic fun branchWithSummary$default (Lpi/coding/agent/core/SessionManager;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;ILjava/lang/Object;)Ljava/lang/String;
 	public final fun buildSessionContext ()Lpi/coding/agent/core/SessionContext;
 	public final fun createBranchedSession (Ljava/lang/String;)Ljava/lang/String;
+	public final fun ensureSessionFileWritten ()Ljava/lang/String;
 	public fun getBranch (Ljava/lang/String;)Ljava/util/List;
 	public final fun getChildren (Ljava/lang/String;)Ljava/util/List;
 	public fun getCwd ()Ljava/lang/String;
