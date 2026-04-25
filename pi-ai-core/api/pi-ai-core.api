@@ -365,6 +365,11 @@ public final class pi/ai/core/ModelsKt {
 	public static final fun supportsXhigh (Lpi/ai/core/Model;)Z
 }
 
+public final class pi/ai/core/OverflowKt {
+	public static final fun isContextOverflow (Lpi/ai/core/AssistantMessage;Ljava/lang/Integer;)Z
+	public static synthetic fun isContextOverflow$default (Lpi/ai/core/AssistantMessage;Ljava/lang/Integer;ILjava/lang/Object;)Z
+}
+
 public final class pi/ai/core/ProviderResponse {
 	public fun <init> (ILjava/util/Map;)V
 	public final fun component1 ()I
