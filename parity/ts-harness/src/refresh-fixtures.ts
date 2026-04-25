@@ -1071,7 +1071,8 @@ function normalizeCodingSessionEvents(rawEvents: any[], normalizer: ReturnType<t
       const normalized: any = {
         type: "compaction_end",
         reason: event.reason,
-        aborted: event.aborted ?? false
+        aborted: event.aborted ?? false,
+        willRetry: event.willRetry ?? false
       };
       if (event.errorMessage) normalized.errorMessage = event.errorMessage;
       if (event.result) normalized.result = normalizer.normalizeCompactionResult(event.result);

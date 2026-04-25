@@ -778,6 +778,7 @@
       "type": "compaction_end",
       "reason": "manual",
       "aborted": false,
+      "willRetry": false,
       "result": {
         "summary": "Conversation summary before the latest turn.",
         "firstKeptEntryId": "entry-1",

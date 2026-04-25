@@ -714,6 +714,7 @@ class CodingAgentParityTest {
                         put("type", "compaction_end")
                         put("reason", event.reason.name.lowercase())
                         put("aborted", event.aborted)
+                        put("willRetry", event.willRetry)
                         event.errorMessage?.let { put("errorMessage", it) }
                         event.result?.let { put("result", normalizer.normalizeCompactionResult(it)) }
                     }
