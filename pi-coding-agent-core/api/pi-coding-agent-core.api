@@ -102,20 +102,22 @@ public final class pi/coding/agent/core/AgentSessionEvent$Agent : pi/coding/agen
 }
 
 public final class pi/coding/agent/core/AgentSessionEvent$CompactionEnd : pi/coding/agent/core/AgentSessionEvent {
-	public fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;)V
-	public synthetic fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZZLjava/lang/String;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lpi/coding/agent/core/CompactionReason;
 	public final fun component2 ()Lpi/coding/agent/core/compaction/CompactionResult;
 	public final fun component3 ()Z
-	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
-	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZLjava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZZLjava/lang/String;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;Lpi/coding/agent/core/CompactionReason;Lpi/coding/agent/core/compaction/CompactionResult;ZZLjava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$CompactionEnd;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAborted ()Z
 	public final fun getErrorMessage ()Ljava/lang/String;
 	public final fun getReason ()Lpi/coding/agent/core/CompactionReason;
 	public final fun getResult ()Lpi/coding/agent/core/compaction/CompactionResult;
 	public fun getType ()Ljava/lang/String;
+	public final fun getWillRetry ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -365,6 +367,7 @@ public final class pi/coding/agent/core/CompactionEntry : pi/coding/agent/core/S
 
 public final class pi/coding/agent/core/CompactionReason : java/lang/Enum {
 	public static final field MANUAL Lpi/coding/agent/core/CompactionReason;
+	public static final field OVERFLOW Lpi/coding/agent/core/CompactionReason;
 	public static final field THRESHOLD Lpi/coding/agent/core/CompactionReason;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/CompactionReason;

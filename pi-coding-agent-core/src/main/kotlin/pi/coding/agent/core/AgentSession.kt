@@ -1,5 +1,11 @@
 package pi.coding.agent.core
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
@@ -20,6 +26,7 @@ import pi.ai.core.ToolResultMessage
 import pi.ai.core.UserContentPart
 import pi.ai.core.UserMessage
 import pi.ai.core.UserMessageContent
+import pi.ai.core.isContextOverflow
 import pi.ai.core.modelsAreEqual
 import pi.ai.core.supportsXhigh
 import pi.coding.agent.core.compaction.BranchSummaryResult
@@ -32,6 +39,7 @@ import pi.coding.agent.core.compaction.estimateContextTokens
 import pi.coding.agent.core.compaction.generateBranchSummary
 import pi.coding.agent.core.compaction.prepareCompaction
 import pi.coding.agent.core.compaction.shouldCompact
+import java.time.Instant
 
 public data class ModelScope(
     val model: Model<*>,
@@ -87,6 +95,7 @@ public sealed interface AgentSessionEvent {
         val reason: CompactionReason,
         val result: CompactionResult<JsonElement>? = null,
         val aborted: Boolean = false,
+        val willRetry: Boolean = false,
         val errorMessage: String? = null,
     ) : AgentSessionEvent {
         override val type: String = "compaction_end"
@@ -96,6 +105,7 @@ public sealed interface AgentSessionEvent {
 public enum class CompactionReason {
     MANUAL,
     THRESHOLD,
+    OVERFLOW,
 }
 
 public data class ModelCycleResult(
@@ -168,9 +178,11 @@ public class AgentSession(
     private val steeringMessages: MutableList<String> = mutableListOf()
     private val followUpMessages: MutableList<String> = mutableListOf()
     private val pendingNextTurnMessages: MutableList<CustomMessage> = mutableListOf()
+    private val sessionScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var compactionAbortController: pi.ai.core.AbortController? = null
     private var branchSummaryAbortController: pi.ai.core.AbortController? = null
     private var autoCompactionEnabled: Boolean = settingsManager.getCompactionSettings().enabled
+    private var overflowRecoveryAttempted: Boolean = false
 
     init {
         agent.state.systemPrompt = resourceLoader.getSystemPrompt()
@@ -231,6 +243,7 @@ public class AgentSession(
     public fun dispose() {
         unsubscribeAgent?.invoke()
         unsubscribeAgent = null
+        sessionScope.cancel()
         listeners.clear()
     }
 
@@ -244,6 +257,7 @@ public class AgentSession(
 
     private suspend fun handleAgentEvent(event: AgentEvent) {
         if (event is AgentEvent.MessageStart && event.message is UserMessage) {
+            overflowRecoveryAttempted = false
             val text = extractUserMessageText((event.message as UserMessage).content)
             if (text.isNotBlank()) {
                 val removedSteering = steeringMessages.remove(text)
@@ -258,13 +272,19 @@ public class AgentSession(
 
         if (event is AgentEvent.MessageEnd) {
             persistMessage(event.message)
+            val assistant = event.message as? AssistantMessage
+            if (assistant != null && assistant.stopReason != StopReason.ERROR) {
+                overflowRecoveryAttempted = false
+            }
         }
 
         if (event is AgentEvent.AgentEnd && autoCompactionEnabled) {
-            val lastAssistant = state.messages.lastOrNull() as? AssistantMessage
-            if (lastAssistant != null && lastAssistant.stopReason == StopReason.STOP) {
-                maybeAutoCompact()
-            }
+            val lastAssistant =
+                event.messages
+                    .asReversed()
+                    .filterIsInstance<AssistantMessage>()
+                    .firstOrNull()
+            lastAssistant?.let { checkCompaction(it) }
         }
     }
 
@@ -302,6 +322,8 @@ public class AgentSession(
                 null -> error("Agent is already processing. Specify streamingBehavior to queue the message.")
             }
         }
+
+        findLastAssistantMessage()?.let { checkCompaction(it, skipAbortedCheck = false) }
 
         val messages = mutableListOf<AgentMessage>()
         messages += userMessage(text = text, images = options.images)
@@ -568,19 +590,85 @@ public class AgentSession(
         }
     }
 
-    private suspend fun maybeAutoCompact() {
-        val usage = getContextUsage() ?: return
+    private suspend fun checkCompaction(
+        assistantMessage: AssistantMessage,
+        skipAbortedCheck: Boolean = true,
+    ) {
         val settings = settingsManager.getCompactionSettings()
-        if (!shouldCompact(usage.tokens, usage.contextWindow, settings)) {
+        if (!settings.enabled) {
+            return
+        }
+        if (skipAbortedCheck && assistantMessage.stopReason == StopReason.ABORTED) {
             return
         }
 
-        emit(AgentSessionEvent.CompactionStart(CompactionReason.THRESHOLD))
+        val contextWindow = model.contextWindow
+        val sameModel = assistantMessage.provider == model.provider && assistantMessage.model == model.id
+        val compactionEntry = getLatestCompactionEntry(sessionManager.getBranch())
+        val assistantIsFromBeforeCompaction =
+            compactionEntry != null && assistantMessage.timestamp <= compactionEntry.timestamp.toEpochMillisOrNull()
+        if (assistantIsFromBeforeCompaction) {
+            return
+        }
+
+        if (sameModel && isContextOverflow(assistantMessage, contextWindow)) {
+            if (overflowRecoveryAttempted) {
+                emit(
+                    AgentSessionEvent.CompactionEnd(
+                        reason = CompactionReason.OVERFLOW,
+                        errorMessage =
+                            "Context overflow recovery failed after one compact-and-retry attempt. " +
+                                "Try reducing context or switching to a larger-context model.",
+                    ),
+                )
+                return
+            }
+
+            overflowRecoveryAttempted = true
+            removeTrailingAssistantErrorFromActiveContext()
+            runAutoCompaction(CompactionReason.OVERFLOW, willRetry = true)
+            return
+        }
+
+        val contextTokens =
+            if (assistantMessage.stopReason == StopReason.ERROR) {
+                val estimate = estimateContextTokens(state.messages)
+                val lastUsageIndex = estimate.lastUsageIndex ?: return
+                val usageMessage = state.messages.getOrNull(lastUsageIndex) as? AssistantMessage
+                if (
+                    compactionEntry != null &&
+                    usageMessage != null &&
+                    usageMessage.timestamp <= compactionEntry.timestamp.toEpochMillisOrNull()
+                ) {
+                    return
+                }
+                estimate.tokens
+            } else {
+                calculateContextTokens(assistantMessage.usage)
+            }
+
+        if (shouldCompact(contextTokens, contextWindow, settings)) {
+            runAutoCompaction(CompactionReason.THRESHOLD, willRetry = false)
+        }
+    }
+
+    private suspend fun runAutoCompaction(
+        reason: CompactionReason,
+        willRetry: Boolean,
+    ) {
+        val settings = settingsManager.getCompactionSettings()
+        emit(AgentSessionEvent.CompactionStart(reason))
         compactionAbortController = pi.ai.core.AbortController()
         try {
-            val preparation = prepareCompaction(sessionManager.getBranch(), settings) ?: return
+            val preparation =
+                prepareCompaction(sessionManager.getBranch(), settings)
+                    ?: run {
+                        emit(AgentSessionEvent.CompactionEnd(reason = reason))
+                        return
+                    }
             val auth = modelRegistry.getApiKeyAndHeaders(model)
             if (!auth.ok || auth.apiKey == null) {
+                emit(AgentSessionEvent.CompactionEnd(reason = reason))
                 return
             }
             val result =
@@ -591,6 +679,15 @@ public class AgentSession(
                     headers = auth.headers,
                     signal = compactionAbortController?.signal,
                 )
+            if (compactionAbortController?.signal?.aborted == true) {
+                emit(
+                    AgentSessionEvent.CompactionEnd(
+                        reason = reason,
+                        aborted = true,
+                    ),
+                )
+                return
+            }
             val detailsJson = result.details?.let(::compactionDetailsToJson)
             sessionManager.appendCompaction(
                 summary = result.summary,
@@ -601,7 +698,7 @@ public class AgentSession(
             refreshAgentMessages()
             emit(
                 AgentSessionEvent.CompactionEnd(
-                    reason = CompactionReason.THRESHOLD,
+                    reason = reason,
                     result =
                         CompactionResult(
                             summary = result.summary,
@@ -609,12 +706,55 @@ public class AgentSession(
                             tokensBefore = result.tokensBefore,
                             details = detailsJson,
                         ),
+                    willRetry = willRetry,
+                ),
+            )
+            if (willRetry) {
+                removeTrailingAssistantErrorFromActiveContext()
+                scheduleAgentContinue()
+            } else if (agent.hasQueuedMessages()) {
+                scheduleAgentContinue()
+            }
+        } catch (error: Throwable) {
+            val message =
+                if (reason == CompactionReason.OVERFLOW) {
+                    "Context overflow recovery failed: ${error.message ?: error.toString()}"
+                } else {
+                    "Auto-compaction failed: ${error.message ?: error.toString()}"
+                }
+            emit(
+                AgentSessionEvent.CompactionEnd(
+                    reason = reason,
+                    errorMessage = message,
                 ),
             )
         } finally {
             compactionAbortController = null
         }
     }
+
+    private fun removeTrailingAssistantErrorFromActiveContext() {
+        val messages = state.messages
+        val last = messages.lastOrNull() as? AssistantMessage
+        if (last != null && last.stopReason == StopReason.ERROR) {
+            state.messages = messages.dropLast(1)
+        }
+    }
+
+    private fun findLastAssistantMessage(): AssistantMessage? =
+        state.messages
+            .asReversed()
+            .filterIsInstance<AssistantMessage>()
+            .firstOrNull()
+
+    private fun scheduleAgentContinue() {
+        sessionScope.launch {
+            delay(100)
+            runCatching { agent.`continue`() }
+        }
+    }
+
+    private fun String.toEpochMillisOrNull(): Long = runCatching { Instant.parse(this).toEpochMilli() }.getOrDefault(Long.MIN_VALUE)
 
     public fun abortCompaction() {
         compactionAbortController?.abort()
