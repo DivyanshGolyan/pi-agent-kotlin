@@ -148,19 +148,23 @@ private suspend fun runLoop(
             val toolCalls = message.content.filterIsInstance<ToolCall>()
             hasMoreToolCalls = toolCalls.isNotEmpty()
 
-            val toolResults =
+            val toolExecution =
                 if (hasMoreToolCalls) {
                     executeToolCalls(currentContext, message, config, signal, emit)
                 } else {
-                    emptyList()
+                    ToolExecutionBatch(emptyList(), terminal = false)
                 }
 
-            toolResults.forEach { result ->
+            toolExecution.messages.forEach { result ->
                 currentContext.messages += result
                 newMessages += result
             }
 
-            emit(AgentEvent.TurnEnd(message, toolResults))
+            emit(AgentEvent.TurnEnd(message, toolExecution.messages))
+            if (toolExecution.terminal) {
+                emit(AgentEvent.AgentEnd(newMessages.toList()))
+                return
+            }
             pendingMessages = config.getSteeringMessages?.invoke().orEmpty()
         }
 
@@ -262,11 +266,21 @@ private suspend fun executeToolCalls(
     config: AgentLoopConfig,
     signal: AbortSignal?,
     emit: AgentEventSink,
-): List<ToolResultMessage> =
+): ToolExecutionBatch =
     when (config.toolExecution) {
         ToolExecutionMode.SEQUENTIAL -> executeToolCallsSequential(currentContext, assistantMessage, config, signal, emit)
         ToolExecutionMode.PARALLEL -> executeToolCallsParallel(currentContext, assistantMessage, config, signal, emit)
     }
+
+private data class ToolExecutionBatch(
+    val messages: List<ToolResultMessage>,
+    val terminal: Boolean,
+)
+
+private data class ToolCallResultMessage(
+    val message: ToolResultMessage,
+    val terminal: Boolean,
+)
 
 private suspend fun executeToolCallsSequential(
     currentContext: AgentContext,
@@ -274,22 +288,29 @@ private suspend fun executeToolCallsSequential(
     config: AgentLoopConfig,
     signal: AbortSignal?,
     emit: AgentEventSink,
-): List<ToolResultMessage> {
+): ToolExecutionBatch {
     val results = mutableListOf<ToolResultMessage>()
     val toolCalls = assistantMessage.content.filterIsInstance<ToolCall>()
+    var terminal = false
 
     for (toolCall in toolCalls) {
         emit(AgentEvent.ToolExecutionStart(toolCall.id, toolCall.name, toolCall.arguments))
-        when (val preparation = prepareToolCall(currentContext, assistantMessage, toolCall, config, signal)) {
-            is ImmediateToolCallOutcome -> results += emitToolCallOutcome(toolCall, preparation.result, preparation.isError, emit)
-            is PreparedToolCall -> {
-                val executed = executePreparedToolCall(preparation, signal, emit)
-                results += finalizeExecutedToolCall(currentContext, assistantMessage, preparation, executed, config, signal, emit)
+        val result =
+            when (val preparation = prepareToolCall(currentContext, assistantMessage, toolCall, config, signal)) {
+                is ImmediateToolCallOutcome -> emitToolCallOutcome(toolCall, preparation.result, preparation.isError, emit)
+                is PreparedToolCall -> {
+                    val executed = executePreparedToolCall(preparation, signal, emit)
+                    finalizeExecutedToolCall(currentContext, assistantMessage, preparation, executed, config, signal, emit)
+                }
             }
+        results += result.message
+        if (result.terminal) {
+            terminal = true
+            break
         }
     }
 
-    return results
+    return ToolExecutionBatch(results, terminal)
 }
 
 private suspend fun executeToolCallsParallel(
@@ -298,16 +319,21 @@ private suspend fun executeToolCallsParallel(
     config: AgentLoopConfig,
     signal: AbortSignal?,
     emit: AgentEventSink,
-): List<ToolResultMessage> =
+): ToolExecutionBatch =
     coroutineScope {
         val results = mutableListOf<ToolResultMessage>()
         val runnableCalls = mutableListOf<PreparedToolCall>()
         val toolCalls = assistantMessage.content.filterIsInstance<ToolCall>()
+        var terminal = false
 
         for (toolCall in toolCalls) {
             emit(AgentEvent.ToolExecutionStart(toolCall.id, toolCall.name, toolCall.arguments))
             when (val preparation = prepareToolCall(currentContext, assistantMessage, toolCall, config, signal)) {
-                is ImmediateToolCallOutcome -> results += emitToolCallOutcome(toolCall, preparation.result, preparation.isError, emit)
+                is ImmediateToolCallOutcome -> {
+                    val result = emitToolCallOutcome(toolCall, preparation.result, preparation.isError, emit)
+                    results += result.message
+                    terminal = terminal || result.terminal
+                }
                 is PreparedToolCall -> runnableCalls += preparation
             }
         }
@@ -322,10 +348,12 @@ private suspend fun executeToolCallsParallel(
 
         runningCalls.forEach { (prepared, execution) ->
             val executed = execution.await()
-            results += finalizeExecutedToolCall(currentContext, assistantMessage, prepared, executed, config, signal, emit)
+            val result = finalizeExecutedToolCall(currentContext, assistantMessage, prepared, executed, config, signal, emit)
+            results += result.message
+            terminal = terminal || result.terminal
         }
 
-        results
+        ToolExecutionBatch(results, terminal)
     }
 
 private sealed interface ToolCallPreparation
@@ -425,7 +453,7 @@ private suspend fun finalizeExecutedToolCall(
     config: AgentLoopConfig,
     signal: AbortSignal?,
     emit: AgentEventSink,
-): ToolResultMessage {
+): ToolCallResultMessage {
     var result = executed.result
     var isError = executed.isError
 
@@ -448,6 +476,7 @@ private suspend fun finalizeExecutedToolCall(
                     AgentToolResult(
                         content = afterResult.content ?: result.content,
                         details = afterResult.details ?: result.details,
+                        terminal = afterResult.terminal ?: result.terminal,
                     )
                 isError = afterResult.isError ?: isError
             }
@@ -471,7 +500,7 @@ private suspend fun emitToolCallOutcome(
     result: AgentToolResult<*>,
     isError: Boolean,
     emit: AgentEventSink,
-): ToolResultMessage {
+): ToolCallResultMessage {
     emit(AgentEvent.ToolExecutionEnd(toolCall.id, toolCall.name, result, isError))
 
     val toolResultMessage =
@@ -486,7 +515,7 @@ private suspend fun emitToolCallOutcome(
 
     emit(AgentEvent.MessageStart(toolResultMessage.copyForEvent()))
     emit(AgentEvent.MessageEnd(toolResultMessage))
-    return toolResultMessage
+    return ToolCallResultMessage(toolResultMessage, result.terminal)
 }
 
 private fun AgentLoopConfig.toSimpleStreamOptions(

@@ -189,6 +189,68 @@ class AgentLoopTest {
             assertEquals(listOf("tool-1:first", "tool-2:second"), executed)
             assertEquals(listOf("tool-1", "tool-2"), toolResults.map { it.toolCallId })
         }
+
+    @Test
+    fun `terminal tool result ends loop without another assistant turn`() =
+        runTest {
+            val tool =
+                object : AgentTool<String> {
+                    override val name: String = "finish"
+                    override val label: String = "Finish"
+                    override val description: String = "Finish tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "done"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult(
+                            content = listOf(TextContent("finished")),
+                            details = buildJsonObject { put("status", params) },
+                            terminal = true,
+                        )
+                }
+
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(tool))
+            val assistantWithTerminalTool =
+                createAssistantMessage(
+                    listOf(ToolCall("tool-1", "finish", buildJsonObject {})),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val unexpectedAssistant = createAssistantMessage(listOf(TextContent("should not be called")))
+
+            var callCount = 0
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("finish")),
+                    context = context,
+                    config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTerminalTool else unexpectedAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+            val messages = stream.result()
+
+            assertEquals(1, callCount)
+            assertEquals(3, messages.size)
+            assertTrue(messages[0] is UserMessage)
+            assertTrue(messages[1] is AssistantMessage)
+            assertTrue(messages[2] is ToolResultMessage)
+        }
 }
 
 private fun identityConverter(messages: List<AgentMessage>): List<Message> =

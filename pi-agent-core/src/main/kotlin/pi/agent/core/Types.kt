@@ -64,6 +64,7 @@ public data class AfterToolCallResult(
     val content: List<ToolResultContentPart>? = null,
     val details: JsonElement? = null,
     val isError: Boolean? = null,
+    val terminal: Boolean? = null,
 )
 
 public data class BeforeToolCallContext(
@@ -122,6 +123,7 @@ public interface AgentState {
 public data class AgentToolResult<TDetails>(
     val content: List<ToolResultContentPart>,
     val details: TDetails,
+    val terminal: Boolean = false,
 )
 
 public typealias AgentToolUpdateCallback<TDetails> = suspend (AgentToolResult<TDetails>) -> Unit
