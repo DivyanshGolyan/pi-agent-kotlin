@@ -7,7 +7,7 @@ This repo is a scoped port:
 - it focuses on the slice needed for direct Anthropic and Gemini API-key usage
 - it checks behavior against pinned upstream TypeScript snapshots
 
-## What is here today
+## Current state
 
 Modules:
 - `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic and Gemini API-key usage
@@ -15,7 +15,7 @@ Modules:
 - `pi-coding-agent-core`: the `coding-agent` session/runtime slice built on top of `pi-agent-core`
 - `android-consumer`: an Android API 31+ verification module
 
-What works:
+Supported today:
 - direct Anthropic Messages API calls with API key auth
 - direct Google Gemini API calls with API key auth
 - streaming text
@@ -28,7 +28,7 @@ What works:
 - coding-agent session persistence, branch trees, context rebuilding, compaction, and branch summarization
 - coding-agent SDK/runtime basics: `createAgentSession`, `AgentSession`, `createAgentSessionRuntime`, runtime session switching, forking, and tree navigation
 
-What is still out of scope:
+Still out of scope:
 - providers beyond direct Anthropic and direct Google Gemini
 - OAuth-based provider flows
 - the upstream extension runtime, built-in coding tools, bash executor, and HTML export surface
@@ -50,17 +50,17 @@ The repo now includes the main `packages/coding-agent` SDK/runtime pieces behind
 - `src/core/agent-session-services.ts`
 - `src/core/agent-session-runtime.ts`
 
-That work ships as `pi-coding-agent-core`, with deterministic parity coverage for the supported Kotlin slice.
+This ships as `pi-coding-agent-core`. The supported slice has deterministic parity coverage.
 
 ## How parity works
 
-The goal is semantic parity with the TypeScript packages for the supported slice.
+The goal is semantic parity with the TypeScript packages for the slice this repo actually ports.
 
-Behavior is checked against pinned upstream snapshots that stay in the repo on purpose:
+Behavior is checked against pinned upstream snapshots. They stay in the repo on purpose:
 - [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) for `packages/ai` and `packages/agent`
 - [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18) for `packages/coding-agent`
 
-We keep those snapshots in the repo because they drive:
+Those snapshots drive:
 - behavior checks
 - regression work
 - parity decisions
@@ -87,24 +87,68 @@ Verified baseline:
 - JVM target `11`
 - Android `minSdk 31`
 
-The runtime modules do not expose Android framework types. Android support is checked through `android-consumer`, so the published libraries stay usable in Android 12+ apps.
+The runtime modules do not expose Android framework types. Android support is checked through `android-consumer`, so the libraries stay usable in Android 12+ apps.
 
 ## Installation
 
-This project is not published yet. For now, install it locally with `publishToMavenLocal`.
+The first public release is on Maven Central.
 
-Planned coordinates:
+Use these coordinates:
 
 ```kotlin
-implementation("io.github.divyanshgolyan:pi-ai-core:<version>")
-implementation("io.github.divyanshgolyan:pi-agent-core:<version>")
-implementation("io.github.divyanshgolyan:pi-coding-agent-core:<version>")
+implementation("io.github.divyanshgolyan:pi-ai-core:0.1.0")
+implementation("io.github.divyanshgolyan:pi-agent-core:0.1.0")
+implementation("io.github.divyanshgolyan:pi-coding-agent-core:0.1.0")
 ```
 
-Local install:
+For local development:
 
 ```bash
 ./gradlew publishToMavenLocal
+```
+
+## Publishing
+
+The publishable modules use Maven Central through the Sonatype Central Portal:
+
+- `io.github.divyanshgolyan:pi-ai-core`
+- `io.github.divyanshgolyan:pi-agent-core`
+- `io.github.divyanshgolyan:pi-coding-agent-core`
+
+Before publishing from a machine or CI:
+
+1. Sign in to <https://central.sonatype.com> and verify the
+   `io.github.divyanshgolyan` namespace.
+2. Generate a Central Portal publishing token.
+3. Create a GPG signing key and publish the public key.
+4. Keep credentials in user Gradle properties or environment variables. Do not put them in this repo.
+
+Environment variables:
+
+```bash
+export ORG_GRADLE_PROJECT_mavenCentralUsername="<central-portal-token-username>"
+export ORG_GRADLE_PROJECT_mavenCentralPassword="<central-portal-token-password>"
+export ORG_GRADLE_PROJECT_signingInMemoryKey="$(gpg --export-secret-keys --armor <key-id>)"
+export ORG_GRADLE_PROJECT_signingInMemoryKeyId="<key-id>"
+export ORG_GRADLE_PROJECT_signingInMemoryKeyPassword="<key-password>"
+```
+
+For a snapshot build, keep `VERSION_NAME` ending in `-SNAPSHOT`. Snapshots also need to be enabled for the namespace in Central Portal:
+
+```bash
+./gradlew publishToMavenCentral
+```
+
+For a release, use a non-snapshot version and run the full verification gate first. To upload and publish manually from Central Portal:
+
+```bash
+./gradlew -PVERSION_NAME=0.1.0 publishToMavenCentral
+```
+
+To upload and publish automatically:
+
+```bash
+./gradlew -PVERSION_NAME=0.1.0 publishAndReleaseToMavenCentral
 ```
 
 ## Quick start: `pi-ai-core`
@@ -242,13 +286,13 @@ npm ci
 ./gradlew parityTest
 ```
 
-The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshots and compared against normalized Kotlin outputs for deterministic scenarios only. Live Anthropic tests are separate.
+The fixtures under `parity/fixtures` are generated from the pinned TypeScript snapshots and compared against normalized Kotlin output for deterministic scenarios only. Live Anthropic tests are separate.
 
 ## Live tests
 
 The repo also contains live Anthropic integration tests. They are opt-in and require `ANTHROPIC_API_KEY`.
 
-The regular verification command does not depend on them. Run them when you want to check the direct provider path against the real API.
+The regular verification command does not depend on them. Run them when you want to check the direct provider path against the live API.
 
 Direct Gemini usage is covered by the same `pi-ai-core` APIs. Use `getModel(GOOGLE_PROVIDER, "...")` and pass `GEMINI_API_KEY` through `SimpleStreamOptions.apiKey` or the environment.
 
