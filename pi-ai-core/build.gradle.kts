@@ -1,10 +1,8 @@
 import org.gradle.api.tasks.testing.Test
-import org.gradle.jvm.tasks.Jar
 
 plugins {
     `java-library`
-    `maven-publish`
-    signing
+    alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
@@ -15,22 +13,15 @@ plugins {
 
 description = "Kotlin port of the pi-ai core subset required for direct Anthropic API-key usage."
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-tasks.named<Jar>("javadocJar") {
-    dependsOn(tasks.named("dokkaGeneratePublicationHtml"))
-    from(layout.buildDirectory.dir("dokka/html"))
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifactId = "pi-ai-core"
-        }
+mavenPublishing {
+    coordinates(providers.gradleProperty("GROUP").get(), "pi-ai-core", providers.gradleProperty("VERSION_NAME").get())
+    publishToMavenCentral()
+    pom {
+        name.set(project.name)
+        description.set(project.description ?: "Kotlin port of selected pi-mono packages.")
+    }
+    if (!providers.gradleProperty("signingInMemoryKey").orNull.isNullOrBlank()) {
+        signAllPublications()
     }
 }
 

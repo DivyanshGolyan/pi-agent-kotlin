@@ -1,10 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaExtension
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.Exec
-import org.gradle.jvm.tasks.Jar
-import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -13,6 +9,7 @@ plugins {
     alias(libs.plugins.binary.compatibility.validator)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
+    alias(libs.plugins.maven.publish) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.serialization) apply false
@@ -94,48 +91,6 @@ subprojects {
         }
     }
 
-    pluginManager.withPlugin("maven-publish") {
-        extensions.configure<PublishingExtension> {
-            publications.withType(MavenPublication::class.java).configureEach {
-                pom {
-                    name.set(project.name)
-                    description.set(project.description ?: "Kotlin port of selected pi-mono packages.")
-                    url.set(providers.gradleProperty("POM_URL"))
-                    licenses {
-                        license {
-                            name.set(providers.gradleProperty("POM_LICENSE_NAME"))
-                            url.set(providers.gradleProperty("POM_LICENSE_URL"))
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set(providers.gradleProperty("POM_DEVELOPER_ID"))
-                            name.set(providers.gradleProperty("POM_DEVELOPER_NAME"))
-                            url.set(providers.gradleProperty("POM_DEVELOPER_URL"))
-                        }
-                    }
-                    scm {
-                        url.set(providers.gradleProperty("POM_SCM_URL"))
-                        connection.set(providers.gradleProperty("POM_SCM_CONNECTION"))
-                        developerConnection.set(providers.gradleProperty("POM_SCM_DEV_CONNECTION"))
-                    }
-                }
-            }
-        }
-    }
-
-    pluginManager.withPlugin("signing") {
-        val signingKey = providers.gradleProperty("signingInMemoryKey").orNull
-        val signingPassword = providers.gradleProperty("signingInMemoryKeyPassword").orNull
-        val signingKeyId = providers.gradleProperty("signingInMemoryKeyId").orNull
-
-        if (!signingKey.isNullOrBlank() && !signingPassword.isNullOrBlank()) {
-            extensions.configure<SigningExtension> {
-                useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-                sign(extensions.getByType(PublishingExtension::class.java).publications)
-            }
-        }
-    }
 }
 
 tasks.register("checkParityEnvironment") {
