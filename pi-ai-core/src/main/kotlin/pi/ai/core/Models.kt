@@ -508,10 +508,31 @@ private val googleModels: Map<String, Model<String>> =
             ),
     )
 
+private val openAiCodexModels: Map<String, Model<String>> =
+    linkedMapOf(
+        "gpt-5.1" to openAiCodexModel("gpt-5.1", "GPT-5.1", ModelCost(1.25, 10.0, 0.125, 0.0)),
+        "gpt-5.1-codex-max" to openAiCodexModel("gpt-5.1-codex-max", "GPT-5.1 Codex Max", ModelCost(1.25, 10.0, 0.125, 0.0)),
+        "gpt-5.1-codex-mini" to openAiCodexModel("gpt-5.1-codex-mini", "GPT-5.1 Codex Mini", ModelCost(0.25, 2.0, 0.025, 0.0)),
+        "gpt-5.2" to openAiCodexModel("gpt-5.2", "GPT-5.2", ModelCost(1.75, 14.0, 0.175, 0.0)),
+        "gpt-5.2-codex" to openAiCodexModel("gpt-5.2-codex", "GPT-5.2 Codex", ModelCost(1.75, 14.0, 0.175, 0.0)),
+        "gpt-5.3-codex" to openAiCodexModel("gpt-5.3-codex", "GPT-5.3 Codex", ModelCost(1.75, 14.0, 0.175, 0.0)),
+        "gpt-5.3-codex-spark" to
+            openAiCodexModel(
+                id = "gpt-5.3-codex-spark",
+                name = "GPT-5.3 Codex Spark",
+                cost = ModelCost(0.0, 0.0, 0.0, 0.0),
+                input = setOf(InputModality.TEXT),
+                contextWindow = 128_000,
+            ),
+        "gpt-5.4" to openAiCodexModel("gpt-5.4", "GPT-5.4", ModelCost(2.5, 15.0, 0.25, 0.0)),
+        "gpt-5.4-mini" to openAiCodexModel("gpt-5.4-mini", "GPT-5.4 Mini", ModelCost(0.75, 4.5, 0.075, 0.0)),
+    )
+
 private val modelRegistry: Map<String, Map<String, Model<String>>> =
     mapOf(
         ANTHROPIC_PROVIDER to anthropicModels,
         GOOGLE_PROVIDER to googleModels,
+        OPENAI_CODEX_PROVIDER to openAiCodexModels,
     )
 
 private fun anthropicModel(
@@ -552,6 +573,27 @@ private fun googleModel(
         provider = GOOGLE_PROVIDER,
         baseUrl = "https://generativelanguage.googleapis.com/v1beta",
         reasoning = reasoning,
+        input = input,
+        cost = cost,
+        contextWindow = contextWindow,
+        maxTokens = maxTokens,
+    )
+
+private fun openAiCodexModel(
+    id: String,
+    name: String,
+    cost: ModelCost,
+    input: Set<InputModality> = setOf(InputModality.TEXT, InputModality.IMAGE),
+    contextWindow: Int = 272_000,
+    maxTokens: Int = 128_000,
+): Model<String> =
+    Model(
+        id = id,
+        name = name,
+        api = OPENAI_CODEX_RESPONSES_API,
+        provider = OPENAI_CODEX_PROVIDER,
+        baseUrl = "https://chatgpt.com/backend-api",
+        reasoning = true,
         input = input,
         cost = cost,
         contextWindow = contextWindow,

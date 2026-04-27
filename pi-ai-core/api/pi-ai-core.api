@@ -604,6 +604,8 @@ public final class pi/ai/core/TypesKt {
 	public static final field ANTHROPIC_PROVIDER Ljava/lang/String;
 	public static final field GOOGLE_GENERATIVE_AI_API Ljava/lang/String;
 	public static final field GOOGLE_PROVIDER Ljava/lang/String;
+	public static final field OPENAI_CODEX_PROVIDER Ljava/lang/String;
+	public static final field OPENAI_CODEX_RESPONSES_API Ljava/lang/String;
 }
 
 public final class pi/ai/core/Usage {
@@ -841,6 +843,226 @@ public final class pi/ai/core/providers/GoogleToolChoice : java/lang/Enum {
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/providers/GoogleToolChoice;
 	public static fun values ()[Lpi/ai/core/providers/GoogleToolChoice;
+}
+
+public final class pi/ai/core/providers/OAuthAuthInfo {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OAuthAuthInfo;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OAuthAuthInfo;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OAuthAuthInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInstructions ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OAuthLoginCallbacks {
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;J)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lkotlin/jvm/functions/Function1;
+	public final fun component2 ()Lkotlin/jvm/functions/Function2;
+	public final fun component3 ()Lkotlin/jvm/functions/Function1;
+	public final fun component4 ()Lkotlin/jvm/functions/Function1;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()J
+	public final fun copy (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;J)Lpi/ai/core/providers/OAuthLoginCallbacks;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OAuthLoginCallbacks;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;JILjava/lang/Object;)Lpi/ai/core/providers/OAuthLoginCallbacks;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCallbackTimeoutMillis ()J
+	public final fun getOnAuth ()Lkotlin/jvm/functions/Function1;
+	public final fun getOnManualCodeInput ()Lkotlin/jvm/functions/Function1;
+	public final fun getOnProgress ()Lkotlin/jvm/functions/Function1;
+	public final fun getOnPrompt ()Lkotlin/jvm/functions/Function2;
+	public final fun getOriginator ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OAuthPrompt {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lpi/ai/core/providers/OAuthPrompt;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OAuthPrompt;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OAuthPrompt;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class pi/ai/core/providers/OAuthProviderInterface {
+	public abstract fun getApiKey (Lpi/ai/core/providers/OpenAICodexOAuthCredentials;)Ljava/lang/String;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getUsesCallbackServer ()Z
+	public abstract fun login (Lpi/ai/core/providers/OAuthLoginCallbacks;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun refreshToken (Lpi/ai/core/providers/OpenAICodexOAuthCredentials;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+}
+
+public final class pi/ai/core/providers/OpenAICodexAuthorizationFlow {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexAuthorizationFlow;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexAuthorizationFlow;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexAuthorizationFlow;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getState ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public final fun getVerifier ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OpenAICodexAuthorizationInput {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexAuthorizationInput;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexAuthorizationInput;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexAuthorizationInput;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getState ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OpenAICodexCallbackResult {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexCallbackResult;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexCallbackResult;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexCallbackResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getState ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OpenAICodexLoopbackServer {
+	public static final field Companion Lpi/ai/core/providers/OpenAICodexLoopbackServer$Companion;
+	public synthetic fun <init> (Ljava/net/ServerSocket;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun cancelWait ()V
+	public final fun close ()V
+	public final fun waitForCallback (J)Lpi/ai/core/providers/OpenAICodexCallbackResult;
+}
+
+public final class pi/ai/core/providers/OpenAICodexLoopbackServer$Companion {
+	public final fun start (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexLoopbackServer;
+	public final fun tryStart (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexLoopbackServer;
+}
+
+public final class pi/ai/core/providers/OpenAICodexOAuthCredentials {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()J
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexOAuthCredentials;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccess ()Ljava/lang/String;
+	public final fun getAccountId ()Ljava/lang/String;
+	public final fun getExpires ()J
+	public final fun getRefresh ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OpenAICodexOAuthKt {
+	public static final field OPENAI_CODEX_AUTHORIZE_URL Ljava/lang/String;
+	public static final field OPENAI_CODEX_CALLBACK_TIMEOUT_MILLIS J
+	public static final field OPENAI_CODEX_CLIENT_ID Ljava/lang/String;
+	public static final field OPENAI_CODEX_JWT_CLAIM_PATH Ljava/lang/String;
+	public static final field OPENAI_CODEX_REDIRECT_URI Ljava/lang/String;
+	public static final field OPENAI_CODEX_SCOPE Ljava/lang/String;
+	public static final field OPENAI_CODEX_TOKEN_URL Ljava/lang/String;
+	public static final fun createOpenAICodexAuthorizationFlow (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexAuthorizationFlow;
+	public static synthetic fun createOpenAICodexAuthorizationFlow$default (Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexAuthorizationFlow;
+	public static final fun createOpenAICodexState (Ljava/security/SecureRandom;)Ljava/lang/String;
+	public static synthetic fun createOpenAICodexState$default (Ljava/security/SecureRandom;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun exchangeOpenAICodexAuthorizationCode (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public static synthetic fun exchangeOpenAICodexAuthorizationCode$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public static final fun extractOpenAICodexAccountId (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun generateOpenAICodexPkce (Ljava/security/SecureRandom;)Lpi/ai/core/providers/OpenAICodexPkce;
+	public static synthetic fun generateOpenAICodexPkce$default (Ljava/security/SecureRandom;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexPkce;
+	public static final fun getOAuthProvider (Ljava/lang/String;)Lpi/ai/core/providers/OAuthProviderInterface;
+	public static final fun getOpenAICodexOAuthProvider ()Lpi/ai/core/providers/OAuthProviderInterface;
+	public static final fun loginOpenAICodex (Lpi/ai/core/providers/OAuthLoginCallbacks;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun parseOpenAICodexAuthorizationInput (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexAuthorizationInput;
+	public static final fun refreshOpenAICodexAccessToken (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+}
+
+public final class pi/ai/core/providers/OpenAICodexPkce {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexPkce;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexPkce;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexPkce;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChallenge ()Ljava/lang/String;
+	public final fun getVerifier ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/providers/OpenAICodexResponsesApiProvider : pi/ai/core/ApiProvider {
+	public static final field INSTANCE Lpi/ai/core/providers/OpenAICodexResponsesApiProvider;
+	public fun getApi ()Ljava/lang/String;
+	public fun stream (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/StreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public fun streamSimple (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/OpenAICodexResponsesKt {
+	public static final fun buildCodexRequestBody (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/OpenAICodexResponsesOptions;)Lkotlinx/serialization/json/JsonObject;
+	public static synthetic fun buildCodexRequestBody$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/OpenAICodexResponsesOptions;ILjava/lang/Object;)Lkotlinx/serialization/json/JsonObject;
+	public static final fun streamOpenAICodexResponses (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/OpenAICodexResponsesOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamOpenAICodexResponses$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/providers/OpenAICodexResponsesOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+	public static final fun streamSimpleOpenAICodexResponses (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;)Lpi/ai/core/AssistantMessageEventStream;
+	public static synthetic fun streamSimpleOpenAICodexResponses$default (Lpi/ai/core/Model;Lpi/ai/core/Context;Lpi/ai/core/SimpleStreamOptions;ILjava/lang/Object;)Lpi/ai/core/AssistantMessageEventStream;
+}
+
+public final class pi/ai/core/providers/OpenAICodexResponsesOptions {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/ThinkingLevel;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Transport;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/ThinkingLevel;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Transport;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Double;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Lpi/ai/core/Transport;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lpi/ai/core/AbortSignal;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlin/jvm/functions/Function3;
+	public final fun component7 ()Lkotlin/jvm/functions/Function3;
+	public final fun component8 ()Ljava/util/Map;
+	public final fun component9 ()Lpi/ai/core/ThinkingLevel;
+	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/ThinkingLevel;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Transport;Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexResponsesOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/OpenAICodexResponsesOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Lpi/ai/core/ThinkingLevel;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/Transport;Ljava/lang/String;ILjava/lang/Object;)Lpi/ai/core/providers/OpenAICodexResponsesOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiKey ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMaxTokens ()Ljava/lang/Integer;
+	public final fun getOnPayload ()Lkotlin/jvm/functions/Function3;
+	public final fun getOnResponse ()Lkotlin/jvm/functions/Function3;
+	public final fun getReasoningEffort ()Lpi/ai/core/ThinkingLevel;
+	public final fun getReasoningSummary ()Ljava/lang/String;
+	public final fun getServiceTier ()Ljava/lang/String;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSignal ()Lpi/ai/core/AbortSignal;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getTextVerbosity ()Ljava/lang/String;
+	public final fun getTransport ()Lpi/ai/core/Transport;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class pi/ai/core/providers/RegisterBuiltinsKt {

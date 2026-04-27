@@ -10,6 +10,8 @@ public const val ANTHROPIC_MESSAGES_API: String = "anthropic-messages"
 public const val ANTHROPIC_PROVIDER: String = "anthropic"
 public const val GOOGLE_GENERATIVE_AI_API: String = "google-generative-ai"
 public const val GOOGLE_PROVIDER: String = "google"
+public const val OPENAI_CODEX_RESPONSES_API: String = "openai-codex-responses"
+public const val OPENAI_CODEX_PROVIDER: String = "openai-codex"
 
 public enum class ThinkingLevel {
     MINIMAL,

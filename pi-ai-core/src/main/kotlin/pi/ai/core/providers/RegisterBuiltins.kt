@@ -10,5 +10,6 @@ public fun registerBuiltins() {
     }
     registerApiProvider(AnthropicApiProvider)
     registerApiProvider(GoogleApiProvider)
+    registerApiProvider(OpenAICodexResponsesApiProvider)
     registered = true
 }
