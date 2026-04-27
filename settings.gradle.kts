@@ -19,4 +19,3 @@ rootProject.name = "pi-agent-kotlin"
 include(":pi-ai-core")
 include(":pi-agent-core")
 include(":pi-coding-agent-core")
-include(":android-consumer")

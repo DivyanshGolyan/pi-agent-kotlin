@@ -14,7 +14,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ktlint) apply false
-    alias(libs.plugins.android.library) apply false
 }
 
 group = providers.gradleProperty("GROUP").get()
@@ -23,10 +22,6 @@ version = providers.gradleProperty("VERSION_NAME").get()
 subprojects {
     group = rootProject.group
     version = rootProject.version
-}
-
-apiValidation {
-    ignoredProjects += listOf("android-consumer")
 }
 
 subprojects {

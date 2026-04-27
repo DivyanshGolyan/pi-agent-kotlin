@@ -4,21 +4,22 @@
 
 This repo is a scoped port:
 - it is not the original implementation
-- it focuses on the slice needed for direct Anthropic and Gemini API-key usage
+- it focuses on the slice needed for direct Anthropic/Gemini API-key usage and ChatGPT subscription-backed Codex access
 - it checks behavior against pinned upstream TypeScript snapshots
 
 ## Current state
 
 Modules:
-- `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic and Gemini API-key usage
+- `pi-ai-core`: the `pi-ai` slice needed for direct Anthropic/Gemini API-key usage and OpenAI Codex subscription access
 - `pi-agent-core`: the `pi-agent` slice built on top of `pi-ai-core`
 - `pi-coding-agent-core`: the `coding-agent` session/runtime slice built on top of `pi-agent-core`
-- `android-consumer`: an Android API 31+ verification module
 
 Supported today:
 - direct Anthropic Messages API calls with API key auth
 - direct Google Gemini API calls with API key auth
+- OpenAI Codex Responses calls with ChatGPT OAuth credentials
 - streaming text
+- SSE and WebSocket provider transports for Codex
 - thinking blocks
 - tool calls and tool results
 - custom agent message conversion hooks
@@ -29,8 +30,8 @@ Supported today:
 - coding-agent SDK/runtime basics: `createAgentSession`, `AgentSession`, `createAgentSessionRuntime`, runtime session switching, forking, and tree navigation
 
 Still out of scope:
-- providers beyond direct Anthropic and direct Google Gemini
-- OAuth-based provider flows
+- providers beyond direct Anthropic, direct Google Gemini, and OpenAI Codex
+- OAuth-based provider flows beyond the OpenAI Codex slice
 - the upstream extension runtime, built-in coding tools, bash executor, and HTML export surface
 - the full upstream `pi-ai` surface
 - the full upstream CLI/app surface built around `packages/coding-agent`
@@ -82,12 +83,11 @@ One known divergence:
 Verified baseline:
 - Kotlin `2.3.20`
 - Gradle `9.3.1`
-- Android Gradle Plugin `9.1.0`
 - JDK `17`
 - JVM target `11`
 - Android `minSdk 31`
 
-The runtime modules do not expose Android framework types. Android support is checked through `android-consumer`, so the libraries stay usable in Android 12+ apps.
+The runtime modules do not expose Android framework types, so the libraries stay usable in Android 12+ apps while the default build stays composite-friendly for downstream Android projects.
 
 ## Installation
 
@@ -234,7 +234,6 @@ Custom agent messages:
 
 ## Android notes
 
-- The repository verifies Android compatibility through `android-consumer`.
 - The core libraries are published as JVM libraries and are intended to be consumed from Android applications.
 - The canonical toolchain for this project is JDK 17, not JDK 21.
 
@@ -250,15 +249,12 @@ Main verification command:
   :pi-ai-core:ktlintCheck \
   :pi-agent-core:ktlintCheck \
   :pi-coding-agent-core:ktlintCheck \
-  :android-consumer:ktlintCheck \
   :pi-ai-core:detekt \
   :pi-agent-core:detekt \
   :pi-coding-agent-core:detekt \
-  :android-consumer:detekt \
   :pi-ai-core:test \
   :pi-agent-core:test \
-  :pi-coding-agent-core:test \
-  :android-consumer:testDebugUnitTest
+  :pi-coding-agent-core:test
 ```
 
 Coverage reports are still available, but they do not block the main verification gate:
