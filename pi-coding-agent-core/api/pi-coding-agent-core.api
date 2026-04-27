@@ -261,8 +261,13 @@ public final class pi/coding/agent/core/AuthStorage {
 	public final fun clear (Ljava/lang/String;)V
 	public final fun getApiKey (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getHeaders (Ljava/lang/String;)Ljava/util/Map;
+	public final fun getOAuthCredentials (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public final fun login (Ljava/lang/String;Lpi/ai/core/providers/OAuthLoginCallbacks;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun logout (Ljava/lang/String;)V
 	public final fun setApiKey (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
 	public static synthetic fun setApiKey$default (Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)V
+	public final fun setOAuthCredentials (Ljava/lang/String;Lpi/ai/core/providers/OpenAICodexOAuthCredentials;Ljava/util/Map;)V
+	public static synthetic fun setOAuthCredentials$default (Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;Lpi/ai/core/providers/OpenAICodexOAuthCredentials;Ljava/util/Map;ILjava/lang/Object;)V
 }
 
 public final class pi/coding/agent/core/AuthStorage$Companion {
@@ -719,20 +724,25 @@ public final class pi/coding/agent/core/ModelCycleResult {
 
 public final class pi/coding/agent/core/ModelRegistry {
 	public static final field Companion Lpi/coding/agent/core/ModelRegistry$Companion;
-	public synthetic fun <init> (Lpi/coding/agent/core/AuthStorage;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/AuthStorage;Ljava/nio/file/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun find (Ljava/lang/String;Ljava/lang/String;)Lpi/ai/core/Model;
+	public final fun getAll ()Ljava/util/List;
 	public final fun getApiKey (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getApiKeyAndHeaders (Lpi/ai/core/Model;)Lpi/coding/agent/core/ApiKeyLookupResult;
 	public final fun getAvailable ()Ljava/util/List;
+	public final fun getError ()Ljava/lang/String;
 	public final fun hasConfiguredAuth (Lpi/ai/core/Model;)Z
 	public final fun hasConfiguredAuthForProvider (Ljava/lang/String;)Z
 	public final fun isUsingOAuth (Lpi/ai/core/Model;)Z
+	public final fun refresh ()V
 	public final fun registerProvider (Ljava/lang/String;Ljava/util/List;)V
 }
 
 public final class pi/coding/agent/core/ModelRegistry$Companion {
 	public final fun create (Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;)Lpi/coding/agent/core/ModelRegistry;
 	public static synthetic fun create$default (Lpi/coding/agent/core/ModelRegistry$Companion;Lpi/coding/agent/core/AuthStorage;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/ModelRegistry;
+	public final fun inMemory (Lpi/coding/agent/core/AuthStorage;)Lpi/coding/agent/core/ModelRegistry;
+	public static synthetic fun inMemory$default (Lpi/coding/agent/core/ModelRegistry$Companion;Lpi/coding/agent/core/AuthStorage;ILjava/lang/Object;)Lpi/coding/agent/core/ModelRegistry;
 }
 
 public final class pi/coding/agent/core/ModelScope {
