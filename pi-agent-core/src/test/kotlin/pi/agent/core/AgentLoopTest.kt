@@ -3,9 +3,11 @@ package pi.agent.core
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import pi.ai.core.AssistantMessage
@@ -14,6 +16,7 @@ import pi.ai.core.AssistantMessageEventStream
 import pi.ai.core.Message
 import pi.ai.core.Model
 import pi.ai.core.ModelCost
+import pi.ai.core.ProviderResponse
 import pi.ai.core.StopReason
 import pi.ai.core.TextContent
 import pi.ai.core.ToolCall
@@ -250,6 +253,189 @@ class AgentLoopTest {
             assertTrue(messages[0] is UserMessage)
             assertTrue(messages[1] is AssistantMessage)
             assertTrue(messages[2] is ToolResultMessage)
+        }
+
+    @Test
+    fun `beforeToolCall can block execution`() =
+        runTest {
+            var executed = false
+            val tool =
+                object : AgentTool<String> {
+                    override val name: String = "blocked_tool"
+                    override val label: String = "Blocked Tool"
+                    override val description: String = "Tool that should not run"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "value"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> {
+                        executed = true
+                        return AgentToolResult(listOf(TextContent("unexpected")), buildJsonObject {})
+                    }
+                }
+            val assistantWithTool =
+                createAssistantMessage(
+                    listOf(ToolCall("tool-1", "blocked_tool", buildJsonObject {})),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val finalAssistant = createAssistantMessage(listOf(TextContent("done")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(tool))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("run")),
+                    context = context,
+                    config =
+                        AgentLoopConfig(
+                            model = createModel(),
+                            convertToLlm = ::identityConverter,
+                            beforeToolCall = { hookContext, _ ->
+                                assertEquals("blocked_tool", hookContext.toolCall.name)
+                                BeforeToolCallResult(block = true, reason = "blocked by hook")
+                            },
+                        ),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTool else finalAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+            val toolResult = stream.result().filterIsInstance<ToolResultMessage>().single()
+
+            assertFalse(executed)
+            assertTrue(toolResult.isError)
+            assertEquals("blocked by hook", (toolResult.content.single() as TextContent).text)
+        }
+
+    @Test
+    fun `afterToolCall can observe and patch tool result`() =
+        runTest {
+            var observedResult: AgentToolResult<*>? = null
+            val tool =
+                object : AgentTool<String> {
+                    override val name: String = "patchable_tool"
+                    override val label: String = "Patchable Tool"
+                    override val description: String = "Tool with patchable result"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "value"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult(
+                            content = listOf(TextContent("original")),
+                            details = buildJsonObject { put("value", "original") },
+                        )
+                }
+            val assistantWithTool =
+                createAssistantMessage(
+                    listOf(ToolCall("tool-1", "patchable_tool", buildJsonObject {})),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val finalAssistant = createAssistantMessage(listOf(TextContent("done")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(tool))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("run")),
+                    context = context,
+                    config =
+                        AgentLoopConfig(
+                            model = createModel(),
+                            convertToLlm = ::identityConverter,
+                            afterToolCall = { hookContext, _ ->
+                                observedResult = hookContext.result
+                                AfterToolCallResult(
+                                    content = listOf(TextContent("patched")),
+                                    details = buildJsonObject { put("value", "patched") },
+                                    isError = true,
+                                )
+                            },
+                        ),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTool else finalAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+            val toolResult = stream.result().filterIsInstance<ToolResultMessage>().single()
+
+            assertEquals("original", ((observedResult?.content?.single()) as TextContent).text)
+            assertTrue(toolResult.isError)
+            assertEquals("patched", (toolResult.content.single() as TextContent).text)
+            assertEquals(JsonPrimitive("patched"), (toolResult.details as JsonObject)["value"])
+        }
+
+    @Test
+    fun `provider payload and response hooks are forwarded to stream options`() =
+        runTest {
+            var payloadReplacement: Any? = null
+            var observedResponse: ProviderResponse? = null
+            val agent =
+                Agent(
+                    AgentOptions(
+                        initialState = InitialAgentState(model = createModel()),
+                        onPayload = { payload, model ->
+                            assertEquals("anthropic", model.provider)
+                            "observed:$payload"
+                        },
+                        onResponse = { response, model ->
+                            assertEquals("anthropic", model.provider)
+                            observedResponse = response
+                        },
+                        streamFn = { model, _, options ->
+                            payloadReplacement = options?.onPayload?.invoke("payload", model)
+                            options?.onResponse?.invoke(
+                                ProviderResponse(
+                                    status = 202,
+                                    headers = mapOf("x-request-id" to "request-1"),
+                                ),
+                                model,
+                            )
+                            AssistantMessageEventStream().also { eventStream ->
+                                eventStream.push(
+                                    AssistantMessageEvent.Done(
+                                        StopReason.STOP,
+                                        createAssistantMessage(listOf(TextContent("ok"))),
+                                    ),
+                                )
+                            }
+                        },
+                    ),
+                )
+
+            agent.prompt("hello")
+
+            assertEquals("observed:payload", payloadReplacement)
+            assertEquals(202, observedResponse?.status)
+            assertEquals("request-1", observedResponse?.headers?.get("x-request-id"))
         }
 }
 
