@@ -35,6 +35,29 @@ class AuthStorageTest {
     }
 
     @Test
+    fun `persisted provider changes merge with current auth file`() {
+        val path = Files.createTempFile("auth", ".json")
+        val first = AuthStorage.create(path.toString())
+        val second = AuthStorage.create(path.toString())
+
+        first.setApiKey("anthropic", "sk-anthropic")
+        second.setOAuthCredentials(
+            OPENAI_CODEX_PROVIDER,
+            OpenAICodexOAuthCredentials(
+                access = "access",
+                refresh = "refresh",
+                expires = System.currentTimeMillis() + 60_000,
+                accountId = "acct_123",
+            ),
+        )
+
+        val reloaded = AuthStorage.create(path.toString())
+
+        assertEquals("sk-anthropic", reloaded.getApiKey("anthropic"))
+        assertEquals("access", reloaded.getApiKey(OPENAI_CODEX_PROVIDER))
+    }
+
+    @Test
     fun `reads legacy nested providers shape`() {
         val path = Files.createTempFile("auth", ".json")
         Files.writeString(path, """{"providers":{"anthropic":{"apiKey":"sk-old","headers":{"x-test":"1"}}}}""")
@@ -103,6 +126,42 @@ class AuthStorageTest {
         val auth = AuthStorage.create(path.toString())
 
         assertNull(auth.getApiKey(OPENAI_CODEX_PROVIDER))
+    }
+
+    @Test
+    fun `expired OAuth access rereads fresh credentials under refresh lock`() {
+        val path = Files.createTempFile("auth", ".json")
+        Files.writeString(
+            path,
+            """
+            {
+                "$OPENAI_CODEX_PROVIDER": {
+                    "type": "oauth",
+                    "access": "stale-access",
+                    "refresh": "stale-refresh",
+                    "expires": ${System.currentTimeMillis() - 60_000},
+                    "accountId": "acct_123"
+                }
+            }
+            """.trimIndent(),
+        )
+        val auth = AuthStorage.create(path.toString())
+        Files.writeString(
+            path,
+            """
+            {
+                "$OPENAI_CODEX_PROVIDER": {
+                    "type": "oauth",
+                    "access": "fresh-access",
+                    "refresh": "fresh-refresh",
+                    "expires": ${System.currentTimeMillis() + 60_000},
+                    "accountId": "acct_123"
+                }
+            }
+            """.trimIndent(),
+        )
+
+        assertEquals("fresh-access", auth.getApiKey(OPENAI_CODEX_PROVIDER))
     }
 
     @Test

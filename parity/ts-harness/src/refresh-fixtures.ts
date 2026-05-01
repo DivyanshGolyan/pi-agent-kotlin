@@ -2,16 +2,16 @@ import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { streamSimple, fauxAssistantMessage, fauxText, fauxThinking, fauxToolCall, registerFauxProvider, Type } from "../../../reference/upstream/pi-mono/e3f6912/packages/ai/src/index.ts";
-import { Agent, agentLoop } from "../../../reference/upstream/pi-mono/e3f6912/packages/agent/src/index.ts";
-import { createAssistantMessageEventStream } from "../../../reference/upstream/pi-mono/e3f6912/packages/ai/src/utils/event-stream.ts";
-import { createAgentSession } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/sdk.ts";
-import { createAgentSessionRuntime } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/agent-session-runtime.ts";
-import { AuthStorage } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/auth-storage.ts";
-import { ModelRegistry } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/model-registry.ts";
-import { DefaultResourceLoader } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/resource-loader.ts";
-import { SessionManager, buildSessionContext as buildCodingSessionContext } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/session-manager.ts";
-import { SettingsManager } from "../../../reference/upstream/pi-mono/9b28e18/packages/coding-agent/src/core/settings-manager.ts";
+import { streamSimple, fauxAssistantMessage, fauxText, fauxThinking, fauxToolCall, registerFauxProvider, Type } from "../../../reference/upstream/pi-mono/def47ec/packages/ai/src/index.ts";
+import { Agent, agentLoop } from "../../../reference/upstream/pi-mono/def47ec/packages/agent/src/index.ts";
+import { createAssistantMessageEventStream } from "../../../reference/upstream/pi-mono/def47ec/packages/ai/src/utils/event-stream.ts";
+import { createAgentSession } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/sdk.ts";
+import { createAgentSessionRuntime } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/agent-session-runtime.ts";
+import { AuthStorage } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/auth-storage.ts";
+import { ModelRegistry } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/model-registry.ts";
+import { DefaultResourceLoader } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/resource-loader.ts";
+import { SessionManager, buildSessionContext as buildCodingSessionContext } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/session-manager.ts";
+import { SettingsManager } from "../../../reference/upstream/pi-mono/def47ec/packages/coding-agent/src/core/settings-manager.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1077,6 +1077,19 @@ function normalizeCodingSessionEvents(rawEvents: any[], normalizer: ReturnType<t
       if (event.errorMessage) normalized.errorMessage = event.errorMessage;
       if (event.result) normalized.result = normalizer.normalizeCompactionResult(event.result);
       return normalized;
+    }
+    if (event.type === "session_info_changed") {
+      const normalized: any = {
+        type: "session_info_changed"
+      };
+      if (event.name !== undefined) normalized.name = event.name;
+      return normalized;
+    }
+    if (event.type === "thinking_level_changed") {
+      return {
+        type: "thinking_level_changed",
+        level: event.level
+      };
     }
     throw new Error(`Unsupported coding-agent session event type: ${event.type}`);
   });

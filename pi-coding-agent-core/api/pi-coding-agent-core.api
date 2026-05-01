@@ -148,9 +148,34 @@ public final class pi/coding/agent/core/AgentSessionEvent$QueueUpdate : pi/codin
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class pi/coding/agent/core/AgentSessionEvent$SessionInfoChanged : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lpi/coding/agent/core/AgentSessionEvent$SessionInfoChanged;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$SessionInfoChanged;Ljava/lang/String;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$SessionInfoChanged;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/AgentSessionEvent$ThinkingLevelChanged : pi/coding/agent/core/AgentSessionEvent {
+	public fun <init> (Lpi/agent/core/AgentThinkingLevel;)V
+	public final fun component1 ()Lpi/agent/core/AgentThinkingLevel;
+	public final fun copy (Lpi/agent/core/AgentThinkingLevel;)Lpi/coding/agent/core/AgentSessionEvent$ThinkingLevelChanged;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/AgentSessionEvent$ThinkingLevelChanged;Lpi/agent/core/AgentThinkingLevel;ILjava/lang/Object;)Lpi/coding/agent/core/AgentSessionEvent$ThinkingLevelChanged;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel ()Lpi/agent/core/AgentThinkingLevel;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class pi/coding/agent/core/AgentSessionRuntime {
 	public final fun dispose (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun fork (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun fork (Ljava/lang/String;Lpi/coding/agent/core/ForkSessionOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getCwd ()Ljava/lang/String;
 	public final fun getDiagnostics ()Ljava/util/List;
 	public final fun getModelFallbackMessage ()Ljava/lang/String;
@@ -262,6 +287,7 @@ public final class pi/coding/agent/core/AuthStorage {
 	public final fun getApiKey (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getHeaders (Ljava/lang/String;)Ljava/util/Map;
 	public final fun getOAuthCredentials (Ljava/lang/String;)Lpi/ai/core/providers/OpenAICodexOAuthCredentials;
+	public final fun hasAuth (Ljava/lang/String;)Z
 	public final fun login (Ljava/lang/String;Lpi/ai/core/providers/OAuthLoginCallbacks;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun logout (Ljava/lang/String;)V
 	public final fun setApiKey (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
@@ -643,6 +669,27 @@ public final class pi/coding/agent/core/DiagnosticType : java/lang/Enum {
 
 public abstract interface class pi/coding/agent/core/FileEntry {
 	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class pi/coding/agent/core/ForkPosition : java/lang/Enum {
+	public static final field AT Lpi/coding/agent/core/ForkPosition;
+	public static final field BEFORE Lpi/coding/agent/core/ForkPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lpi/coding/agent/core/ForkPosition;
+	public static fun values ()[Lpi/coding/agent/core/ForkPosition;
+}
+
+public final class pi/coding/agent/core/ForkSessionOptions {
+	public fun <init> ()V
+	public fun <init> (Lpi/coding/agent/core/ForkPosition;)V
+	public synthetic fun <init> (Lpi/coding/agent/core/ForkPosition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lpi/coding/agent/core/ForkPosition;
+	public final fun copy (Lpi/coding/agent/core/ForkPosition;)Lpi/coding/agent/core/ForkSessionOptions;
+	public static synthetic fun copy$default (Lpi/coding/agent/core/ForkSessionOptions;Lpi/coding/agent/core/ForkPosition;ILjava/lang/Object;)Lpi/coding/agent/core/ForkSessionOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPosition ()Lpi/coding/agent/core/ForkPosition;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class pi/coding/agent/core/LabelEntry : pi/coding/agent/core/SessionEntry {

@@ -41,6 +41,84 @@ class AgentSessionRuntimeTest {
         }
 
     @Test
+    fun `create agent session passes resolved api key and headers to stream`() =
+        runTest {
+            val auth = AuthStorage.create(Files.createTempFile("auth", ".json").toString())
+            auth.setApiKey("anthropic", "sk-test", mapOf("x-auth" to "auth-header"))
+            val modelsPath = Files.createTempFile("models", ".json")
+            Files.writeString(
+                modelsPath,
+                """
+                {
+                    "providers": {
+                        "anthropic": {
+                            "headers": {
+                                "x-provider": "provider-header"
+                            },
+                            "modelOverrides": {
+                                "claude-sonnet-4-5": {
+                                    "headers": {
+                                        "x-model": "model-header"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                """.trimIndent(),
+            )
+            val registry = ModelRegistry.create(auth, modelsPath.toString())
+            var seenApiKey: String? = null
+            var seenHeaders: Map<String, String> = emptyMap()
+            val streamFn: pi.agent.core.StreamFn = { _, _, options ->
+                seenApiKey = options?.apiKey
+                seenHeaders = options?.headers.orEmpty()
+                fakeStream("ok").invoke(createModel(), pi.ai.core.Context(messages = emptyList()), options)
+            }
+
+            val session =
+                createAgentSession(
+                    CreateAgentSessionOptions(
+                        authStorage = auth,
+                        modelRegistry = registry,
+                        model = registry.find("anthropic", "claude-sonnet-4-5"),
+                        sessionManager = SessionManager.inMemory(),
+                        streamFn = streamFn,
+                    ),
+                ).session
+
+            session.prompt("hello")
+
+            assertEquals("sk-test", seenApiKey)
+            assertEquals("auth-header", seenHeaders["x-auth"])
+            assertEquals("provider-header", seenHeaders["x-provider"])
+            assertEquals("model-header", seenHeaders["x-model"])
+        }
+
+    @Test
+    fun `set session name emits normalized stored name`() =
+        runTest {
+            val session =
+                createAgentSession(
+                    CreateAgentSessionOptions(
+                        model = createModel(),
+                        sessionManager = SessionManager.inMemory(),
+                        streamFn = fakeStream("ok"),
+                    ),
+                ).session
+            val events = mutableListOf<AgentSessionEvent>()
+            session.subscribe { events += it }
+
+            session.setSessionName("  hello world  ")
+
+            assertEquals("hello world", session.sessionName)
+            assertEquals(
+                listOf("hello world"),
+                events.filterIsInstance<AgentSessionEvent.SessionInfoChanged>().map { it.name },
+            )
+        }
+
+    @Test
     fun `navigate tree to user message returns editor text and rewinds context`() =
         runTest {
             val session =
@@ -124,6 +202,34 @@ class AgentSessionRuntimeTest {
             assertFalse(cancelled)
             assertEquals("fork me", selectedText)
             assertNotEquals(previousSessionId, runtime.session.sessionId)
+        }
+
+    @Test
+    fun `runtime fork at selected entry keeps that entry in fork context`() =
+        runTest {
+            val runtime =
+                createAgentSessionRuntime(
+                    createRuntime = runtimeFactory(),
+                    cwd = Files.createTempDirectory("pi-coding-fork-at").toString(),
+                    agentDir = getAgentDir(),
+                    sessionManager = SessionManager.inMemory(),
+                )
+
+            runtime.session.prompt("fork at me")
+            val assistantEntryId =
+                runtime.session.sessionManager
+                    .getEntries()
+                    .filterIsInstance<SessionMessageEntry>()
+                    .first { it.message is AssistantMessage }
+                    .id
+            val previousSessionId = runtime.session.sessionId
+
+            val (cancelled, selectedText) = runtime.fork(assistantEntryId, ForkSessionOptions(ForkPosition.AT))
+
+            assertFalse(cancelled)
+            assertEquals(null, selectedText)
+            assertNotEquals(previousSessionId, runtime.session.sessionId)
+            assertTrue(runtime.session.messages.any { it is AssistantMessage })
         }
 
     private fun runtimeFactory(): CreateAgentSessionRuntimeFactory =

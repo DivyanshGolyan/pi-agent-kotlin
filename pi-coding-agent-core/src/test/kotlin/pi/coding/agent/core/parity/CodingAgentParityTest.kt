@@ -718,6 +718,16 @@ class CodingAgentParityTest {
                         event.errorMessage?.let { put("errorMessage", it) }
                         event.result?.let { put("result", normalizer.normalizeCompactionResult(it)) }
                     }
+                is AgentSessionEvent.SessionInfoChanged ->
+                    buildJsonObject {
+                        put("type", "session_info_changed")
+                        event.name?.let { put("name", it) }
+                    }
+                is AgentSessionEvent.ThinkingLevelChanged ->
+                    buildJsonObject {
+                        put("type", "thinking_level_changed")
+                        put("level", event.level.name.lowercase())
+                    }
             }
         }
     }

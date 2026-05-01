@@ -20,6 +20,15 @@ public enum class SessionStartReason {
     FORK,
 }
 
+public enum class ForkPosition {
+    BEFORE,
+    AT,
+}
+
+public data class ForkSessionOptions(
+    val position: ForkPosition = ForkPosition.BEFORE,
+)
+
 public data class CreateAgentSessionRuntimeResult(
     val session: AgentSession,
     val services: AgentSessionServices,
@@ -121,23 +130,43 @@ public class AgentSessionRuntime internal constructor(
         return false to null
     }
 
-    public suspend fun fork(entryId: String): Pair<Boolean, String?> {
-        val selectedEntry = session.sessionManager.getEntry(entryId) as? SessionMessageEntry
-        require(selectedEntry?.message is UserMessage) { "Invalid entry ID for forking" }
-        val selectedText = extractUserMessageText(selectedEntry.message.content)
+    public suspend fun fork(entryId: String): Pair<Boolean, String?> = fork(entryId, ForkSessionOptions())
+
+    public suspend fun fork(
+        entryId: String,
+        options: ForkSessionOptions,
+    ): Pair<Boolean, String?> {
+        val selectedEntry = session.sessionManager.getEntry(entryId) ?: error("Invalid entry ID for forking")
+        val targetLeafId: String?
+        val selectedText: String?
+        if (options.position == ForkPosition.AT) {
+            targetLeafId = selectedEntry.id
+            selectedText = null
+        } else {
+            val messageEntry = selectedEntry as? SessionMessageEntry
+            require(messageEntry?.message is UserMessage) { "Invalid entry ID for forking" }
+            targetLeafId = messageEntry.parentId
+            selectedText = extractUserMessageText(messageEntry.message.content)
+        }
         val currentFile = session.sessionFile
         val sessionManager =
             if (session.sessionManager.isPersisted() && currentFile != null) {
                 val sourceManager = SessionManager.open(currentFile, session.sessionManager.getSessionDir())
-                val forked = sourceManager.createBranchedSession(selectedEntry.parentId ?: entryId)
-                requireNotNull(forked) { "Failed to create forked session" }
-                SessionManager.open(forked, session.sessionManager.getSessionDir())
+                if (targetLeafId == null) {
+                    SessionManager.create(cwd, session.sessionManager.getSessionDir()).also {
+                        it.newSession(NewSessionOptions(parentSession = currentFile))
+                    }
+                } else {
+                    val forked = sourceManager.createBranchedSession(targetLeafId)
+                    requireNotNull(forked) { "Failed to create forked session" }
+                    SessionManager.open(forked, session.sessionManager.getSessionDir())
+                }
             } else {
                 session.sessionManager.apply {
-                    if (selectedEntry.parentId == null) {
+                    if (targetLeafId == null) {
                         newSession(NewSessionOptions(parentSession = currentFile))
                     } else {
-                        createBranchedSession(selectedEntry.parentId)
+                        createBranchedSession(targetLeafId)
                     }
                 }
             }

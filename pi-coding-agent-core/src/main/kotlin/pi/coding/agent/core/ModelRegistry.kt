@@ -12,6 +12,7 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import pi.ai.core.InputModality
 import pi.ai.core.Model
+import pi.ai.core.ModelCompat
 import pi.ai.core.ModelCost
 import pi.ai.core.getModel
 import pi.ai.core.getModels
@@ -60,15 +61,14 @@ public class ModelRegistry private constructor(
         modelId: String,
     ): Model<*>? = providerModels[provider]?.get(modelId) ?: getModel(provider, modelId)
 
-    public fun getAvailable(): List<Model<*>> =
-        providerModels
-            .filterKeys(::hasConfiguredAuthForProvider)
-            .values
-            .flatMap { it.values }
+    public fun getAvailable(): List<Model<*>> = getAll().filter(::hasConfiguredAuth)
 
     public fun hasConfiguredAuth(model: Model<*>): Boolean = hasConfiguredAuthForProvider(model.provider)
 
-    public fun hasConfiguredAuthForProvider(provider: String): Boolean = getApiKeyForProvider(provider) != null
+    public fun hasConfiguredAuthForProvider(provider: String): Boolean =
+        authStorage.hasAuth(provider) ||
+            providerRequestConfigs[provider]?.apiKey != null ||
+            hasEnvApiKeyForProvider(provider)
 
     public fun getApiKey(provider: String): String? = getApiKeyForProvider(provider)
 
@@ -157,7 +157,10 @@ public class ModelRegistry private constructor(
                     if (providerOverride == null) {
                         model
                     } else {
-                        model.copy(baseUrl = providerOverride.baseUrl ?: model.baseUrl)
+                        model.copy(
+                            baseUrl = providerOverride.baseUrl ?: model.baseUrl,
+                            compat = mergeModelCompat(model.compat, providerOverride.compat),
+                        )
                     }
                 perModelOverrides[model.id]?.let { applyModelOverride(providerApplied, it) } ?: providerApplied
             }
@@ -210,8 +213,8 @@ public class ModelRegistry private constructor(
                 val providerConfig = parseProviderConfig(provider)
                 storeProviderRequestConfig(providerName, providerConfig)
 
-                if (providerConfig.baseUrl != null) {
-                    providerOverrides[providerName] = ProviderOverride(baseUrl = providerConfig.baseUrl)
+                if (providerConfig.baseUrl != null || providerConfig.compat != null) {
+                    providerOverrides[providerName] = ProviderOverride(baseUrl = providerConfig.baseUrl, compat = providerConfig.compat)
                 }
                 if (providerConfig.modelOverrides.isNotEmpty()) {
                     modelOverrides[providerName] = providerConfig.modelOverrides
@@ -282,6 +285,7 @@ public class ModelRegistry private constructor(
             api = provider["api"]?.jsonPrimitive?.contentOrNull,
             headers = parseStringMap(provider["headers"]),
             authHeader = provider["authHeader"]?.jsonPrimitive?.booleanOrNull,
+            compat = parseModelCompat(provider["compat"] as? JsonObject),
             models =
                 (provider["models"] as? JsonArray)
                     ?.mapNotNull { it as? JsonObject }
@@ -305,6 +309,7 @@ public class ModelRegistry private constructor(
             contextWindow = model["contextWindow"]?.jsonPrimitive?.intOrNull,
             maxTokens = model["maxTokens"]?.jsonPrimitive?.intOrNull,
             headers = parseStringMap(model["headers"]),
+            compat = parseModelCompat(model["compat"] as? JsonObject),
         )
 
     private fun parseModelOverride(model: JsonObject): ModelOverride =
@@ -316,6 +321,7 @@ public class ModelRegistry private constructor(
             contextWindow = model["contextWindow"]?.jsonPrimitive?.intOrNull,
             maxTokens = model["maxTokens"]?.jsonPrimitive?.intOrNull,
             headers = parseStringMap(model["headers"]),
+            compat = parseModelCompat(model["compat"] as? JsonObject),
         )
 
     private fun parseCustomModels(
@@ -344,6 +350,7 @@ public class ModelRegistry private constructor(
                 cost = model.cost ?: ModelCost(input = 0.0, output = 0.0, cacheRead = 0.0, cacheWrite = 0.0),
                 contextWindow = model.contextWindow ?: 128_000,
                 maxTokens = model.maxTokens ?: 16_384,
+                compat = mergeModelCompat(config.compat, model.compat),
             )
         }
     }
@@ -367,18 +374,42 @@ public class ModelRegistry private constructor(
                 } ?: model.cost,
             contextWindow = override.contextWindow ?: model.contextWindow,
             maxTokens = override.maxTokens ?: model.maxTokens,
+            compat = mergeModelCompat(model.compat, override.compat),
         )
+
+    private fun mergeModelCompat(
+        base: ModelCompat?,
+        override: ModelCompat?,
+    ): ModelCompat? {
+        if (override == null) {
+            return base
+        }
+        if (base == null) {
+            return override
+        }
+        return ModelCompat(
+            supportsEagerToolInputStreaming =
+                override.supportsEagerToolInputStreaming ?: base.supportsEagerToolInputStreaming,
+            supportsLongCacheRetention =
+                override.supportsLongCacheRetention ?: base.supportsLongCacheRetention,
+        )
+    }
 
     private fun getApiKeyForProvider(provider: String): String? =
         authStorage.getApiKey(provider)
             ?: providerRequestConfigs[provider]?.apiKey?.let(::resolveConfigValue)
             ?: providerEnvVars(provider).firstNotNullOfOrNull(System::getenv)
 
+    private fun hasEnvApiKeyForProvider(provider: String): Boolean = providerEnvVars(provider).any { !System.getenv(it).isNullOrBlank() }
+
     private fun providerEnvVars(provider: String): List<String> {
         val normalized = provider.replace(Regex("[^A-Za-z0-9]"), "_").uppercase()
         val candidates = linkedSetOf("${normalized}_API_KEY")
         if (provider.equals("anthropic", ignoreCase = true)) {
             candidates += "ANTHROPIC_API_KEY"
+        }
+        if (provider.equals("google", ignoreCase = true)) {
+            candidates += "GEMINI_API_KEY"
         }
         if (provider.equals("openai", ignoreCase = true)) {
             candidates += "OPENAI_API_KEY"
@@ -445,6 +476,7 @@ private data class CustomModelsResult(
 
 private data class ProviderOverride(
     val baseUrl: String? = null,
+    val compat: ModelCompat? = null,
 )
 
 private data class ProviderRequestConfig(
@@ -459,6 +491,7 @@ private data class ProviderConfig(
     val api: String? = null,
     val headers: Map<String, String> = emptyMap(),
     val authHeader: Boolean? = null,
+    val compat: ModelCompat? = null,
     val models: List<ModelDefinition> = emptyList(),
     val modelOverrides: Map<String, ModelOverride> = emptyMap(),
 )
@@ -474,6 +507,7 @@ private data class ModelDefinition(
     val contextWindow: Int? = null,
     val maxTokens: Int? = null,
     val headers: Map<String, String> = emptyMap(),
+    val compat: ModelCompat? = null,
 )
 
 private data class ModelOverride(
@@ -484,6 +518,7 @@ private data class ModelOverride(
     val contextWindow: Int? = null,
     val maxTokens: Int? = null,
     val headers: Map<String, String> = emptyMap(),
+    val compat: ModelCompat? = null,
 )
 
 private data class BuiltInDefaults(
@@ -507,6 +542,7 @@ private fun validateProviderShape(
     requireOptionalString(provider, "api", "Provider $providerName", minLength = true)
     requireOptionalBoolean(provider, "authHeader", "Provider $providerName")
     requireOptionalObject(provider, "compat", "Provider $providerName")
+    requireCompatShape(provider["compat"], "Provider $providerName compat")
     requireHeadersShape(provider["headers"], "Provider $providerName headers")
 
     provider["models"]?.let { models ->
@@ -547,6 +583,7 @@ private fun validateModelDefinitionShape(
     requireOptionalPositiveInt(model, "maxTokens", location)
     requireHeadersShape(model["headers"], "$location headers")
     requireOptionalObject(model, "compat", location)
+    requireCompatShape(model["compat"], "$location compat")
 }
 
 private fun validateModelOverrideShape(
@@ -563,6 +600,7 @@ private fun validateModelOverrideShape(
     requireOptionalPositiveInt(override, "maxTokens", location)
     requireHeadersShape(override["headers"], "$location headers")
     requireOptionalObject(override, "compat", location)
+    requireCompatShape(override["compat"], "$location compat")
 }
 
 private fun requireOptionalString(
@@ -633,6 +671,18 @@ private fun requireHeadersShape(
     }
 }
 
+private fun requireCompatShape(
+    element: JsonElement?,
+    location: String,
+) {
+    if (element == null) {
+        return
+    }
+    val compat = element as? JsonObject ?: error("$location must be an object.")
+    requireOptionalBoolean(compat, "supportsEagerToolInputStreaming", location)
+    requireOptionalBoolean(compat, "supportsLongCacheRetention", location)
+}
+
 private fun requireInputShape(
     element: JsonElement?,
     location: String,
@@ -671,6 +721,14 @@ private fun parseStringMap(element: JsonElement?): Map<String, String> =
     (element as? JsonObject)
         ?.mapValues { (_, value) -> value.jsonPrimitive.contentOrNull.orEmpty() }
         .orEmpty()
+
+private fun parseModelCompat(obj: JsonObject?): ModelCompat? =
+    obj?.let {
+        ModelCompat(
+            supportsEagerToolInputStreaming = it["supportsEagerToolInputStreaming"]?.jsonPrimitive?.booleanOrNull,
+            supportsLongCacheRetention = it["supportsLongCacheRetention"]?.jsonPrimitive?.booleanOrNull,
+        )
+    }
 
 private fun JsonPrimitive.isJsonString(): Boolean = toString().startsWith("\"")
 

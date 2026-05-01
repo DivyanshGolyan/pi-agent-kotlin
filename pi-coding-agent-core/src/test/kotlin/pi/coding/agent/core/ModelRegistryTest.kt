@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import pi.ai.core.ANTHROPIC_PROVIDER
 import pi.ai.core.InputModality
+import pi.ai.core.OPENAI_CODEX_PROVIDER
+import pi.ai.core.providers.OpenAICodexOAuthCredentials
 import java.nio.file.Files
 
 class ModelRegistryTest {
@@ -24,6 +26,10 @@ class ModelRegistryTest {
                         "apiKey": "sk-custom",
                         "api": "anthropic-messages",
                         "authHeader": true,
+                        "compat": {
+                            "supportsEagerToolInputStreaming": false,
+                            "supportsLongCacheRetention": false
+                        },
                         "headers": {
                             "x-provider": "provider-header"
                         },
@@ -60,6 +66,8 @@ class ModelRegistryTest {
         assertEquals("Custom One", model.name)
         assertEquals("https://custom.example/v1", model.baseUrl)
         assertEquals(setOf(InputModality.TEXT, InputModality.IMAGE), model.input)
+        assertEquals(false, model.compat?.supportsEagerToolInputStreaming)
+        assertEquals(false, model.compat?.supportsLongCacheRetention)
         assertTrue(registry.getAvailable().any { it.provider == "custom-ai" && it.id == "custom-1" })
 
         val authResult = registry.getApiKeyAndHeaders(model)
@@ -82,12 +90,19 @@ class ModelRegistryTest {
                 "providers": {
                     "$ANTHROPIC_PROVIDER": {
                         "baseUrl": "https://proxy.example",
+                        "compat": {
+                            "supportsEagerToolInputStreaming": false,
+                            "supportsLongCacheRetention": false
+                        },
                         "headers": {
                             "x-provider": "provider-header"
                         },
                         "modelOverrides": {
                             "claude-sonnet-4-5": {
                                 "name": "Proxy Sonnet",
+                                "compat": {
+                                    "supportsEagerToolInputStreaming": true
+                                },
                                 "contextWindow": 12345,
                                 "maxTokens": 678,
                                 "cost": {
@@ -115,6 +130,8 @@ class ModelRegistryTest {
         assertEquals(678, model.maxTokens)
         assertEquals(9.0, model.cost.input)
         assertTrue(model.cost.output > 0.0)
+        assertEquals(true, model.compat?.supportsEagerToolInputStreaming)
+        assertEquals(false, model.compat?.supportsLongCacheRetention)
 
         val authResult = registry.getApiKeyAndHeaders(model)
         assertTrue(authResult.ok, authResult.error)
@@ -150,5 +167,56 @@ class ModelRegistryTest {
         assertTrue(registry.getError()?.contains("baseUrl") == true)
         assertNotNull(registry.find(ANTHROPIC_PROVIDER, "claude-sonnet-4-5"))
         assertFalse(registry.getAll().any { it.provider == "custom-ai" && it.id == "broken" })
+    }
+
+    @Test
+    fun `available models ignores request headers without configured auth`() {
+        val auth = AuthStorage.create(Files.createTempFile("auth", ".json").toString())
+        val modelsPath = Files.createTempFile("models", ".json")
+        Files.writeString(
+            modelsPath,
+            """
+            {
+                "providers": {
+                    "$ANTHROPIC_PROVIDER": {
+                        "headers": {
+                            "x-provider": "provider-header"
+                        },
+                        "modelOverrides": {
+                            "claude-sonnet-4-5": {
+                                "headers": {
+                                    "x-model": "model-header"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent(),
+        )
+
+        val registry = ModelRegistry.create(auth, modelsPath.toString())
+        val model = registry.find(ANTHROPIC_PROVIDER, "claude-sonnet-4-5")
+
+        assertNotNull(model)
+        assertFalse(registry.hasConfiguredAuth(model!!))
+        assertFalse(registry.getAvailable().any { it.provider == ANTHROPIC_PROVIDER && it.id == "claude-sonnet-4-5" })
+    }
+
+    @Test
+    fun `available models uses OAuth presence without refreshing expired credentials`() {
+        val auth = AuthStorage.create(Files.createTempFile("auth", ".json").toString())
+        auth.setOAuthCredentials(
+            OPENAI_CODEX_PROVIDER,
+            OpenAICodexOAuthCredentials(
+                access = "expired-access",
+                refresh = "invalid-refresh",
+                expires = System.currentTimeMillis() - 60_000,
+                accountId = "acct_123",
+            ),
+        )
+        val registry = ModelRegistry.create(auth)
+
+        assertTrue(registry.getAvailable().any { it.provider == OPENAI_CODEX_PROVIDER })
     }
 }

@@ -5,8 +5,10 @@ import pi.agent.core.AgentOptions
 import pi.agent.core.AgentThinkingLevel
 import pi.agent.core.AgentTool
 import pi.agent.core.InitialAgentState
+import pi.agent.core.StreamFn
 import pi.ai.core.Model
 import pi.ai.core.getModel
+import pi.ai.core.streamSimple
 
 public data class CreateAgentSessionOptions(
     val cwd: String =
@@ -62,6 +64,7 @@ public suspend fun createAgentSession(options: CreateAgentSessionOptions = Creat
             ?: parseThinkingLevel(existingSession.thinkingLevel)
             ?: settingsManager.getDefaultThinkingLevel()
             ?: DEFAULT_THINKING_LEVEL
+    val streamFn = createRequestAuthStreamFn(modelRegistry, options.streamFn)
 
     val agent =
         Agent(
@@ -75,8 +78,7 @@ public suspend fun createAgentSession(options: CreateAgentSessionOptions = Creat
                         messages = existingSession.messages,
                     ),
                 convertToLlm = ::convertToLlm,
-                getApiKey = modelRegistry::getApiKey,
-                streamFn = options.streamFn,
+                streamFn = streamFn,
                 steeringMode = settingsManager.getSteeringMode(),
                 followUpMode = settingsManager.getFollowUpMode(),
                 transport = settingsManager.getTransport(),
@@ -116,6 +118,42 @@ public suspend fun createAgentSession(options: CreateAgentSessionOptions = Creat
     return CreateAgentSessionResult(
         session = session,
         modelFallbackMessage = modelFallbackMessage,
+    )
+}
+
+private fun createRequestAuthStreamFn(
+    modelRegistry: ModelRegistry,
+    customStreamFn: StreamFn?,
+): StreamFn {
+    val delegate = customStreamFn ?: { model, context, options -> streamSimple(model, context, options) }
+    return { model, context, options ->
+        val auth = modelRegistry.getApiKeyAndHeaders(model)
+        if (!auth.ok) {
+            if (customStreamFn == null) {
+                error(auth.error ?: "No API key configured for ${model.provider}")
+            }
+            delegate(model, context, options)
+        } else {
+            delegate(
+                model,
+                context,
+                options.copyWithRequestAuth(
+                    apiKey = auth.apiKey,
+                    headers = auth.headers,
+                ),
+            )
+        }
+    }
+}
+
+private fun pi.ai.core.SimpleStreamOptions?.copyWithRequestAuth(
+    apiKey: String?,
+    headers: Map<String, String>,
+): pi.ai.core.SimpleStreamOptions {
+    val existing = this ?: pi.ai.core.SimpleStreamOptions()
+    return existing.copy(
+        apiKey = apiKey ?: existing.apiKey,
+        headers = headers + existing.headers,
     )
 }
 

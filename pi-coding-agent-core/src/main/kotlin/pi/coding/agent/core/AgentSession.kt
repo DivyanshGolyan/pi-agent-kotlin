@@ -100,6 +100,18 @@ public sealed interface AgentSessionEvent {
     ) : AgentSessionEvent {
         override val type: String = "compaction_end"
     }
+
+    public data class SessionInfoChanged(
+        val name: String?,
+    ) : AgentSessionEvent {
+        override val type: String = "session_info_changed"
+    }
+
+    public data class ThinkingLevelChanged(
+        val level: AgentThinkingLevel,
+    ) : AgentSessionEvent {
+        override val type: String = "thinking_level_changed"
+    }
 }
 
 public enum class CompactionReason {
@@ -479,6 +491,7 @@ public class AgentSession(
             state.thinkingLevel = effective
             sessionManager.appendThinkingLevelChange(effective.name.lowercase())
             settingsManager.setDefaultThinkingLevel(effective)
+            emit(AgentSessionEvent.ThinkingLevelChanged(effective))
         }
     }
 
@@ -766,6 +779,7 @@ public class AgentSession(
 
     public fun setSessionName(name: String) {
         sessionManager.appendSessionInfo(name)
+        emit(AgentSessionEvent.SessionInfoChanged(sessionManager.getSessionName()))
     }
 
     public suspend fun navigateTree(
@@ -784,32 +798,34 @@ public class AgentSession(
         var summaryDetails: JsonElement? = null
         if (options.summarize && entriesToSummarize.isNotEmpty()) {
             branchSummaryAbortController = pi.ai.core.AbortController()
-            val auth = modelRegistry.getApiKeyAndHeaders(model)
-            require(auth.ok && auth.apiKey != null) { auth.error ?: "No API key configured for ${model.provider}" }
-            val result =
-                generateBranchSummary(
-                    entries = entriesToSummarize,
-                    options =
-                        pi.coding.agent.core.compaction.GenerateBranchSummaryOptions(
-                            model = model,
-                            apiKey = auth.apiKey,
-                            headers = auth.headers,
-                            signal = branchSummaryAbortController?.signal,
-                            customInstructions = options.customInstructions,
-                            replaceInstructions = options.replaceInstructions,
-                            reserveTokens = settingsManager.getBranchSummarySettings().reserveTokens,
-                        ),
-                )
-            if (result.aborted) {
+            try {
+                val auth = modelRegistry.getApiKeyAndHeaders(model)
+                require(auth.ok && auth.apiKey != null) { auth.error ?: "No API key configured for ${model.provider}" }
+                val result =
+                    generateBranchSummary(
+                        entries = entriesToSummarize,
+                        options =
+                            pi.coding.agent.core.compaction.GenerateBranchSummaryOptions(
+                                model = model,
+                                apiKey = auth.apiKey,
+                                headers = auth.headers,
+                                signal = branchSummaryAbortController?.signal,
+                                customInstructions = options.customInstructions,
+                                replaceInstructions = options.replaceInstructions,
+                                reserveTokens = settingsManager.getBranchSummarySettings().reserveTokens,
+                            ),
+                    )
+                if (result.aborted) {
+                    return TreeNavigationResult(cancelled = true, aborted = true)
+                }
+                if (result.error != null) {
+                    error(result.error)
+                }
+                summaryText = result.summary
+                summaryDetails = branchSummaryDetailsToJson(result)
+            } finally {
                 branchSummaryAbortController = null
-                return TreeNavigationResult(cancelled = true, aborted = true)
             }
-            if (result.error != null) {
-                error(result.error)
-            }
-            summaryText = result.summary
-            summaryDetails = branchSummaryDetailsToJson(result)
-            branchSummaryAbortController = null
         }
 
         var newLeafId: String? = targetId
