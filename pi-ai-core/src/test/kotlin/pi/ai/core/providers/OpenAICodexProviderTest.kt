@@ -41,6 +41,7 @@ import pi.ai.core.UserMessage
 import pi.ai.core.UserMessageContent
 import pi.ai.core.getModel
 import pi.ai.core.getProviders
+import pi.ai.core.supportsXhigh
 import java.net.ServerSocket
 import java.nio.charset.StandardCharsets
 import java.util.Base64
@@ -56,9 +57,13 @@ class OpenAICodexProviderTest {
     fun `model registry includes upstream OpenAI Codex models`() {
         assertTrue(getProviders().contains(OPENAI_CODEX_PROVIDER))
         val model = getModel(OPENAI_CODEX_PROVIDER, "gpt-5.4-mini")!!
+        val gpt55 = getModel(OPENAI_CODEX_PROVIDER, "gpt-5.5")!!
         assertEquals(OPENAI_CODEX_RESPONSES_API, model.api)
         assertEquals("https://chatgpt.com/backend-api", model.baseUrl)
         assertEquals(272_000, model.contextWindow)
+        assertEquals(5.0, gpt55.cost.input)
+        assertEquals(30.0, gpt55.cost.output)
+        assertTrue(supportsXhigh(gpt55))
     }
 
     @Test
@@ -200,6 +205,7 @@ class OpenAICodexProviderTest {
         assertEquals("true", payload["stream"]!!.jsonPrimitive.content)
         assertEquals("Be direct.", payload["instructions"]!!.jsonPrimitive.content)
         assertEquals("session-1", payload["prompt_cache_key"]!!.jsonPrimitive.content)
+        assertEquals("low", payload["text"]!!.jsonObject["verbosity"]!!.jsonPrimitive.content)
         assertEquals("priority", payload["service_tier"]!!.jsonPrimitive.content)
         assertEquals("low", payload["reasoning"]!!.jsonObject["effort"]!!.jsonPrimitive.content)
         assertEquals("reasoning.encrypted_content", payload["include"]!!.jsonArray[0].jsonPrimitive.content)
@@ -214,7 +220,7 @@ class OpenAICodexProviderTest {
     }
 
     @Test
-    fun `request payload skips image only structured user message for text only Codex model`() {
+    fun `request payload downgrades image only structured user message for text only Codex model`() {
         val payload =
             buildCodexRequestBody(
                 model = getModel(OPENAI_CODEX_PROVIDER, "gpt-5.3-codex-spark")!!,
@@ -230,7 +236,14 @@ class OpenAICodexProviderTest {
                     ),
             )
 
-        assertEquals(0, payload["input"]!!.jsonArray.size)
+        val content =
+            payload["input"]!!
+                .jsonArray[0]
+                .jsonObject["content"]!!
+                .jsonArray[0]
+                .jsonObject
+        assertEquals("input_text", content["type"]!!.jsonPrimitive.content)
+        assertEquals(NON_VISION_USER_IMAGE_PLACEHOLDER, content["text"]!!.jsonPrimitive.content)
     }
 
     @Test

@@ -173,7 +173,7 @@ class GoogleProviderTest {
     }
 
     @Test
-    fun `convertGoogleMessages filters images for text-only models and maps tool result images`() {
+    fun `convertGoogleMessages downgrades unsupported images and maps tool result images`() {
         val textOnly =
             convertGoogleMessages(
                 createGoogleModel(input = setOf(InputModality.TEXT)),
@@ -189,7 +189,44 @@ class GoogleProviderTest {
                         ),
                 ),
             )
-        assertEquals(0, textOnly.size)
+        assertEquals(
+            NON_VISION_USER_IMAGE_PLACEHOLDER,
+            textOnly[0]
+                .jsonObject["parts"]!!
+                .jsonArray[0]
+                .jsonObject["text"]!!
+                .jsonPrimitive.content,
+        )
+
+        val missingToolResult =
+            convertGoogleMessages(
+                createGoogleModel(input = setOf(InputModality.TEXT)),
+                Context(
+                    messages =
+                        listOf(
+                            AssistantMessage(
+                                content = mutableListOf(ToolCall("tool-1", "echo", buildJsonObject { put("value", "x") })),
+                                api = "anthropic-messages",
+                                provider = "anthropic",
+                                model = "claude-sonnet-4-5",
+                                usage = Usage(),
+                                stopReason = StopReason.TOOL_USE,
+                                timestamp = 2L,
+                            ),
+                            UserMessage(UserMessageContent.Text("continue"), 3L),
+                        ),
+                ),
+            )
+        assertEquals(
+            "No result provided",
+            missingToolResult[1]
+                .jsonObject["parts"]!!
+                .jsonArray[0]
+                .jsonObject["functionResponse"]!!
+                .jsonObject["response"]!!
+                .jsonObject["error"]!!
+                .jsonPrimitive.content,
+        )
 
         val gemini3ToolResult =
             convertGoogleMessages(
@@ -214,6 +251,66 @@ class GoogleProviderTest {
                 .jsonObject["functionResponse"]!!
                 .jsonObject
         assertNotNull(functionResponse["parts"])
+    }
+
+    @Test
+    fun `convertGoogleMessages sanitizes unpaired surrogates in request text`() {
+        val malformed = "bad " + Char(0xD83D) + " text"
+        val sanitized = "bad  text"
+        val model = createGoogleModel(id = "gemini-3-pro-preview")
+        val contents =
+            convertGoogleMessages(
+                model,
+                Context(
+                    messages =
+                        listOf(
+                            UserMessage(UserMessageContent.Text(malformed), 1L),
+                            AssistantMessage(
+                                content =
+                                    mutableListOf(
+                                        TextContent(malformed),
+                                        ThinkingContent(malformed),
+                                        ToolCall("tool-1", "echo", buildJsonObject { put("value", "x") }),
+                                    ),
+                                api = GOOGLE_GENERATIVE_AI_API,
+                                provider = GOOGLE_PROVIDER,
+                                model = model.id,
+                                usage = Usage(),
+                                stopReason = StopReason.TOOL_USE,
+                                timestamp = 2L,
+                            ),
+                            ToolResultMessage(
+                                toolCallId = "tool-1",
+                                toolName = "echo",
+                                content = listOf(TextContent(malformed)),
+                                isError = false,
+                                timestamp = 3L,
+                            ),
+                        ),
+                ),
+            )
+
+        assertEquals(
+            sanitized,
+            contents[0]
+                .jsonObject["parts"]!!
+                .jsonArray[0]
+                .jsonObject["text"]!!
+                .jsonPrimitive.content,
+        )
+        val assistantParts = contents[1].jsonObject["parts"]!!.jsonArray
+        assertEquals(sanitized, assistantParts[0].jsonObject["text"]!!.jsonPrimitive.content)
+        assertEquals(sanitized, assistantParts[1].jsonObject["text"]!!.jsonPrimitive.content)
+        assertEquals(
+            sanitized,
+            contents[2]
+                .jsonObject["parts"]!!
+                .jsonArray[0]
+                .jsonObject["functionResponse"]!!
+                .jsonObject["response"]!!
+                .jsonObject["output"]!!
+                .jsonPrimitive.content,
+        )
     }
 
     @Test

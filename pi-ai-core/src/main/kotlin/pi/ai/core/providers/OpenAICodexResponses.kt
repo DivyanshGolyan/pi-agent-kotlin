@@ -78,7 +78,7 @@ public data class OpenAICodexResponsesOptions(
     val headers: Map<String, String> = emptyMap(),
     val reasoningEffort: ThinkingLevel? = null,
     val reasoningSummary: String? = "auto",
-    val textVerbosity: String = "medium",
+    val textVerbosity: String = "low",
     val transport: Transport? = null,
     val serviceTier: String? = null,
 )
@@ -238,7 +238,10 @@ public fun streamOpenAICodexResponses(
                     stream.push(AssistantMessageEvent.Done(output.stopReason, output))
                     return@launch
                 } catch (error: Throwable) {
-                    if (transport == Transport.WEBSOCKET || websocketStarted) {
+                    if (transport == Transport.WEBSOCKET ||
+                        transport == Transport.WEBSOCKET_CACHED ||
+                        websocketStarted
+                    ) {
                         throw error
                     }
                 }
@@ -464,137 +467,10 @@ private fun convertCodexTools(tools: List<Tool<*>>): JsonArray =
 private fun transformCodexMessages(
     model: Model<String>,
     messages: List<Message>,
-): List<Message> {
-    val toolCallIdMap = linkedMapOf<String, String>()
-    val transformed =
-        messages.map { message ->
-            when (message) {
-                is UserMessage -> message
-                is ToolResultMessage -> {
-                    val normalizedId = toolCallIdMap[message.toolCallId]
-                    if (normalizedId != null && normalizedId != message.toolCallId) {
-                        message.copy(toolCallId = normalizedId)
-                    } else {
-                        message
-                    }
-                }
-                is AssistantMessage -> {
-                    val isSameModel =
-                        message.provider == model.provider &&
-                            message.api == model.api &&
-                            message.model == model.id
-                    val content =
-                        message.content.flatMap { block ->
-                            transformCodexContentBlock(
-                                block = block,
-                                source = message,
-                                model = model,
-                                isSameModel = isSameModel,
-                                toolCallIdMap = toolCallIdMap,
-                            )
-                        }
-                    message.copy(content = content.toMutableList())
-                }
-                else -> message
-            }
-        }
-
-    val result = mutableListOf<Message>()
-    var pendingToolCalls = emptyList<ToolCall>()
-    var existingToolResultIds = emptySet<String>()
-
-    fun insertSyntheticToolResults() {
-        pendingToolCalls.forEach { toolCall ->
-            if (!existingToolResultIds.contains(toolCall.id)) {
-                result +=
-                    ToolResultMessage(
-                        toolCallId = toolCall.id,
-                        toolName = toolCall.name,
-                        content = listOf(TextContent("No result provided")),
-                        isError = true,
-                        timestamp = System.currentTimeMillis(),
-                    )
-            }
-        }
-        pendingToolCalls = emptyList()
-        existingToolResultIds = emptySet()
+): List<Message> =
+    transformMessages(messages, model) { id, normalizedModel, source ->
+        normalizeCodexToolCallId(id, source, normalizedModel)
     }
-
-    transformed.forEach { message ->
-        when (message) {
-            is AssistantMessage -> {
-                insertSyntheticToolResults()
-                if (message.stopReason == StopReason.ERROR || message.stopReason == StopReason.ABORTED) {
-                    return@forEach
-                }
-                val toolCalls = message.content.filterIsInstance<ToolCall>()
-                if (toolCalls.isNotEmpty()) {
-                    pendingToolCalls = toolCalls
-                    existingToolResultIds = emptySet()
-                }
-                result += message
-            }
-            is ToolResultMessage -> {
-                existingToolResultIds = existingToolResultIds + message.toolCallId
-                result += message
-            }
-            is UserMessage -> {
-                insertSyntheticToolResults()
-                result += message
-            }
-            else -> result += message
-        }
-    }
-
-    return result
-}
-
-private fun transformCodexContentBlock(
-    block: AssistantContentBlock,
-    source: AssistantMessage,
-    model: Model<String>,
-    isSameModel: Boolean,
-    toolCallIdMap: MutableMap<String, String>,
-): List<AssistantContentBlock> =
-    when (block) {
-        is ThinkingContent -> transformCodexThinkingBlock(block, isSameModel)
-        is TextContent ->
-            listOf(
-                if (isSameModel) {
-                    block
-                } else {
-                    TextContent(block.text)
-                },
-            )
-        is ToolCall -> {
-            var next = if (!isSameModel && block.thoughtSignature != null) block.copy(thoughtSignature = null) else block
-            if (!isSameModel) {
-                val normalizedId = normalizeCodexToolCallId(block.id, source, model)
-                if (normalizedId != block.id) {
-                    toolCallIdMap[block.id] = normalizedId
-                    next = next.copy(id = normalizedId)
-                }
-            }
-            listOf(next)
-        }
-        else -> listOf(block)
-    }
-
-private fun transformCodexThinkingBlock(
-    block: ThinkingContent,
-    isSameModel: Boolean,
-): List<AssistantContentBlock> {
-    if (block.redacted) {
-        return if (isSameModel) listOf(block) else emptyList()
-    }
-    if (isSameModel && block.thinkingSignature != null) {
-        return listOf(block)
-    }
-    if (block.thinking.isBlank()) {
-        return emptyList()
-    }
-    return if (isSameModel) listOf(block) else listOf(TextContent(block.thinking))
-}
 
 private fun buildCodexToolResultOutput(
     text: String,
@@ -824,6 +700,7 @@ private fun updateCodexUsageAndStop(
                     responseServiceTier = response["service_tier"]?.jsonPrimitive?.contentOrNull,
                     requestServiceTier = options.serviceTier,
                 ),
+            model = model,
         )
     }
     output.stopReason =
@@ -973,10 +850,17 @@ private suspend fun processCodexWebSocketStream(
     var keepConnection = true
     try {
         acquired.connection.start(events, completion)
+        val fullPayload = payload
+        val requestPayload =
+            if (options.transport == Transport.WEBSOCKET_CACHED && acquired.cached != null) {
+                buildCachedCodexWebSocketPayload(acquired.cached, fullPayload)
+            } else {
+                fullPayload
+            }
         val message =
             buildJsonObject {
                 put("type", JsonPrimitive("response.create"))
-                payload.forEach { (key, value) -> put(key, value) }
+                requestPayload.forEach { (key, value) -> put(key, value) }
             }
         check(acquired.connection.send(codexJson.encodeToString(JsonObject.serializer(), message))) {
             "Failed to send Codex WebSocket request"
@@ -994,8 +878,16 @@ private suspend fun processCodexWebSocketStream(
         if (options.signal?.aborted == true) {
             keepConnection = false
             error("Request was aborted")
+        } else if (options.transport == Transport.WEBSOCKET_CACHED && acquired.cached != null && output.responseId != null) {
+            acquired.cached.continuation =
+                CachedCodexWebSocketContinuation(
+                    lastRequestBody = fullPayload,
+                    lastResponseId = output.responseId!!,
+                    lastResponseItems = buildCodexResponseItems(model, output),
+                )
         }
     } catch (error: Throwable) {
+        acquired.cached?.continuation = null
         keepConnection = false
         throw error
     } finally {
@@ -1006,6 +898,7 @@ private suspend fun processCodexWebSocketStream(
 
 private data class AcquiredCodexWebSocket(
     val connection: CodexWebSocketConnection,
+    val cached: CachedCodexWebSocket?,
     val release: (keep: Boolean) -> Unit,
 )
 
@@ -1013,6 +906,13 @@ private data class CachedCodexWebSocket(
     val connection: CodexWebSocketConnection,
     var busy: Boolean = true,
     var idleTimer: TimerTask? = null,
+    var continuation: CachedCodexWebSocketContinuation? = null,
+)
+
+private data class CachedCodexWebSocketContinuation(
+    val lastRequestBody: JsonObject,
+    val lastResponseId: String,
+    val lastResponseItems: JsonArray,
 )
 
 private suspend fun acquireCodexWebSocket(
@@ -1022,7 +922,7 @@ private suspend fun acquireCodexWebSocket(
 ): AcquiredCodexWebSocket {
     if (sessionId == null) {
         val connection = connectCodexWebSocket(request, signal)
-        return AcquiredCodexWebSocket(connection) { connection.close() }
+        return AcquiredCodexWebSocket(connection, null) { connection.close() }
     }
 
     var useTemporaryConnection = false
@@ -1033,7 +933,7 @@ private suspend fun acquireCodexWebSocket(
             cached.idleTimer = null
             if (!cached.busy && cached.connection.isReusable) {
                 cached.busy = true
-                return AcquiredCodexWebSocket(cached.connection) { keep ->
+                return AcquiredCodexWebSocket(cached.connection, cached) { keep ->
                     releaseCachedCodexWebSocket(sessionId, cached, keep)
                 }
             }
@@ -1048,7 +948,7 @@ private suspend fun acquireCodexWebSocket(
 
     if (useTemporaryConnection) {
         val connection = connectCodexWebSocket(request, signal)
-        return AcquiredCodexWebSocket(connection) { connection.close() }
+        return AcquiredCodexWebSocket(connection, null) { connection.close() }
     }
 
     val connection = connectCodexWebSocket(request, signal)
@@ -1056,10 +956,69 @@ private suspend fun acquireCodexWebSocket(
     synchronized(codexWebSocketCache) {
         codexWebSocketCache[sessionId] = cached
     }
-    return AcquiredCodexWebSocket(connection) { keep ->
+    return AcquiredCodexWebSocket(connection, cached) { keep ->
         releaseCachedCodexWebSocket(sessionId, cached, keep)
     }
 }
+
+private fun buildCachedCodexWebSocketPayload(
+    cached: CachedCodexWebSocket,
+    payload: JsonObject,
+): JsonObject {
+    val continuation = cached.continuation ?: return payload
+    val delta = getCachedCodexInputDelta(payload, continuation)
+    if (delta == null) {
+        cached.continuation = null
+        return payload
+    }
+    return buildJsonObject {
+        payload.forEach { (key, value) ->
+            if (key != "input") {
+                put(key, value)
+            }
+        }
+        put("previous_response_id", JsonPrimitive(continuation.lastResponseId))
+        put("input", delta)
+    }
+}
+
+private fun getCachedCodexInputDelta(
+    payload: JsonObject,
+    continuation: CachedCodexWebSocketContinuation,
+): JsonArray? {
+    if (!requestBodiesMatchExceptInput(payload, continuation.lastRequestBody)) {
+        return null
+    }
+    val currentInput = payload["input"] as? JsonArray ?: JsonArray(emptyList())
+    val previousInput = continuation.lastRequestBody["input"] as? JsonArray ?: JsonArray(emptyList())
+    val baseline = JsonArray(previousInput + continuation.lastResponseItems)
+    if (currentInput.size < baseline.size) {
+        return null
+    }
+    val prefix = JsonArray(currentInput.take(baseline.size))
+    if (prefix != baseline) {
+        return null
+    }
+    return JsonArray(currentInput.drop(baseline.size))
+}
+
+private fun requestBodiesMatchExceptInput(
+    left: JsonObject,
+    right: JsonObject,
+): Boolean = left.withoutCodexInputState() == right.withoutCodexInputState()
+
+private fun JsonObject.withoutCodexInputState(): JsonObject =
+    JsonObject(filterKeys { key -> key != "input" && key != "previous_response_id" })
+
+private fun buildCodexResponseItems(
+    model: Model<String>,
+    output: AssistantMessage,
+): JsonArray =
+    JsonArray(
+        convertCodexMessages(model, Context(messages = listOf(output))).filter { item ->
+            item.jsonObject["type"]?.jsonPrimitive?.contentOrNull != "function_call_output"
+        },
+    )
 
 private fun releaseCachedCodexWebSocket(
     sessionId: String,
@@ -1325,7 +1284,8 @@ private fun clampCodexReasoningEffort(
         }
     val id = modelId.substringAfterLast("/")
     return when {
-        (id.startsWith("gpt-5.2") || id.startsWith("gpt-5.3") || id.startsWith("gpt-5.4")) && value == "minimal" -> "low"
+        (id.startsWith("gpt-5.2") || id.startsWith("gpt-5.3") || id.startsWith("gpt-5.4") || id.startsWith("gpt-5.5")) &&
+            value == "minimal" -> "low"
         id == "gpt-5.1" && value == "xhigh" -> "high"
         id == "gpt-5.1-codex-mini" && (value == "high" || value == "xhigh") -> "high"
         id == "gpt-5.1-codex-mini" -> "medium"
@@ -1382,11 +1342,12 @@ private fun resolveCodexServiceTier(
 private fun applyCodexServiceTierPricing(
     usage: Usage,
     serviceTier: String?,
+    model: Model<*>,
 ) {
     val multiplier =
         when (serviceTier) {
             "flex" -> 0.5
-            "priority" -> 2.0
+            "priority" -> if (model.id == "gpt-5.5") 2.5 else 2.0
             else -> 1.0
         }
     if (multiplier == 1.0) {
@@ -1431,30 +1392,6 @@ private fun normalizeCodexIdPart(value: String): String =
         .trimEnd('_')
 
 private fun buildForeignCodexResponsesItemId(value: String): String = normalizeCodexIdPart("fc_${value.hashCode().toUInt().toString(16)}")
-
-private fun sanitizeSurrogates(value: String): String {
-    val builder = StringBuilder(value.length)
-    var index = 0
-    while (index < value.length) {
-        val char = value[index]
-        when {
-            char.isHighSurrogate() && index + 1 < value.length && value[index + 1].isLowSurrogate() -> {
-                builder.append(char)
-                builder.append(value[index + 1])
-                index += 2
-            }
-            char.isHighSurrogate() || char.isLowSurrogate() -> {
-                builder.append('\uFFFD')
-                index++
-            }
-            else -> {
-                builder.append(char)
-                index++
-            }
-        }
-    }
-    return builder.toString()
-}
 
 private fun finishCodexWithError(
     stream: AssistantMessageEventStream,

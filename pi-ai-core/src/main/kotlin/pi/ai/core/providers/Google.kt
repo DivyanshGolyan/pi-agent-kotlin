@@ -332,7 +332,11 @@ internal fun convertGoogleMessages(
     context: Context,
 ): JsonArray {
     val contents = mutableListOf<JsonElement>()
-    context.messages.forEach { message ->
+    val transformedMessages =
+        transformMessages(context.messages, model) { id, normalizedModel, _ ->
+            normalizeToolCallId(id, normalizedModel.id)
+        }
+    transformedMessages.forEach { message ->
         when (message) {
             is UserMessage -> convertGoogleUserMessage(model, message)?.let(contents::add)
             is AssistantMessage -> convertGoogleAssistantMessage(model, message)?.let(contents::add)
@@ -344,7 +348,7 @@ internal fun convertGoogleMessages(
 
 private fun buildTextPart(text: String): JsonObject =
     buildJsonObject {
-        put("parts", buildJsonArray { add(buildJsonObject { put("text", JsonPrimitive(text)) }) })
+        put("parts", buildJsonArray { add(buildJsonObject { put("text", JsonPrimitive(sanitizeSurrogates(text))) }) })
     }
 
 private fun convertGoogleUserMessage(
@@ -353,11 +357,11 @@ private fun convertGoogleUserMessage(
 ): JsonObject? {
     val parts: List<JsonElement> =
         when (val content = message.content) {
-            is UserMessageContent.Text -> listOf(buildJsonObject { put("text", JsonPrimitive(content.value)) })
+            is UserMessageContent.Text -> listOf(buildJsonObject { put("text", JsonPrimitive(sanitizeSurrogates(content.value))) })
             is UserMessageContent.Structured ->
                 content.parts.mapNotNull { part ->
                     when (part) {
-                        is TextContent -> buildJsonObject { put("text", JsonPrimitive(part.text)) }
+                        is TextContent -> buildJsonObject { put("text", JsonPrimitive(sanitizeSurrogates(part.text))) }
                         is ImageContent ->
                             if (model.input.contains(InputModality.IMAGE)) {
                                 buildInlineData(part)
@@ -390,7 +394,7 @@ private fun convertGoogleAssistantMessage(
                     } else {
                         val thoughtSignature = resolveThoughtSignature(isSameProviderAndModel, block.textSignature)
                         buildJsonObject {
-                            put("text", JsonPrimitive(block.text))
+                            put("text", JsonPrimitive(sanitizeSurrogates(block.text)))
                             thoughtSignature?.let { put("thoughtSignature", JsonPrimitive(it)) }
                         }
                     }
@@ -402,11 +406,11 @@ private fun convertGoogleAssistantMessage(
                         val thoughtSignature = resolveThoughtSignature(isSameProviderAndModel, block.thinkingSignature)
                         buildJsonObject {
                             put("thought", JsonPrimitive(true))
-                            put("text", JsonPrimitive(block.thinking))
+                            put("text", JsonPrimitive(sanitizeSurrogates(block.thinking)))
                             thoughtSignature?.let { put("thoughtSignature", JsonPrimitive(it)) }
                         }
                     } else {
-                        buildJsonObject { put("text", JsonPrimitive(block.thinking)) }
+                        buildJsonObject { put("text", JsonPrimitive(sanitizeSurrogates(block.thinking))) }
                     }
                 }
                 is ToolCall -> {
@@ -470,7 +474,7 @@ private fun MutableList<JsonElement>.addGoogleToolResultMessage(
                     put(
                         "response",
                         buildJsonObject {
-                            put(if (message.isError) "error" else "output", JsonPrimitive(responseValue))
+                            put(if (message.isError) "error" else "output", JsonPrimitive(sanitizeSurrogates(responseValue)))
                         },
                     )
                     if (hasImages && supportsMultimodalFunctionResponse) {

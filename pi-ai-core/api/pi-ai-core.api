@@ -308,11 +308,12 @@ public abstract interface class pi/ai/core/Message {
 }
 
 public final class pi/ai/core/Model {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;Lpi/ai/core/ModelCompat;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;Lpi/ai/core/ModelCompat;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()I
 	public final fun component11 ()Ljava/util/Map;
+	public final fun component12 ()Lpi/ai/core/ModelCompat;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
@@ -321,11 +322,12 @@ public final class pi/ai/core/Model {
 	public final fun component7 ()Ljava/util/Set;
 	public final fun component8 ()Lpi/ai/core/ModelCost;
 	public final fun component9 ()I
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;)Lpi/ai/core/Model;
-	public static synthetic fun copy$default (Lpi/ai/core/Model;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;ILjava/lang/Object;)Lpi/ai/core/Model;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;Lpi/ai/core/ModelCompat;)Lpi/ai/core/Model;
+	public static synthetic fun copy$default (Lpi/ai/core/Model;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/Set;Lpi/ai/core/ModelCost;IILjava/util/Map;Lpi/ai/core/ModelCompat;ILjava/lang/Object;)Lpi/ai/core/Model;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getApi ()Ljava/lang/String;
 	public final fun getBaseUrl ()Ljava/lang/String;
+	public final fun getCompat ()Lpi/ai/core/ModelCompat;
 	public final fun getContextWindow ()I
 	public final fun getCost ()Lpi/ai/core/ModelCost;
 	public final fun getHeaders ()Ljava/util/Map;
@@ -335,6 +337,21 @@ public final class pi/ai/core/Model {
 	public final fun getName ()Ljava/lang/String;
 	public final fun getProvider ()Ljava/lang/String;
 	public final fun getReasoning ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class pi/ai/core/ModelCompat {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Boolean;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/Boolean;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Boolean;
+	public final fun component2 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/Boolean;Ljava/lang/Boolean;)Lpi/ai/core/ModelCompat;
+	public static synthetic fun copy$default (Lpi/ai/core/ModelCompat;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/ai/core/ModelCompat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSupportsEagerToolInputStreaming ()Ljava/lang/Boolean;
+	public final fun getSupportsLongCacheRetention ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -594,6 +611,7 @@ public final class pi/ai/core/Transport : java/lang/Enum {
 	public static final field AUTO Lpi/ai/core/Transport;
 	public static final field SSE Lpi/ai/core/Transport;
 	public static final field WEBSOCKET Lpi/ai/core/Transport;
+	public static final field WEBSOCKET_CACHED Lpi/ai/core/Transport;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lpi/ai/core/Transport;
 	public static fun values ()[Lpi/ai/core/Transport;
@@ -726,8 +744,8 @@ public final class pi/ai/core/providers/AnthropicKt {
 
 public final class pi/ai/core/providers/AnthropicOptions {
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;)V
-	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lpi/ai/core/providers/ToolChoice;)V
+	public synthetic fun <init> (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lpi/ai/core/providers/ToolChoice;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/Double;
 	public final fun component10 ()Ljava/lang/Long;
 	public final fun component11 ()Ljava/util/Map;
@@ -735,7 +753,8 @@ public final class pi/ai/core/providers/AnthropicOptions {
 	public final fun component13 ()Ljava/lang/Integer;
 	public final fun component14 ()Ljava/lang/String;
 	public final fun component15 ()Ljava/lang/String;
-	public final fun component16 ()Lpi/ai/core/providers/ToolChoice;
+	public final fun component16 ()Ljava/lang/Boolean;
+	public final fun component17 ()Lpi/ai/core/providers/ToolChoice;
 	public final fun component2 ()Ljava/lang/Integer;
 	public final fun component3 ()Lpi/ai/core/AbortSignal;
 	public final fun component4 ()Ljava/lang/String;
@@ -744,13 +763,14 @@ public final class pi/ai/core/providers/AnthropicOptions {
 	public final fun component7 ()Lkotlin/jvm/functions/Function3;
 	public final fun component8 ()Lkotlin/jvm/functions/Function3;
 	public final fun component9 ()Ljava/util/Map;
-	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;)Lpi/ai/core/providers/AnthropicOptions;
-	public static synthetic fun copy$default (Lpi/ai/core/providers/AnthropicOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lpi/ai/core/providers/ToolChoice;ILjava/lang/Object;)Lpi/ai/core/providers/AnthropicOptions;
+	public final fun copy (Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lpi/ai/core/providers/ToolChoice;)Lpi/ai/core/providers/AnthropicOptions;
+	public static synthetic fun copy$default (Lpi/ai/core/providers/AnthropicOptions;Ljava/lang/Double;Ljava/lang/Integer;Lpi/ai/core/AbortSignal;Ljava/lang/String;Lpi/ai/core/CacheRetention;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ljava/util/Map;Ljava/lang/Long;Ljava/util/Map;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lpi/ai/core/providers/ToolChoice;ILjava/lang/Object;)Lpi/ai/core/providers/AnthropicOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getApiKey ()Ljava/lang/String;
 	public final fun getCacheRetention ()Lpi/ai/core/CacheRetention;
 	public final fun getEffort ()Ljava/lang/String;
 	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getInterleavedThinking ()Ljava/lang/Boolean;
 	public final fun getMaxRetryDelayMs ()Ljava/lang/Long;
 	public final fun getMaxTokens ()Ljava/lang/Integer;
 	public final fun getMetadata ()Ljava/util/Map;

@@ -70,6 +70,7 @@ public data class AnthropicOptions(
     val thinkingBudgetTokens: Int? = null,
     val effort: AnthropicEffort? = null,
     val thinkingDisplay: AnthropicThinkingDisplay? = null,
+    val interleavedThinking: Boolean? = null,
     val toolChoice: ToolChoice? = null,
 )
 
@@ -94,7 +95,8 @@ private val json: Json =
 
 private val client: OkHttpClient = OkHttpClient.Builder().build()
 private val jsonMediaType = "application/json".toMediaType()
-private const val ANTHROPIC_BETA_HEADER: String = "fine-grained-tool-streaming-2025-05-14"
+private const val FINE_GRAINED_TOOL_STREAMING_BETA: String = "fine-grained-tool-streaming-2025-05-14"
+private const val INTERLEAVED_THINKING_BETA: String = "interleaved-thinking-2025-05-14"
 
 public object AnthropicApiProvider : ApiProvider {
     override val api: String = ANTHROPIC_MESSAGES_API
@@ -266,9 +268,9 @@ public fun streamAnthropic(
                     .header("accept", "text/event-stream")
                     .header("anthropic-version", "2023-06-01")
                     .header("anthropic-dangerous-direct-browser-access", "true")
-                    .header("anthropic-beta", ANTHROPIC_BETA_HEADER)
                     .header("x-api-key", options.apiKey ?: "")
                     .apply {
+                        buildAnthropicBetaHeader(model, context, options)?.let { header("anthropic-beta", it) }
                         model.headers.forEach { (name, value) -> header(name, value) }
                         options.headers.forEach { (name, value) -> header(name, value) }
                     }.build()
@@ -357,6 +359,30 @@ private fun supportsAdaptiveThinking(modelId: String): Boolean =
         modelId.contains("sonnet-4-6") ||
         modelId.contains("sonnet-4.6")
 
+internal fun buildAnthropicBetaHeader(
+    model: Model<String>,
+    context: Context,
+    options: AnthropicOptions,
+): String? {
+    val betaFeatures = mutableListOf<String>()
+    if (shouldUseFineGrainedToolStreamingBeta(model, context)) {
+        betaFeatures += FINE_GRAINED_TOOL_STREAMING_BETA
+    }
+    if (options.interleavedThinking != false && !supportsAdaptiveThinking(model.id)) {
+        betaFeatures += INTERLEAVED_THINKING_BETA
+    }
+    return betaFeatures.takeIf { it.isNotEmpty() }?.joinToString(",")
+}
+
+private fun shouldUseFineGrainedToolStreamingBeta(
+    model: Model<String>,
+    context: Context,
+): Boolean =
+    context.tools.isNotEmpty() &&
+        !supportsEagerToolInputStreaming(model)
+
+private fun supportsEagerToolInputStreaming(model: Model<String>): Boolean = model.compat?.supportsEagerToolInputStreaming ?: true
+
 private fun mapThinkingLevelToEffort(
     level: ThinkingLevel,
     modelId: String,
@@ -378,7 +404,7 @@ internal fun buildParams(
     context: Context,
     options: AnthropicOptions,
 ): JsonObject {
-    val cacheControl = getCacheControl(model.baseUrl, options.cacheRetention)
+    val cacheControl = getCacheControl(model, options.cacheRetention)
     return buildJsonObject {
         put("model", JsonPrimitive(model.id))
         put("messages", convertMessages(context.messages, model, cacheControl))
@@ -392,7 +418,7 @@ internal fun buildParams(
                     add(
                         buildJsonObject {
                             put("type", JsonPrimitive("text"))
-                            put("text", JsonPrimitive(context.systemPrompt))
+                            put("text", JsonPrimitive(sanitizeSurrogates(context.systemPrompt)))
                             cacheControl?.let { put("cache_control", it) }
                         },
                     )
@@ -405,7 +431,7 @@ internal fun buildParams(
         }
 
         if (context.tools.isNotEmpty()) {
-            put("tools", convertTools(context.tools, cacheControl))
+            put("tools", convertTools(context.tools, model, cacheControl))
         }
 
         if (model.reasoning) {
@@ -477,7 +503,7 @@ internal fun buildParams(
 }
 
 private fun getCacheControl(
-    baseUrl: String,
+    model: Model<String>,
     cacheRetention: CacheRetention?,
 ): JsonObject? {
     val retention = cacheRetention ?: CacheRetention.SHORT
@@ -486,11 +512,13 @@ private fun getCacheControl(
     }
     return buildJsonObject {
         put("type", JsonPrimitive("ephemeral"))
-        if (retention == CacheRetention.LONG && baseUrl.contains("api.anthropic.com")) {
+        if (retention == CacheRetention.LONG && supportsLongCacheRetention(model)) {
             put("ttl", JsonPrimitive("1h"))
         }
     }
 }
+
+private fun supportsLongCacheRetention(model: Model<String>): Boolean = model.compat?.supportsLongCacheRetention ?: true
 
 private fun convertMessages(
     messages: List<Message>,
@@ -498,9 +526,10 @@ private fun convertMessages(
     cacheControl: JsonObject?,
 ): JsonArray =
     buildJsonArray {
+        val transformedMessages = transformMessages(messages, model) { id, _, _ -> normalizeAnthropicToolCallId(id) }
         var index = 0
-        while (index < messages.size) {
-            when (val message = messages[index]) {
+        while (index < transformedMessages.size) {
+            when (val message = transformedMessages[index]) {
                 is UserMessage -> {
                     add(
                         buildJsonObject {
@@ -519,7 +548,7 @@ private fun convertMessages(
                                             add(
                                                 buildJsonObject {
                                                     put("type", JsonPrimitive("text"))
-                                                    put("text", JsonPrimitive(block.text))
+                                                    put("text", JsonPrimitive(sanitizeSurrogates(block.text)))
                                                 },
                                             )
                                         }
@@ -537,14 +566,14 @@ private fun convertMessages(
                                                 add(
                                                     buildJsonObject {
                                                         put("type", JsonPrimitive("text"))
-                                                        put("text", JsonPrimitive(block.thinking))
+                                                        put("text", JsonPrimitive(sanitizeSurrogates(block.thinking)))
                                                     },
                                                 )
                                             else ->
                                                 add(
                                                     buildJsonObject {
                                                         put("type", JsonPrimitive("thinking"))
-                                                        put("thinking", JsonPrimitive(block.thinking))
+                                                        put("thinking", JsonPrimitive(sanitizeSurrogates(block.thinking)))
                                                         put("signature", JsonPrimitive(block.thinkingSignature))
                                                     },
                                                 )
@@ -584,8 +613,8 @@ private fun convertMessages(
                         buildJsonArray {
                             add(convertToolResult(message))
                             var next = index + 1
-                            while (next < messages.size && messages[next] is ToolResultMessage) {
-                                add(convertToolResult(messages[next] as ToolResultMessage))
+                            while (next < transformedMessages.size && transformedMessages[next] is ToolResultMessage) {
+                                add(convertToolResult(transformedMessages[next] as ToolResultMessage))
                                 next += 1
                             }
                             index = next - 1
@@ -632,7 +661,7 @@ private fun convertUserContent(
     model: Model<String>,
 ): JsonElement =
     when (content) {
-        is UserMessageContent.Text -> JsonPrimitive(content.value)
+        is UserMessageContent.Text -> JsonPrimitive(sanitizeSurrogates(content.value))
         is UserMessageContent.Structured ->
             buildJsonArray {
                 content.parts.forEach { part ->
@@ -642,7 +671,7 @@ private fun convertUserContent(
                                 add(
                                     buildJsonObject {
                                         put("type", JsonPrimitive("text"))
-                                        put("text", JsonPrimitive(part.text))
+                                        put("text", JsonPrimitive(sanitizeSurrogates(part.text)))
                                     },
                                 )
                             }
@@ -681,7 +710,7 @@ private fun convertToolResultContent(content: List<ToolResultContentPart>): Json
         return JsonPrimitive(
             content
                 .filterIsInstance<TextContent>()
-                .joinToString("\n") { it.text },
+                .joinToString("\n") { sanitizeSurrogates(it.text) },
         )
     }
 
@@ -693,7 +722,7 @@ private fun convertToolResultContent(content: List<ToolResultContentPart>): Json
                         add(
                             buildJsonObject {
                                 put("type", JsonPrimitive("text"))
-                                put("text", JsonPrimitive(part.text))
+                                put("text", JsonPrimitive(sanitizeSurrogates(part.text)))
                             },
                         )
                     is ImageContent ->
@@ -729,6 +758,7 @@ private fun convertToolResultContent(content: List<ToolResultContentPart>): Json
 
 private fun convertTools(
     tools: List<Tool<*>>,
+    model: Model<String>,
     cacheControl: JsonObject?,
 ): JsonArray =
     buildJsonArray {
@@ -737,6 +767,9 @@ private fun convertTools(
                 buildJsonObject {
                     put("name", JsonPrimitive(tool.name))
                     put("description", JsonPrimitive(tool.description))
+                    if (supportsEagerToolInputStreaming(model)) {
+                        put("eager_input_streaming", JsonPrimitive(true))
+                    }
                     put(
                         "input_schema",
                         buildJsonObject {
@@ -752,6 +785,8 @@ private fun convertTools(
             )
         }
     }
+
+private fun normalizeAnthropicToolCallId(id: String): String = id.replace(Regex("[^a-zA-Z0-9_-]"), "_").take(64)
 
 internal fun handleSseEvent(
     eventType: String,

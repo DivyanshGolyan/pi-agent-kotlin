@@ -30,6 +30,7 @@ public enum class CacheRetention {
 public enum class Transport {
     SSE,
     WEBSOCKET,
+    WEBSOCKET_CACHED,
     AUTO,
 }
 
@@ -50,6 +51,11 @@ public data class ModelCost(
     val output: Double,
     val cacheRead: Double,
     val cacheWrite: Double,
+)
+
+public data class ModelCompat(
+    val supportsEagerToolInputStreaming: Boolean? = null,
+    val supportsLongCacheRetention: Boolean? = null,
 )
 
 public data class UsageCost(
@@ -81,6 +87,7 @@ public data class Model<TApi : Api>(
     val contextWindow: Int,
     val maxTokens: Int,
     val headers: Map<String, String> = emptyMap(),
+    val compat: ModelCompat? = null,
 )
 
 public enum class InputModality {

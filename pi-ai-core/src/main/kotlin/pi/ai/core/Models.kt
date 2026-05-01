@@ -526,6 +526,7 @@ private val openAiCodexModels: Map<String, Model<String>> =
             ),
         "gpt-5.4" to openAiCodexModel("gpt-5.4", "GPT-5.4", ModelCost(2.5, 15.0, 0.25, 0.0)),
         "gpt-5.4-mini" to openAiCodexModel("gpt-5.4-mini", "GPT-5.4 Mini", ModelCost(0.75, 4.5, 0.075, 0.0)),
+        "gpt-5.5" to openAiCodexModel("gpt-5.5", "GPT-5.5", ModelCost(5.0, 30.0, 0.5, 0.0)),
     )
 
 private val modelRegistry: Map<String, Map<String, Model<String>>> =
@@ -625,6 +626,7 @@ public fun supportsXhigh(model: Model<*>): Boolean =
     model.id.contains("gpt-5.2") ||
         model.id.contains("gpt-5.3") ||
         model.id.contains("gpt-5.4") ||
+        model.id.contains("gpt-5.5") ||
         model.id.contains("opus-4-6") ||
         model.id.contains("opus-4.6") ||
         model.id.contains("opus-4-7") ||
