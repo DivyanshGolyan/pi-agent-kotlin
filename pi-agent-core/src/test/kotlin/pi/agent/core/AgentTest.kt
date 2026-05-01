@@ -15,6 +15,7 @@ import pi.ai.core.AssistantMessage
 import pi.ai.core.AssistantMessageEvent
 import pi.ai.core.AssistantMessageEventStream
 import pi.ai.core.CacheRetention
+import pi.ai.core.Message
 import pi.ai.core.Model
 import pi.ai.core.ModelCost
 import pi.ai.core.StopReason
@@ -311,7 +312,36 @@ class AgentTest {
 
             assertEquals("Cannot continue from message role: assistant", error?.message)
         }
+
+    @Test
+    fun `continue fails from custom assistant role tail without queued messages`() =
+        runTest {
+            val agent =
+                Agent(
+                    AgentOptions(
+                        initialState =
+                            InitialAgentState(
+                                model = createModel(),
+                                messages = listOf(CustomAgentRoleMessage(role = "assistant")),
+                            ),
+                    ),
+                )
+
+            var error: IllegalStateException? = null
+            try {
+                agent.`continue`()
+            } catch (caught: IllegalStateException) {
+                error = caught
+            }
+
+            assertEquals("Cannot continue from message role: assistant", error?.message)
+        }
 }
+
+private data class CustomAgentRoleMessage(
+    override val role: String,
+    override val timestamp: Long = 1L,
+) : Message
 
 private fun createModel(): Model<String> =
     Model(

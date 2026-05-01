@@ -21,18 +21,20 @@ public final class pi/agent/core/AfterToolCallContext {
 
 public final class pi/agent/core/AfterToolCallResult {
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;)V
-	public synthetic fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Lkotlinx/serialization/json/JsonElement;
 	public final fun component3 ()Ljava/lang/Boolean;
 	public final fun component4 ()Ljava/lang/Boolean;
-	public final fun copy (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lpi/agent/core/AfterToolCallResult;
-	public static synthetic fun copy$default (Lpi/agent/core/AfterToolCallResult;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/agent/core/AfterToolCallResult;
+	public final fun component5 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lpi/agent/core/AfterToolCallResult;
+	public static synthetic fun copy$default (Lpi/agent/core/AfterToolCallResult;Ljava/util/List;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lpi/agent/core/AfterToolCallResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getContent ()Ljava/util/List;
 	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
 	public final fun getTerminal ()Ljava/lang/Boolean;
+	public final fun getTerminate ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public final fun isError ()Ljava/lang/Boolean;
 	public fun toString ()Ljava/lang/String;
@@ -378,27 +380,31 @@ public final class pi/agent/core/AgentThinkingLevel : java/lang/Enum {
 public abstract interface class pi/agent/core/AgentTool : pi/ai/core/Tool {
 	public abstract fun execute (Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun execute$default (Lpi/agent/core/AgentTool;Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun getExecutionMode ()Lpi/agent/core/ToolExecutionMode;
 	public abstract fun getLabel ()Ljava/lang/String;
 	public fun prepareArguments (Lkotlinx/serialization/json/JsonObject;)Lkotlinx/serialization/json/JsonObject;
 }
 
 public final class pi/agent/core/AgentTool$DefaultImpls {
 	public static synthetic fun execute$default (Lpi/agent/core/AgentTool;Ljava/lang/String;Ljava/lang/Object;Lpi/ai/core/AbortSignal;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun getExecutionMode (Lpi/agent/core/AgentTool;)Lpi/agent/core/ToolExecutionMode;
 	public static fun prepareArguments (Lpi/agent/core/AgentTool;Lkotlinx/serialization/json/JsonObject;)Lkotlinx/serialization/json/JsonObject;
 }
 
 public final class pi/agent/core/AgentToolResult {
-	public fun <init> (Ljava/util/List;Ljava/lang/Object;Z)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/lang/Object;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/lang/Object;ZZ)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/Object;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun component3 ()Z
-	public final fun copy (Ljava/util/List;Ljava/lang/Object;Z)Lpi/agent/core/AgentToolResult;
-	public static synthetic fun copy$default (Lpi/agent/core/AgentToolResult;Ljava/util/List;Ljava/lang/Object;ZILjava/lang/Object;)Lpi/agent/core/AgentToolResult;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/util/List;Ljava/lang/Object;ZZ)Lpi/agent/core/AgentToolResult;
+	public static synthetic fun copy$default (Lpi/agent/core/AgentToolResult;Ljava/util/List;Ljava/lang/Object;ZZILjava/lang/Object;)Lpi/agent/core/AgentToolResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getContent ()Ljava/util/List;
 	public final fun getDetails ()Ljava/lang/Object;
 	public final fun getTerminal ()Z
+	public final fun getTerminate ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

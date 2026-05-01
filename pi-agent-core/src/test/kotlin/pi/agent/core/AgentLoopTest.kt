@@ -1,5 +1,6 @@
 package pi.agent.core
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
@@ -74,6 +75,27 @@ class AgentLoopTest {
                 ),
                 events,
             )
+        }
+
+    @Test
+    fun `runAgentLoopContinue rejects assistant role messages by role`() =
+        runTest {
+            val context =
+                AgentContext(
+                    systemPrompt = "",
+                    messages = mutableListOf(CustomRoleMessage(role = "assistant")),
+                    tools = emptyList(),
+                )
+            val config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter)
+            var error: IllegalArgumentException? = null
+
+            try {
+                runAgentLoopContinue(context, config, emit = {})
+            } catch (caught: IllegalArgumentException) {
+                error = caught
+            }
+
+            assertEquals("Cannot continue from message role: assistant", error?.message)
         }
 
     @Test
@@ -253,6 +275,305 @@ class AgentLoopTest {
             assertTrue(messages[0] is UserMessage)
             assertTrue(messages[1] is AssistantMessage)
             assertTrue(messages[2] is ToolResultMessage)
+        }
+
+    @Test
+    fun `terminal compatibility alias terminates after data class copy`() =
+        runTest {
+            val tool =
+                object : AgentTool<String> {
+                    override val name: String = "finish"
+                    override val label: String = "Finish"
+                    override val description: String = "Finish tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "done"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult<kotlinx.serialization.json.JsonElement>(
+                            content = listOf(TextContent("finished")),
+                            details = buildJsonObject {},
+                        ).copy(terminal = true)
+                }
+            val assistantWithTerminalTool =
+                createAssistantMessage(
+                    listOf(ToolCall("tool-1", "finish", buildJsonObject {})),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val unexpectedAssistant = createAssistantMessage(listOf(TextContent("should not be called")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(tool))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("finish")),
+                    context = context,
+                    config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTerminalTool else unexpectedAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+
+            assertEquals(1, callCount)
+        }
+
+    @Test
+    fun `mixed terminal tool batch continues after all tool results`() =
+        runTest {
+            val finishingTool =
+                object : AgentTool<String> {
+                    override val name: String = "finish"
+                    override val label: String = "Finish"
+                    override val description: String = "Terminal tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "done"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult(
+                            content = listOf(TextContent("finished")),
+                            details = buildJsonObject {},
+                            terminal = true,
+                        )
+                }
+            val continuingTool =
+                object : AgentTool<String> {
+                    override val name: String = "continue"
+                    override val label: String = "Continue"
+                    override val description: String = "Non-terminal tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "done"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult(
+                            content = listOf(TextContent("continued")),
+                            details = buildJsonObject {},
+                        )
+                }
+            val assistantWithTools =
+                createAssistantMessage(
+                    listOf(
+                        ToolCall("tool-1", "finish", buildJsonObject {}),
+                        ToolCall("tool-2", "continue", buildJsonObject {}),
+                    ),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val finalAssistant = createAssistantMessage(listOf(TextContent("done")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(finishingTool, continuingTool))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("run")),
+                    context = context,
+                    config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTools else finalAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+            val messages = stream.result()
+
+            assertEquals(2, callCount)
+            assertEquals(listOf("tool-1", "tool-2"), messages.filterIsInstance<ToolResultMessage>().map { it.toolCallId })
+            assertTrue(messages.last() is AssistantMessage)
+        }
+
+    @Test
+    fun `per-tool sequential execution override serializes the whole batch`() =
+        runTest {
+            val execution = mutableListOf<String>()
+            val slowSequential =
+                object : AgentTool<String> {
+                    override val name: String = "slow"
+                    override val label: String = "Slow"
+                    override val description: String = "Sequential tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+                    override val executionMode: ToolExecutionMode = ToolExecutionMode.SEQUENTIAL
+
+                    override fun validateArguments(arguments: JsonObject): String = "slow"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> {
+                        execution += "slow:start"
+                        delay(10)
+                        execution += "slow:end"
+                        return AgentToolResult(listOf(TextContent("slow")), buildJsonObject {})
+                    }
+                }
+            val fast =
+                object : AgentTool<String> {
+                    override val name: String = "fast"
+                    override val label: String = "Fast"
+                    override val description: String = "Parallel-capable tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "fast"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> {
+                        execution += "fast:start"
+                        execution += "fast:end"
+                        return AgentToolResult(listOf(TextContent("fast")), buildJsonObject {})
+                    }
+                }
+            val assistantWithTools =
+                createAssistantMessage(
+                    listOf(
+                        ToolCall("tool-1", "slow", buildJsonObject {}),
+                        ToolCall("tool-2", "fast", buildJsonObject {}),
+                    ),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val finalAssistant = createAssistantMessage(listOf(TextContent("done")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(slowSequential, fast))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("run")),
+                    context = context,
+                    config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTools else finalAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            stream.asFlow().toList()
+
+            assertEquals(listOf("slow:start", "slow:end", "fast:start", "fast:end"), execution)
+        }
+
+    @Test
+    fun `parallel tool execution ends in completion order but emits results in source order`() =
+        runTest {
+            val slow =
+                object : AgentTool<String> {
+                    override val name: String = "slow"
+                    override val label: String = "Slow"
+                    override val description: String = "Slow tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "slow"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> {
+                        delay(50)
+                        return AgentToolResult(listOf(TextContent("slow")), buildJsonObject {})
+                    }
+                }
+            val fast =
+                object : AgentTool<String> {
+                    override val name: String = "fast"
+                    override val label: String = "Fast"
+                    override val description: String = "Fast tool"
+                    override val parameters: JsonObject = buildJsonObject { put("type", "object") }
+
+                    override fun validateArguments(arguments: JsonObject): String = "fast"
+
+                    override suspend fun execute(
+                        toolCallId: String,
+                        params: String,
+                        signal: pi.ai.core.AbortSignal?,
+                        onUpdate: AgentToolUpdateCallback<kotlinx.serialization.json.JsonElement>?,
+                    ): AgentToolResult<kotlinx.serialization.json.JsonElement> =
+                        AgentToolResult(listOf(TextContent("fast")), buildJsonObject {})
+                }
+            val assistantWithTools =
+                createAssistantMessage(
+                    listOf(
+                        ToolCall("tool-1", "slow", buildJsonObject {}),
+                        ToolCall("tool-2", "fast", buildJsonObject {}),
+                    ),
+                    stopReason = StopReason.TOOL_USE,
+                )
+            val finalAssistant = createAssistantMessage(listOf(TextContent("done")))
+            val context = AgentContext(systemPrompt = "", messages = mutableListOf(), tools = listOf(slow, fast))
+            var callCount = 0
+
+            val stream =
+                agentLoop(
+                    prompts = listOf(createUserMessage("run")),
+                    context = context,
+                    config = AgentLoopConfig(model = createModel(), convertToLlm = ::identityConverter),
+                    streamFn = { _, _, _ ->
+                        callCount += 1
+                        AssistantMessageEventStream().also { eventStream ->
+                            eventStream.push(
+                                AssistantMessageEvent.Done(
+                                    reason = if (callCount == 1) StopReason.TOOL_USE else StopReason.STOP,
+                                    message = if (callCount == 1) assistantWithTools else finalAssistant,
+                                ),
+                            )
+                        }
+                    },
+                )
+
+            val events = stream.asFlow().toList()
+            val toolExecutionEndIds = events.filterIsInstance<AgentEvent.ToolExecutionEnd>().map { it.toolCallId }
+            val toolResultMessageIds =
+                events.filterIsInstance<AgentEvent.MessageEnd>().mapNotNull {
+                    (it.message as? ToolResultMessage)
+                        ?.toolCallId
+                }
+
+            assertEquals(listOf("tool-2", "tool-1"), toolExecutionEndIds)
+            assertEquals(listOf("tool-1", "tool-2"), toolResultMessageIds)
         }
 
     @Test
@@ -469,6 +790,11 @@ private fun createAssistantMessage(
         stopReason = stopReason,
         timestamp = System.currentTimeMillis(),
     )
+
+private data class CustomRoleMessage(
+    override val role: String,
+    override val timestamp: Long = 1L,
+) : Message
 
 private fun createUserMessage(text: String): UserMessage =
     UserMessage(

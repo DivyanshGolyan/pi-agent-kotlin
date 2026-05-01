@@ -65,6 +65,7 @@ public data class AfterToolCallResult(
     val details: JsonElement? = null,
     val isError: Boolean? = null,
     val terminal: Boolean? = null,
+    val terminate: Boolean? = terminal,
 )
 
 public data class BeforeToolCallContext(
@@ -124,12 +125,16 @@ public data class AgentToolResult<TDetails>(
     val content: List<ToolResultContentPart>,
     val details: TDetails,
     val terminal: Boolean = false,
+    val terminate: Boolean = terminal,
 )
 
 public typealias AgentToolUpdateCallback<TDetails> = suspend (AgentToolResult<TDetails>) -> Unit
 
 public interface AgentTool<TArguments> : Tool<TArguments> {
     public val label: String
+
+    public val executionMode: ToolExecutionMode
+        get() = ToolExecutionMode.PARALLEL
 
     public fun prepareArguments(args: JsonObject): JsonObject = args
 

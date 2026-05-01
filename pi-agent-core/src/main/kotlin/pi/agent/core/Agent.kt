@@ -215,7 +215,7 @@ public class Agent
             require(activeRun == null) { "Agent is already processing. Wait for completion before continuing." }
 
             val lastMessage = stateBacking.messages.lastOrNull() ?: error("No messages to continue from")
-            if (lastMessage is AssistantMessage) {
+            if (lastMessage.role == "assistant") {
                 val queuedSteering = steeringQueue.drain()
                 if (queuedSteering.isNotEmpty()) {
                     runPromptMessages(queuedSteering, skipInitialSteeringPoll = true)
