@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "reference/upstream/pi-mono/e3f6912/packages/ai",
-    "reference/upstream/pi-mono/e3f6912/packages/agent",
-    "reference/upstream/pi-mono/9b28e18/packages/coding-agent"
+    "reference/upstream/pi-mono/def47ec/packages/ai",
+    "reference/upstream/pi-mono/def47ec/packages/agent",
+    "reference/upstream/pi-mono/def47ec/packages/coding-agent"
   ],
   "scripts": {
     "refresh-parity-fixtures": "tsx --tsconfig parity/ts-harness/tsconfig.json parity/ts-harness/src/refresh-fixtures.ts",

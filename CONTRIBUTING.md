@@ -19,15 +19,12 @@ Run the verification gate:
   :pi-ai-core:ktlintCheck \
   :pi-agent-core:ktlintCheck \
   :pi-coding-agent-core:ktlintCheck \
-  :android-consumer:ktlintCheck \
   :pi-ai-core:detekt \
   :pi-agent-core:detekt \
   :pi-coding-agent-core:detekt \
-  :android-consumer:detekt \
   :pi-ai-core:test \
   :pi-agent-core:test \
-  :pi-coding-agent-core:test \
-  :android-consumer:testDebugUnitTest
+  :pi-coding-agent-core:test
 ```
 
 Coverage reports are still useful for local investigation, but they are not the blocking correctness gate for the upstream-ported modules:
@@ -37,8 +34,8 @@ Coverage reports are still useful for local investigation, but they are not the 
 ```
 
 If a change touches parity-sensitive behavior, start with the pinned upstream reference that matches the module:
-- `reference/upstream/pi-mono/e3f6912` for `pi-ai-core` and `pi-agent-core`
-- `reference/upstream/pi-mono/9b28e18` for `pi-coding-agent-core`
+- `reference/upstream/pi-mono/def47ec` for `pi-ai-core` and `pi-agent-core`
+- `reference/upstream/pi-mono/def47ec` for `pi-coding-agent-core`
 
 If you change behavior covered by the deterministic parity harness, refresh and verify the fixtures:
 

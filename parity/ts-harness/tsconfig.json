@@ -3,10 +3,16 @@
     "baseUrl": "../..",
     "paths": {
       "@mariozechner/pi-ai": [
-        "reference/upstream/pi-mono/e3f6912/packages/ai/src/index.ts"
+        "reference/upstream/pi-mono/def47ec/packages/ai/src/index.ts"
+      ],
+      "@mariozechner/pi-ai/bedrock-provider": [
+        "reference/upstream/pi-mono/def47ec/packages/ai/src/bedrock-provider.ts"
+      ],
+      "@mariozechner/pi-ai/oauth": [
+        "reference/upstream/pi-mono/def47ec/packages/ai/src/oauth.ts"
       ],
       "@mariozechner/pi-agent-core": [
-        "reference/upstream/pi-mono/e3f6912/packages/agent/src/index.ts"
+        "reference/upstream/pi-mono/def47ec/packages/agent/src/index.ts"
       ]
     }
   }

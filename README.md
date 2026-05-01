@@ -19,7 +19,7 @@ Supported today:
 - direct Google Gemini API calls with API key auth
 - OpenAI Codex Responses calls with ChatGPT OAuth credentials
 - streaming text
-- SSE and WebSocket provider transports for Codex
+- SSE, WebSocket, and cached WebSocket provider transports for Codex
 - thinking blocks
 - tool calls and tool results
 - custom agent message conversion hooks
@@ -57,9 +57,8 @@ This ships as `pi-coding-agent-core`. The supported slice has deterministic pari
 
 The goal is semantic parity with the TypeScript packages for the slice this repo actually ports.
 
-Behavior is checked against pinned upstream snapshots. They stay in the repo on purpose:
-- [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) for `packages/ai` and `packages/agent`
-- [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18) for `packages/coding-agent`
+Behavior is checked against a pinned upstream snapshot. It stays in the repo on purpose:
+- [reference/upstream/pi-mono/def47ec](reference/upstream/pi-mono/def47ec) for `packages/ai`, `packages/agent`, and `packages/coding-agent`
 
 Those snapshots drive:
 - behavior checks
@@ -304,11 +303,9 @@ What that means in practice:
 ## Attribution
 
 - Upstream reference: [`badlogic/pi-mono`](https://github.com/badlogic/pi-mono)
-- Pinned snapshots used here:
-  `e3f6912d49d14b6e6ffe96bb053644922004ecf3` for `pi-ai` and `pi-agent`
-  `9b28e18` for `coding-agent`
-- Upstream snapshots and licenses are preserved under
-  [reference/upstream/pi-mono/e3f6912](reference/upstream/pi-mono/e3f6912) and
-  [reference/upstream/pi-mono/9b28e18](reference/upstream/pi-mono/9b28e18)
+- Pinned snapshot used here:
+  `def47ece9242295a928f9f62a51522ec80843aa6` for `pi-ai`, `pi-agent`, and `coding-agent`
+- The upstream snapshot and license are preserved under
+  [reference/upstream/pi-mono/def47ec](reference/upstream/pi-mono/def47ec)
 
 This project is not affiliated with the upstream maintainers.
